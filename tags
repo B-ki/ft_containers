@@ -1,0 +1,60 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CC	Makefile	/^CC = c++$/;"	m
+CFLAGS	Makefile	/^CFLAGS = -Wall -Werror -Wextra -std=c++98$/;"	m
+INCLUDE_DIR	Makefile	/^INCLUDE_DIR = includes\/$/;"	m
+INCPATH	Makefile	/^INCPATH = -I$(INCLUDE_DIR)$/;"	m
+LFLAGS	Makefile	/^LFLAGS = -I includes$/;"	m
+NAME	Makefile	/^NAME = ft_container$/;"	m
+OBJDIR	Makefile	/^OBJDIR = bin\/$/;"	m
+OBJS	Makefile	/^OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))$/;"	m
+SRCS	Makefile	/^SRCS = main.cpp$/;"	m
+SRC_DIR	Makefile	/^SRC_DIR = srcs\/$/;"	m
+STACK_HPP	includes/stack.hpp	14;"	d
+VECTOR_HPP	vector.hpp	14;"	d
+allocator_type	vector.hpp	/^		typedef Allocator allocator_type;$/;"	t	class:vector
+c	includes/stack.hpp	/^		Container c;$/;"	m	class:stack
+capacity	vector.hpp	/^		size_type capacity;$/;"	m	class:vector
+const_iterator	vector.hpp	/^		typedef implementation defined const_iterator; \/\/ See 23.1$/;"	t	class:vector
+const_pointer	vector.hpp	/^		typedef typename Allocator::const_pointer const_pointer;$/;"	t	class:vector
+const_reference	includes/stack.hpp	/^		typedef typename Container::const_reference const_reference;$/;"	t	class:stack
+const_reference	vector.hpp	/^		typedef typename Allocator::const_reference const_reference;$/;"	t	class:vector
+const_reverse_iterator	vector.hpp	/^		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;$/;"	t	class:vector
+container_type	includes/stack.hpp	/^		typedef Container 							container_type;$/;"	t	class:stack
+difference_type	vector.hpp	/^		typedef implementation defined difference_type;\/\/ See 23.1$/;"	t	class:vector
+difference_type	vector.hpp	/^		typedef std::ptrdiff_t difference_type;$/;"	t	class:vector
+empty	includes/stack.hpp	/^		bool empty() const { return c.empty(); }$/;"	f	class:stack
+iterator	vector.hpp	/^		typedef implementation defined iterator; \/\/ See 23.1$/;"	t	class:vector
+main	srcs/main.cpp	/^int main()$/;"	f
+nelems	vector.hpp	/^		size_type nelems;$/;"	m	class:vector
+operator !=	includes/stack.hpp	/^bool operator!=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator <	includes/stack.hpp	/^bool operator<(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator <=	includes/stack.hpp	/^bool operator<=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator =	includes/stack.hpp	/^		stack& operator=(const stack& rhs)$/;"	f	class:stack
+operator ==	includes/stack.hpp	/^bool operator==(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator >	includes/stack.hpp	/^bool operator> (const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator >=	includes/stack.hpp	/^bool operator>=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+pointer	vector.hpp	/^		typedef typename Allocator::pointer pointer;$/;"	t	class:vector
+pop	includes/stack.hpp	/^		void pop() { c.pop_back(); }$/;"	f	class:stack
+print_and_empty_stack	srcs/main.cpp	/^void print_and_empty_stack(stack<T> & c)$/;"	f
+print_container	srcs/main.cpp	/^void print_container(T const& coll)$/;"	f
+push	includes/stack.hpp	/^		void push(const value_type& x) { c.push_back(x); }$/;"	f	class:stack
+reference	includes/stack.hpp	/^		typedef typename Container::reference 		reference;$/;"	t	class:stack
+reference	vector.hpp	/^		typedef typename Allocator::reference reference;$/;"	t	class:vector
+reverse_iterator	vector.hpp	/^		typedef std::reverse_iterator<iterator> reverse_iterator;$/;"	t	class:vector
+size	includes/stack.hpp	/^		size_type size() const { return c.size(); }$/;"	f	class:stack
+size_type	includes/stack.hpp	/^		typedef typename Container::size_type 		size_type;$/;"	t	class:stack
+size_type	vector.hpp	/^		typedef implementation defined size_type; \/\/ See 23.1$/;"	t	class:vector
+size_type	vector.hpp	/^		typedef std::size_t size_type;$/;"	t	class:vector
+stack	includes/stack.hpp	/^		explicit stack(const Container& cont = Container()) : c(cont) {}$/;"	f	class:stack
+stack	includes/stack.hpp	/^class stack {$/;"	c
+top	includes/stack.hpp	/^		const value_type& top() const { return c.back(); }$/;"	f	class:stack
+top	includes/stack.hpp	/^		value_type& top() { return c.back(); }$/;"	f	class:stack
+value_type	includes/stack.hpp	/^		typedef typename Container::value_type 		value_type;$/;"	t	class:stack
+value_type	vector.hpp	/^		typedef T value_type;$/;"	t	class:vector
+vector	vector.hpp	/^class vector {$/;"	c
+~stack	includes/stack.hpp	/^		~stack() {}$/;"	f	class:stack
