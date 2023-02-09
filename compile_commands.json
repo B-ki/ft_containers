@@ -1,0 +1,7 @@
+[
+  {
+    "directory": "/mnt/nfs/homes/rmorel/Documents/containers",
+    "command": "c++ -Wall -Werror -Wextra -std=c++98 -Iincludes/ -o bin/main.o -c srcs/main.cpp",
+    "file": "srcs/main.cpp"
+  }
+]

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 16:14:01 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/07 16:59:15 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/09 11:48:37 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #define IS_INTEGRAL_HPP 
 
 #include "remove_cv.hpp"
-#include <type_traits>
 
 namespace ft
 {
@@ -22,10 +21,13 @@ namespace ft
 template<class T, T v>
 struct integral_constant
 {
-    static const T value = v;
-    typedef T value_type;
-    typedef integral_constant type;
-    operator value_type() const noexcept { 
+    static const T 					value = v;
+    typedef T 						value_type;
+	// type now mean integral_constant type
+    typedef integral_constant<T, v> type;
+	// operator to access value_type, not necessary here
+	
+    operator value_type() { 
 		return value;
 	}
 };

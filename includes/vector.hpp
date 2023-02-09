@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/07 17:26:19 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/09 19:49:25 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,11 @@
 #include <iterator>
 #include <memory>
 #include <cstdlib>
-#include <type_traits>
 #include "iterator_traits.hpp"
 #include "enable_if.hpp"
 #include "is_integral.hpp"
+#include <limits>
+#include <new>
 
 namespace ft
 {
@@ -44,74 +45,113 @@ class vector
 
 		typedef T* iterator; 
 		typedef const T* const_iterator;
+
+		// !!!!!!!!!!!!!!! Il va falloir refaire la class std::reverse_iterator
 		typedef std::reverse_iterator<iterator> reverse_iterator;
 		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 		// ########## DATA MEMBERS ##########
 
 	private:
-		T* _start;
+		T* _first;
+		T* _last;
 		T* _end;
-		T* _closing;
 		allocator_type _alloc;
 
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
 
 	public:
 		// Default constructor 
-		explicit vector() : _start(), _end(), _closing() { };
-		// Parametric constructor
+		explicit vector() : _first(), _last(), _end() { };
 
+		// Parametric constructor
 		explicit vector(size_type n, const T& value = T()) 
 		{
-			_start = _alloc.allocate(n);
-			_end = _start + n;
-			_closing = _start;
+			_first = _alloc.allocate(n);
+			_end = _first + n;
+			_last = _first;
 
-			for(; n > 0; n--, _closing++)
-				_alloc.construct(_closing, value);
+			for(; n > 0; n--, _last++)
+				_alloc.construct(_last, value);
 		}
 		// Range constructor
 		// SFINAE : If we give an int to the constructor it can either be a type or a pointer, thus it will hesitate between range or parametric constructor. So we prevent the compiler to use the range iterator if the parameter is an integral
-		template <class InputIterator, ft::enable_if<ft::is_integral<T>::value != true, bool> = true>
-		vector(InputIterator first, InputIterator last)
+		template <class It>
+		vector(It first, It last, typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0)
 		 {
 			 const size_type n = std::distance(first, last);
-			 _start = _alloc.allocate(n);
-			 _closing = _start + n;
-			 _end = _start;
-			 for(; first != last; first++, _end++)
-				 _alloc.construct(_end, *first);
+			 _first = _alloc.allocate(n);
+			 _end = _first + n;
+			 _last = _first;
+			 for(; first != last; first++, _last++)
+				 _alloc.construct(_last, *first);
 		 }
+		// !!!!!!!!! MIGHT BE PROBLEM WITH FORWARD AND INPUT ITERATOR !!!!!!!
+
 		//Copy constructor 
 		vector(const vector<T>& x)
 		{
 			if (this != x)
 			{
-				const size_type n = std::distance(_start, _closing);
-				_start = _alloc.allocate(n);
-				_closing = _start + n;
-				_end = _start;
-				for(size_type i = 0; i < n; _end++)
-					_alloc.construct(_end, *(x._start + i));
+				const size_type n = std::distance(_first, _end);
+				_first = _alloc.allocate(n);
+				_last = _first + n;
+				_end = _first + n;
+				std::uninitialized_copy(x._first, x._last, this->_first);
 			}
 		}
+
 		// Destructor 
 		~vector()
 		{
-			const size_type n = std::distance(_start, _closing);
-			_end = _start;
-			for(; _end != _closing; _end++)
-				_alloc.destroy(_end);
-			_start = _alloc.deallocate(n);
+			const size_type n = std::distance(_first, _end);
+			_last = _first;
+			for(; _last != _end; _last++)
+				_alloc.destroy(_last);
+			_alloc.deallocate(_first, n);
 		}
-		/*
 
-		   vector<T,Allocator>& operator=(const vector<T>& x);
-		   template <class InputIterator>
-		   void assign(InputIterator first, InputIterator last);
+		// #################### ASSIGNMENT OPERATORS  ####################
+
+		   vector<T>& operator=(const vector<T>& x) {
+			   size_type xSize = x.size();
+			   size_type xCap = x.capacity();
+			   size_type thisSize = this->size();
+			   size_type thisCap = this->capacity();
+
+			   if (xSize >= thisSize && xCap <= thisCap)
+			   {
+				   std::copy(x._first, x._first + thisSize, this->_first);
+				   std::uninitialized_copy(x._first + thisSize, x._last, this->_first + thisSize);
+			   }
+			   else if (xSize < thisSize && xCap <= thisCap)
+			   {
+				   std::copy(x._first, x._last, _first);
+				   for (size_type i = xSize; i < thisSize; i++)
+					   _alloc.destroy(_first + i);
+			   }
+			   else
+			   {
+				   T* newFirst = _alloc.allocate(xCap);
+				   T* newLast = newFirst;
+				   for (size_type i = 0; i < thisCap; i++, newLast++)
+				   {
+					   _alloc.construct(newLast, _first + i);
+					   _alloc.destroy(_first + i);
+				   }
+				   _alloc.deallocate(_first, thisCap);
+				   _first = newFirst;
+				   _last = newLast;
+				   _end = _first + xCap;
+			}
+			   ;
+
+		   };
+		   template <class It>
+		   void assign(It first, It last);
 		   void assign(size_type n, const T& u);
 		   allocator_type get_allocator() const;
+		  /*
 
 		// #################### ITERATORS ####################
 
@@ -126,12 +166,36 @@ class vector
 
 		// #################### CAPACITY ####################
 
-		size_type size() const;
-		size_type max_size() const;
-		void resize(size_type sz, T c = T());
-		size_type capacity() const;
-		bool empty() const;
-		void reserve(size_type n);
+		*/
+		size_type size() const { return std::distance(_first, _last); }
+		size_type max_size() const { return std::numeric_limits<difference_type>::max(); }
+		size_type capacity() const { return std::distance(_first, _end); }
+		bool empty() const {
+			if (_first)
+				return false;
+			return true;
+		}
+		void reserve(size_type newCap) {
+			if (newCap <= this->size())
+				return;
+			try {
+				const size_type oldCap = this->capacity();
+				T* newFirst = _alloc.allocate(newCap);
+				T* newLast = newFirst;
+				for (size_type i = 0; i < oldCap; i++, newLast++)
+				{
+					_alloc.construct(newLast, _first + i);
+					_alloc.destroy(_first + i);
+				}
+				_alloc.deallocate(_first, oldCap);
+				_first = newFirst;
+				_last = newLast;
+				_end = _first + newCap;
+			} catch(std::bad_alloc) {
+				return ;
+			}
+		}
+		/*
 
 		// #################### ELEMENT ACCESS ####################
 
@@ -146,8 +210,17 @@ class vector
 
 		// #################### MODIFIERS ####################
 
-		void push_back(const T& x);
-		void pop_back();
+		*/
+		void push_back(const T& x) {
+			if (_last == _end)
+				reserve(this->capacity() ? this->capacity() * 2 : 1);
+			_alloc.construct(_last, x);
+			_last++;
+		}
+		void pop_back() {
+			_alloc.destroy(_last);
+			_last--;
+		}
 		iterator insert(iterator position, const T& x);
 		void insert(iterator position, size_type n, const T& x);
 		template <class InputIterator>
@@ -155,7 +228,31 @@ class vector
 		iterator erase(iterator position);
 		iterator erase(iterator first, iterator last);
 		void swap(vector<T>&);
-		void clear();
+		void clear() {
+			size_type const n = size();
+
+			for (size_type i = 0; i < n; i++) {
+				_alloc.destroy(_first + i);
+			}
+			_last = _first;
+		}
+		void resize(size_type sz, T c = T()) {
+			size_type const n = size();
+
+			if (sz < n)
+			{
+				for (size_type i = sz; i < n; i++)
+					_alloc.destroy(_first + i);
+			}
+			else if (sz > n)
+			{
+				reserve(sz);
+				for(size_type i = n; i < sz; i++)
+					_alloc.construct(_first + i, c);
+			}
+			_last = _first + sz;
+		}
+		/*
 
 		template <class T>
 		bool operator==(const vector<T>& x, const vector<T>& y);
