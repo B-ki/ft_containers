@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 15:44:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/09 18:58:51 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/13 13:17:14 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ void print_and_empty_stack(stack<T> & c)
 	}
 }
 
-template<typename C>
-void print(C const& container)
+template<class T>
+void print(ft::vector<T> container)
 {
     std::cout << "{ ";
-    for (typename std::vector<typename C::value_type>::const_iterator it = container.begin(); it != container.end(); it++)
-        std::cout << *it << " ";
-    std::cout << "}\n";
+    for (T* it = container.begin(); it != container.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
 }
 
 int main()
@@ -47,32 +47,78 @@ int main()
 	print_and_empty_stack<int>(c1);
 	ft::vector<int> v1;
 	ft::vector<int> v2(5, 6);
-	std::vector<std::string> stdv;
+	ft::vector<std::string> stdv;
 	stdv.push_back("Hello");
 	stdv.push_back("Richard");
 	stdv.push_back("Nguyen");
 	ft::vector<std::string> v(stdv.begin(), stdv.end());
-	print(stdv);
-	std::vector<int> x;
+    std::cout << "{ ";
+    for (std::string* it = stdv.begin(); it != stdv.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+	{
+	ft::vector<int> x;
 	x.push_back(1);
 	x.push_back(2);
 	x.push_back(3);
-	std::vector<int> y;
+	ft::vector<int> y;
 	y.push_back(4);
 	y.push_back(5);
 	y.push_back(6);
 	y.push_back(7);
-	std::vector<int> z;
+	ft::vector<int> z;
 	z.push_back(8);
 	z.push_back(9);
-	print(x);
-	print(y);
-	print(z);
+    std::cout << "{ ";
+    for (int* it = x.begin(); it != x.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+    std::cout << "{ ";
+    for (int* it = y.begin(); it != y.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+	x.swap(y);
+    std::cout << "{ ";
+    for (int* it = x.begin(); it != x.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+    std::cout << "{ ";
+    for (int* it = y.begin(); it != y.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+    std::cout << "{ ";
+    for (int* it = z.begin(); it != z.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
 	y = x;
 	z = x;
-	print(x);
-	print(y);
-	print(z);
-
+    std::cout << "{ ";
+    for (int* it = x.begin(); it != x.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+    std::cout << "{ ";
+    for (int* it = y.begin(); it != y.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+    std::cout << "{ ";
+    for (int* it = z.begin(); it != z.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+	z.resize(1);
+    std::cout << "{ ";
+    for (int* it = z.begin(); it != z.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+	y.erase(y.begin() + 1);
+    std::cout << "{ ";
+    for (int* it = y.begin(); it != y.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+	y.clear();
+    std::cout << "{ ";
+    for (int* it = y.begin(); it != y.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "}\n";
+	}
 	return 0;
 }

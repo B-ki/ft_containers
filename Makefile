@@ -9,7 +9,7 @@ SRCS = main.cpp
 OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))
 
 CC = c++
-CFLAGS = -Wall -Werror -Wextra -std=c++98
+CFLAGS = -Wall -Werror -Wextra -std=c++98 -g
 LFLAGS = -I includes
 INCPATH = -I$(INCLUDE_DIR)
 
