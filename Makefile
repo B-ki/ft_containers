@@ -8,8 +8,10 @@ SRCS = main.cpp
 
 OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))
 
+NS = ft
+
 CC = c++
-CFLAGS = -Wall -Werror -Wextra -std=c++98 -g
+CFLAGS = -Wall -Werror -Wextra -std=c++98 -g -DNAMESPACE=$(NS)
 LFLAGS = -I includes
 INCPATH = -I$(INCLUDE_DIR)
 

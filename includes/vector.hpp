@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/13 18:44:30 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/16 20:05:31 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define VECTOR_HPP 
 
 #include <algorithm>
+#include <cstddef>
+#include <exception>
 #include <iterator>
 #include <memory>
 #include <cstdlib>
@@ -23,6 +25,7 @@
 #include <limits>
 #include <new>
 #include <iostream>
+#include <stdexcept>
 
 namespace ft
 {
@@ -95,7 +98,7 @@ class vector
 		{
 			if (this != &x)
 			{
-				const size_type n = std::distance(_first, _end);
+				const size_type n = std::distance(x._first, x._last);
 				_first = _alloc.allocate(n);
 				_last = _first + n;
 				_end = _first + n;
@@ -107,9 +110,8 @@ class vector
 		~vector()
 		{
 			const size_type n = std::distance(_first, _end);
-			_last = _first;
-			for(; _last != _end; _last++)
-				_alloc.destroy(_last);
+			for(iterator it = _first; it != _last; it++)
+				_alloc.destroy(it);
 			_alloc.deallocate(_first, n);
 		}
 
@@ -123,13 +125,21 @@ class vector
 
 			   if (xSize >= thisSize && xCap <= thisCap)
 			   {
-				   std::copy(x._first, x._first + thisSize, this->_first);
-				   std::uninitialized_copy(x._first + thisSize, x._last, this->_first + thisSize);
+				   size_type i = 0;
+				   iterator it = x._first;
+				   for (; i != thisSize; it++, i++)
+					   *(this->_first + i) = *it;
+				   for (; it != x._last; it++, i++)
+						_alloc.construct(this->_first + i, *it);
+				   this->_last = this->_first + i;
 			   }
 			   else if (xSize < thisSize && xCap <= thisCap)
 			   {
-				   std::copy(x._first, x._last, _first);
-				   for (size_type i = xSize; i < thisSize; i++)
+				   size_type i = 0;
+				   iterator it = x._first;
+				   for (; it != x._last; it++, i++)
+						*(this->_first  + i) = *it;
+				   for (; i < thisSize; i++)
 					   _alloc.destroy(this->_first + i);
 				   this->_last = this->_first + xSize;
 			   }
@@ -194,14 +204,20 @@ class vector
 
 		*/
 		size_type size() const { return std::distance(_first, _last); }
+
 		size_type max_size() const { return std::numeric_limits<difference_type>::max(); }
+
 		size_type capacity() const { return std::distance(_first, _end); }
+
 		bool empty() const {
 			if (_first)
 				return false;
 			return true;
 		}
+
 		void reserve(size_type newCap) {
+			if (newCap > this->max_size())
+				throw(std::length_error("ft::vector<t>::reserve : newCap > max_size"));
 			if (newCap <= this->size())
 				return;
 			try {
@@ -270,8 +286,11 @@ class vector
 		}
 
 		void pop_back() {
-			_alloc.destroy(_last);
-			_last--;
+			if (_first)
+			{
+				_alloc.destroy(_last - 1);
+				_last--;
+			}
 		}
 
 		iterator insert(iterator position, const T& x);
@@ -282,10 +301,7 @@ class vector
 		void insert(iterator position, InputIterator first, InputIterator last);
 
 		iterator erase(iterator position) {
-			if (position > _last || this->empty())
-				return (position + 1);
-			_alloc.destroy(position);
-			return (position + 1);
+			return (erase(position, position + 1));
 		}
 
 		iterator erase(iterator first, iterator last) {
@@ -293,8 +309,10 @@ class vector
 
 			if (dist <= 0)
 				return (last);
-			for(; first != last; first++)
-				_alloc.destroy(first);
+			std::copy(first + dist, this->_last, first);
+			for(iterator it = _last - dist; it != this->_last; it++)
+				_alloc.destroy(it);
+			this->_last -= dist;
 			return (last);
 		}
 
@@ -320,21 +338,27 @@ class vector
 			_last = _first;
 		}
 
-		void resize(size_type sz, T c = T()) {
-			size_type const n = size();
+		void resize(size_type n, T c = T()) {
+			size_type const sz = size();
+			size_type const cap = capacity();
 
-			if (sz < n)
+			if (n > cap)
 			{
-				for (size_type i = sz; i < n; i++)
-					_alloc.destroy(_first + i);
+				reserve(n);
+				for(size_type i = sz; i < n; i++)
+					_alloc.construct(this->_first + i, c);
 			}
 			else if (sz > n)
 			{
-				reserve(sz);
-				for(size_type i = n; i < sz; i++)
-					_alloc.construct(_first + i, c);
+				for (size_type i = n; i < sz; i++)
+					_alloc.construct(this->_first + i, c);
 			}
-			_last = _first + sz;
+			else 
+			{
+				for (size_type i = n; i < sz; i++)
+					_alloc.destroy(this->_first + i);
+			}
+			_last = _first + n;
 		}
 		/*
 
