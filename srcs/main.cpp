@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 15:44:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/16 20:03:01 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/18 00:52:30 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ int main()
 		x.push_back(3);
 	}
 	{
+		std::cout << "\n########## OPERATORS ##########\n\n";
+	}
 		NAMESPACE::vector<A> x;
 		x.push_back(1);
 		x.push_back(2);
@@ -108,71 +110,101 @@ int main()
 		y.push_back(6);
 		y.push_back(7);
 		NAMESPACE::vector<A> z;
-		z.push_back(8);
-		z.push_back(9);
-		std::cout << "x.front() : " << x.front() << " x.back() : " << x.back() << " x.at(0) : " << x.at(0) << " x.at(2) : " << x.at(2) << std::endl;
+		z.push_back(1);
+		z.push_back(2);
+		print_vector(x);
+		print_vector(y);
+		print_vector(z);
+		y = x;
+		z = x;
+		std::cout << "y = x && z = x\n";
+		print_vector(x);
+		print_vector(y);
+		print_vector(z);
+	{
+		std::cout << "\n########## MODIFIERS ##########\n\n";
+		NAMESPACE::vector<A> x;
+		x.push_back(1);
+		x.push_back(2);
+		x.push_back(3);
+		NAMESPACE::vector<A> y;
+		y.push_back(4);
+		y.push_back(5);
+		y.push_back(6);
+		y.push_back(7);
+		std::cout << "print x, y ; x.swap(y); print x, y;\n";
 		print_vector(x);
 		print_vector(y);
 		x.swap(y);
 		print_vector(x);
 		print_vector(y);
-		print_vector(z);
-		NAMESPACE::vector<A> w;
-		z.pop_back();
-		print_vector(z);
-		z.push_back(INT_MAX);
-		print_vector(z);
-		NAMESPACE::vector<A> u;
-		u.push_back(1);
-		u.push_back(2);
-		y = x;
-		u = x;
+		std::cout << "x.popback()\n";
+		x.pop_back();
 		print_vector(x);
-		print_vector(y);
-		print_vector(z);
-		w.push_back(10);
-		w.push_back(11);
-		w.push_back(12);
-		w.push_back(13);
-		w.push_back(14);
-		print_vector(w);
-		std::cout << w.size() << " is w size and capacity is " << w.capacity() << std::endl;
-		std::cout << y.size() << " is y size and capacity is " << y.capacity() << std::endl;
-		w = y;
-		w.erase(w.begin() + 1);
-		print_vector(w);
-		w.erase(w.begin() + 3);
-		print_vector(w);
-		w.erase(w.begin());
-		print_vector(w);
-		print_vector(z);
-		std::cout << "z.resize(1)\n";
-		z.resize(1);
-		print_vector(z);
+		x.push_back(INT_MAX);
+		std::cout << "x.push_back(INT_MAX)\n";
+		print_vector(x);
+		std::cout<< "x.erase(x.begin +1), x.erase(x.begin + 3), x.erase(x.begin)\n";
+		x.erase(x.begin() + 1);
+		print_vector(x);
+		x.erase(x.begin() + 3);
+		print_vector(x);
+		std::cout << "NOTE : Even though x.begin() + 3 is already destroyed, erase destroy the last element\n";
+		x.erase(x.begin());
+		print_vector(x);
 		std::cout << "Vector y :\n";
 		print_vector(y);
-		std::cout << "Erasing begin + 1\n";
+		std::cout << "y.erase begin + 1\n";
 		y.erase(y.begin() + 1);
 		print_vector(y);
-		std::cout << "Erasing begin\n";
-		y.erase(y.begin());
+		std::cout << "y.erase begin to begin + 1\n";
+		y.erase(y.begin(), y.begin() + 1);
 		print_vector(y);
-		std::cout << "Erasing begin\n";
-		y.erase(y.begin());
-		print_vector(y);
-		std::cout << "Erasing begin\n";
-		y.erase(y.begin());
-		print_vector(y);
-		z.erase(z.begin());
-		std::cout << "Z before erasing begin to begin :\n";
-		print_vector(z);
-		std::cout << "Erasing z begin to begin :\n";
-		z.erase(z.begin(), z.begin());
-		print_vector(z);
-		std::cout << "Clear\n";
+		std::cout << "y.clear()\n";
 		y.clear();
 		print_vector(y);
-		std::cout << "x.front() : " << x.front() << " x.back() : " << x.back() << " x.at(0) : " << x.at(0) << " x.at(2) : " << x.at(2) << std::endl;
+	}
+	{
+		std::cout << "\n########## RESIZE ##########\n\n";
+		NAMESPACE::vector<int> x;
+
+		x.push_back(1);
+		x.push_back(1);
+		x.push_back(1);
+		x.push_back(1);
+		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		print_vector(x);
+		x.resize(9, 12);
+		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		print_vector(x);
+	}
+	{
+		NAMESPACE::vector<int> x;
+
+		x.push_back(1);
+		x.push_back(1);
+		x.push_back(1);
+		x.push_back(1);
+		x.erase(x.begin());
+		x.erase(x.begin());
+		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		print_vector(x);
+		x.resize(3);
+		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		print_vector(x);	
+	}
+	{
+		NAMESPACE::vector<int> x;
+
+		x.push_back(1);
+		x.push_back(1);
+		x.push_back(1);
+		x.push_back(1);
+		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		print_vector(x);
+		x.resize(3);
+		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		print_vector(x);	
 	}
 	{
 		std::cout << "\n########## VECTOR CAPACITY ##########\n\n";
@@ -244,51 +276,94 @@ int main()
 		print_vector(x);
 		x.pop_back();
 		print_vector(x);
-		//x.resize(5, A(7));
+		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		x.resize(5);
 	}
 	{
-		std::cout << "\n########## RESIZE ##########\n\n";
+		std::cout << "\n########## INSERT ##########\n\n";
 		NAMESPACE::vector<int> x;
 
 		x.push_back(1);
-		x.push_back(1);
-		x.push_back(1);
-		x.push_back(1);
-		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
-		print_vector(x);
-		x.resize(9, 12);
-		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
-		print_vector(x);
-	}
-	{
-		std::cout << "\n########## RESIZE ##########\n\n";
-		NAMESPACE::vector<int> x;
-
-		x.push_back(1);
-		x.push_back(1);
-		x.push_back(1);
-		x.push_back(1);
+		x.push_back(2);
+		x.push_back(3);
+		x.push_back(4);
+		x.push_back(5);
+		x.erase(x.begin());
 		x.erase(x.begin());
 		x.erase(x.begin());
 		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		std::cout << x.back() << std::endl;
 		print_vector(x);
-		x.resize(3);
+		x.insert(x.begin(), 9);
+		print_vector(x);
+		x.insert(x.begin() + 2, 10);
+		print_vector(x);
+		x.insert(x.end(), 11);
+		print_vector(x);
+		NAMESPACE::vector<int> y;
+
+		y.push_back(1);
+		y.push_back(2);
+		y.push_back(3);
+		y.push_back(4);	
+		print_vector(y);
+		std::cout << "y.insert(end(), 5)\n";
+		y.insert(y.end(), 5);
+		print_vector(y);
+		std::cout << "y.insert(end(), 6)\n";
+		y.insert(y.end(), 6);
+		print_vector(y);
+		x.erase(x.begin());
+		x.erase(x.begin());
+		std::cout << "Vector x : ";
+		print_vector(x);
 		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
-		print_vector(x);	
+		std::cout << "x.insert(x.begin(), 2lu, 3)\n";
+		x.insert(x.begin(), 2lu, 3);
+		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		print_vector(x);
+		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		std::cout << "x.insert(x.end(), 2lu, 3)\n";
+		x.insert(x.end(), 2lu, 3);
+		print_vector(x);
+		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		std::cout << "x.insert(x.end(), 2lu, 4)\n";
+		x.insert(x.end(), 2lu, 4);
+		print_vector(x);
 	}
 	{
-		std::cout << "\n########## RESIZE ##########\n\n";
-		NAMESPACE::vector<int> x;
+		std::cout << "\n########## INSERT2  ##########\n\n";
+		NAMESPACE::vector<int> y;
 
-		x.push_back(1);
-		x.push_back(1);
-		x.push_back(1);
-		x.push_back(1);
-		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		y.reserve(8);
+		y.push_back(1);
+		y.push_back(2);
+		y.push_back(3);
+		y.push_back(4);	
+		NAMESPACE::vector<int> w;
+		NAMESPACE::vector<int> x;
+		NAMESPACE::vector<int> z;
+		w = y;
+		x = y;
+		z = y;
+		w.push_back(5);
+		std::cout << "w : cap = " << w.capacity() << ", size = " << w.size() << std::endl;
+		std::cout << "x : cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		std::cout << "y : cap = " << y.capacity() << ", size = " << y.size() << std::endl;
+		std::cout << "z : cap = " << z.capacity() << ", size = " << z.size() << std::endl;
+		print_vector(w);
 		print_vector(x);
-		x.resize(3);
-		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
-		print_vector(x);	
+		print_vector(y);
+		print_vector(z);
+		w.insert(w.begin(), 2lu, 7);
+		x.insert(x.begin() + 2, 4lu, 7);
+		y.insert(y.end(), 4lu, 7);
+		z.insert(z.begin(), 4lu, 7);
+		print_vector(w);
+		print_vector(x);
+		print_vector(y);
+		print_vector(z);
+
 	}
 	return 0;
 }

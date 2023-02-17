@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/16 20:05:31 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/18 00:54:28 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <new>
 #include <iostream>
 #include <stdexcept>
+#include <streambuf>
 
 namespace ft
 {
@@ -145,16 +146,11 @@ class vector
 			   }
 			   else
 			   {
-				   T* newFirst = _alloc.allocate(xCap);
-				   T* newLast = newFirst;
-				   for (size_type i = 0; i < thisCap; i++, newLast++)
-				   {
-					   _alloc.construct(newLast, *(x._first + i));
-					   _alloc.destroy(this->_first + i);
-				   }
+				   this->clear();
 				   _alloc.deallocate(this->_first, thisCap);
-				   this->_first = newFirst;
-				   this->_last = newLast;
+				   this->_first = _alloc.allocate(xCap);
+				   std::uninitialized_copy(x._first, x._last, this->_first);
+				   this->_last = this->_first + xSize;
 				   this->_end = this->_first + xCap;
 				}
 			   return (*this);
@@ -203,7 +199,7 @@ class vector
 		// #################### CAPACITY ####################
 
 		*/
-		size_type size() const { return std::distance(_first, _last); }
+		size_type size() const { return std::distance(this->_first, this->_last); }
 
 		size_type max_size() const { return std::numeric_limits<difference_type>::max(); }
 
@@ -221,15 +217,16 @@ class vector
 			if (newCap <= this->size())
 				return;
 			try {
-				const size_type oldCap = this->capacity();
-				T* newFirst = _alloc.allocate(newCap);
-				T* newLast = newFirst;
-				for (size_type i = 0; i < oldCap; i++, newLast++)
+				const size_type oldSize = this->size();
+				pointer newFirst = _alloc.allocate(newCap);
+				pointer newLast = newFirst;
+
+				for (size_type i = 0; i < oldSize; i++, newLast++)
 				{
 					_alloc.construct(newLast, *(_first + i));
 					_alloc.destroy(_first + i);
 				}
-				_alloc.deallocate(_first, oldCap);
+				_alloc.deallocate(_first, oldSize);
 				_first = newFirst;
 				_last = newLast;
 				_end = _first + newCap;
@@ -293,9 +290,77 @@ class vector
 			}
 		}
 
-		iterator insert(iterator position, const T& x);
+		iterator insert(iterator position, const T& x) {
+			size_type oldCap = this->capacity();
 
-		void insert(iterator position, size_type n, const T& x);
+			if (oldCap == this->size()) {
+				pointer newFirst = _alloc.allocate(oldCap + 1);
+				size_type i = 0;
+
+				for (; this->_first + i != position; i++)
+					_alloc.construct(newFirst + i, *(this->_first + i));
+				_alloc.construct(newFirst + i, x);
+				i++;
+				for (; i != oldCap + 1; i++)
+					_alloc.construct(newFirst + i, *(this->_first + i - 1));
+				this->clear();
+				_alloc.deallocate(this->_first, oldCap);
+				this->_first = newFirst;
+				this->_last = newFirst + oldCap + 1;
+				this->_end = this->_last;
+			}
+			else {
+				if (position == _last)
+					_alloc.construct(position, x);
+				else {
+					_alloc.construct(this->_last, *(this->_last - 1));
+					for(iterator it = this->_last - 1; it != position; it--)
+						*it = *(it - 1);
+					*position = x;
+				}
+				this->_last++;
+			}
+			return (position);
+		}
+
+		void insert(iterator pos, size_type n, const T& x) {
+			size_type oldCap = this->capacity();
+
+			if (oldCap < this->size() + n) {
+				size_type newCap = (oldCap + n ? (oldCap + n) * 2 : 1);
+				pointer newFirst = _alloc.allocate(newCap);
+				pointer tmp;
+
+				tmp = std::uninitialized_copy(this->_first, pos, newFirst);
+				tmp = std::uninitialized_fill_n(tmp, n, x);
+				tmp = std::uninitialized_copy(pos, this->_last, tmp);
+				this->clear();
+				_alloc.deallocate(this->_first, oldCap);
+				this->_first = newFirst;
+				this->_last = tmp;
+				this->_end = this->_first + newCap;
+			}
+			else {
+				/*
+				pointer oldLast = this->_last;
+
+				this->resize(n + this->size());
+				std::copy_backward(pos, oldLast, this->_last);
+				std::fill_n(pos, n, x);
+				*/
+				difference_type cop = ((this->_last - pos) - n > 0 ? (this->_last - pos) - n : 0);
+				if (pos + n + cop < this->_end)
+					std::uninitialized_copy(pos + cop, pos + cop + n, pos + n + cop);
+				if (cop > 0)
+					std::copy(pos, pos + cop, pos + n);
+				size_type fill = (n < (size_type)(this->_last - pos) ? n : this->_last - pos);
+				if (pos != this->_last)
+					std::fill_n(pos, fill, x);
+				if (pos + n > this->_last)
+					std::uninitialized_fill_n(this->_last, n - fill, x);
+				this->_last += n;
+			}
+		}
 
 		template <class InputIterator>
 		void insert(iterator position, InputIterator first, InputIterator last);
@@ -351,12 +416,12 @@ class vector
 			else if (sz > n)
 			{
 				for (size_type i = n; i < sz; i++)
-					_alloc.construct(this->_first + i, c);
+					_alloc.destroy(this->_first + i);
 			}
 			else 
 			{
-				for (size_type i = n; i < sz; i++)
-					_alloc.destroy(this->_first + i);
+				for (size_type i = sz; i < n; i++)
+					_alloc.construct(this->_first + i, c);
 			}
 			_last = _first + n;
 		}
