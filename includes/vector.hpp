@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/18 00:54:28 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/19 03:14:12 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,21 +126,14 @@ class vector
 
 			   if (xSize >= thisSize && xCap <= thisCap)
 			   {
-				   size_type i = 0;
-				   iterator it = x._first;
-				   for (; i != thisSize; it++, i++)
-					   *(this->_first + i) = *it;
-				   for (; it != x._last; it++, i++)
-						_alloc.construct(this->_first + i, *it);
-				   this->_last = this->_first + i;
+				   std::copy(x._first, x._first + thisSize, this->_first);
+				   std::uninitialized_copy(x._first + thisSize, x._last, this->_last);
+				   this->_last = this->_first + xSize;
 			   }
 			   else if (xSize < thisSize && xCap <= thisCap)
 			   {
-				   size_type i = 0;
-				   iterator it = x._first;
-				   for (; it != x._last; it++, i++)
-						*(this->_first  + i) = *it;
-				   for (; i < thisSize; i++)
+				   std::copy(x._first, x._last, this->_first);
+				   for (size_type i = xSize; i < thisSize; i++)
 					   _alloc.destroy(this->_first + i);
 				   this->_last = this->_first + xSize;
 			   }
@@ -230,7 +223,7 @@ class vector
 				_first = newFirst;
 				_last = newLast;
 				_end = _first + newCap;
-			} catch(std::bad_alloc) {
+			} catch(std::bad_alloc const&) {
 				return ;
 			}
 		}
@@ -291,6 +284,8 @@ class vector
 		}
 
 		iterator insert(iterator position, const T& x) {
+			insert(position, 1lu, x);
+			/*
 			size_type oldCap = this->capacity();
 
 			if (oldCap == this->size()) {
@@ -320,6 +315,7 @@ class vector
 				}
 				this->_last++;
 			}
+			*/
 			return (position);
 		}
 
@@ -348,12 +344,16 @@ class vector
 				std::copy_backward(pos, oldLast, this->_last);
 				std::fill_n(pos, n, x);
 				*/
-				difference_type cop = ((this->_last - pos) - n > 0 ? (this->_last - pos) - n : 0);
+				difference_type cop = (this->_last - pos) - n;;
+				if (cop < 0)
+					cop = 0;
+				std::cout << "cop = " << cop << std::endl;
 				if (pos + n + cop < this->_end)
-					std::uninitialized_copy(pos + cop, pos + cop + n, pos + n + cop);
+					std::uninitialized_copy(pos + cop, std::min(this->_last, pos + cop + n), pos + n + cop);
 				if (cop > 0)
 					std::copy(pos, pos + cop, pos + n);
 				size_type fill = (n < (size_type)(this->_last - pos) ? n : this->_last - pos);
+				std::cout << "fill = " << fill << std::endl;
 				if (pos != this->_last)
 					std::fill_n(pos, fill, x);
 				if (pos + n > this->_last)

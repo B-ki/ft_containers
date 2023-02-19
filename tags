@@ -1,73 +1,76 @@
 !_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
 !_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
-!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
-!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
-!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
-!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
-!_TAG_PROC_CWD	/data/data/com.termux/files/home/storage/ft_containers/	//
-!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
-!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
-!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
-!_TAG_PROGRAM_VERSION	5.9.0	//
-$(NAME)	Makefile	/^$(NAME): $(OBJDIR) $(OBJS)$/;"	t
-$(OBJDIR)	Makefile	/^$(OBJDIR):$/;"	t
-$(OBJDIR)%.o	Makefile	/^$(OBJDIR)%.o : $(SRC_DIR)%.cpp$/;"	t
-0	compile_commands.json	/^  {$/;"	o
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+A	srcs/main.cpp	/^	A(A const & src) : _i(new int(*src._i)) {};$/;"	f	class:A
+A	srcs/main.cpp	/^	A(const int &n) : _i(new int(n))  {};$/;"	f	class:A
+A	srcs/main.cpp	/^	A(void) : _i(new int(0)) {};$/;"	f	class:A
+A	srcs/main.cpp	/^class A $/;"	c	file:
 CC	Makefile	/^CC = c++$/;"	m
-ENABLE_IF_HPP	includes/enable_if.hpp	/^#define ENABLE_IF_HPP /;"	d
+CFLAGS	Makefile	/^CFLAGS = -Wall -Werror -Wextra -std=c++98 -g -DNAMESPACE=$(NS)$/;"	m
+ENABLE_IF_HPP	includes/enable_if.hpp	14;"	d
 INCLUDE_DIR	Makefile	/^INCLUDE_DIR = includes\/$/;"	m
 INCPATH	Makefile	/^INCPATH = -I$(INCLUDE_DIR)$/;"	m
-IS_INTEGRAL_HPP	includes/is_integral.hpp	/^#define IS_INTEGRAL_HPP /;"	d
-ITERATOR_TRAITS_HPP	includes/iterator_traits.hpp	/^# define ITERATOR_TRAITS_HPP /;"	d
+IS_INTEGRAL_HPP	includes/is_integral.hpp	14;"	d
+ITERATOR_TRAITS_HPP	includes/iterator_traits.hpp	14;"	d
 LFLAGS	Makefile	/^LFLAGS = -I includes$/;"	m
 NAME	Makefile	/^NAME = ft_container$/;"	m
+NAMESPACE	srcs/main.cpp	21;"	d	file:
+NS	Makefile	/^NS = ft$/;"	m
 OBJDIR	Makefile	/^OBJDIR = bin\/$/;"	m
 OBJS	Makefile	/^OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))$/;"	m
-REMOVE_CV_HPP	includes/remove_cv.hpp	/^# define REMOVE_CV_HPP /;"	d
+REMOVE_CV_HPP	includes/remove_cv.hpp	14;"	d
 SRCS	Makefile	/^SRCS = main.cpp$/;"	m
 SRC_DIR	Makefile	/^SRC_DIR = srcs\/$/;"	m
-STACK_HPP	includes/stack.hpp	/^#define STACK_HPP /;"	d
-VECTOR_HPP	includes/vector.hpp	/^# define VECTOR_HPP /;"	d
-_alloc	includes/vector.hpp	/^		std::allocator<T> _alloc;$/;"	m	class:ft::vector	typeref:typename:std::allocator<T>
-_end	includes/vector.hpp	/^		T* _end;$/;"	m	class:ft::vector	typeref:typename:T *
-_first	includes/vector.hpp	/^		T* _first;$/;"	m	class:ft::vector	typeref:typename:T *
-_last	includes/vector.hpp	/^		T* _last;$/;"	m	class:ft::vector	typeref:typename:T *
-all	Makefile	/^all: $(NAME)$/;"	t
-allocator_type	includes/vector.hpp	/^		typedef typename std::allocator<value_type> allocator_type;$/;"	t	class:ft::vector	typeref:typename:std::allocator<value_type>
-begin	includes/vector.hpp	/^		const_iterator begin() const { return _first; }$/;"	f	class:ft::vector	typeref:typename:const_iterator
-begin	includes/vector.hpp	/^		iterator begin() { return _first; }$/;"	f	class:ft::vector	typeref:typename:iterator
-c	includes/stack.hpp	/^		Container c;$/;"	m	class:stack	typeref:typename:Container
-capacity	includes/vector.hpp	/^		size_type capacity() const { return std::distance(_first, _end); }$/;"	f	class:ft::vector	typeref:typename:size_type
-clean	Makefile	/^clean: $/;"	t
-clear	includes/vector.hpp	/^		void clear() {$/;"	f	class:ft::vector	typeref:typename:void
-command	compile_commands.json	/^    "command": "c++ -Wall -Werror -Wextra -std=c++98 -Iincludes\/ -o bin\/main.o -c srcs\/main.c/;"	s	object:0
-const_iterator	includes/vector.hpp	/^		typedef const T* const_iterator;$/;"	t	class:ft::vector	typeref:typename:const T *
-const_pointer	includes/vector.hpp	/^		typedef typename allocator_type::const_pointer const_pointer;$/;"	t	class:ft::vector	typeref:typename:allocator_type::const_pointer
-const_reference	includes/stack.hpp	/^		typedef typename Container::const_reference const_reference;$/;"	t	class:stack	typeref:typename:Container::const_reference
-const_reference	includes/vector.hpp	/^		typedef const value_type& const_reference;$/;"	t	class:ft::vector	typeref:typename:const value_type &
-const_reverse_iterator	includes/vector.hpp	/^		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;$/;"	t	class:ft::vector	typeref:typename:std::reverse_iterator<const_iterator>
-container_type	includes/stack.hpp	/^		typedef Container 							container_type;$/;"	t	class:stack	typeref:typename:Container
-difference_type	includes/iterator_traits.hpp	/^	typedef std::ptrdiff_t difference_type;$/;"	t	struct:iterator_traits	typeref:typename:std::ptrdiff_t
-difference_type	includes/iterator_traits.hpp	/^	typedef typename Iterator::difference_type difference_type;$/;"	t	struct:iterator_traits	typeref:typename:Iterator::difference_type
-difference_type	includes/vector.hpp	/^		typedef typename allocator_type::difference_type difference_type;$/;"	t	class:ft::vector	typeref:typename:allocator_type::difference_type
-directory	compile_commands.json	/^    "directory": "\/mnt\/nfs\/homes\/rmorel\/Documents\/containers",$/;"	s	object:0
-empty	includes/stack.hpp	/^		bool empty() const { return c.empty(); }$/;"	f	class:stack	typeref:typename:bool
-empty	includes/vector.hpp	/^		bool empty() const {$/;"	f	class:ft::vector	typeref:typename:bool
+STACK_HPP	includes/stack.hpp	14;"	d
+VECTOR_HPP	includes/vector.hpp	14;"	d
+_alloc	includes/vector.hpp	/^		std::allocator<T> _alloc;$/;"	m	class:ft::vector
+_end	includes/vector.hpp	/^		T* _end;$/;"	m	class:ft::vector
+_first	includes/vector.hpp	/^		T* _first;$/;"	m	class:ft::vector
+_i	srcs/main.cpp	/^		int* _i;$/;"	m	class:A	file:
+_last	includes/vector.hpp	/^		T* _last;$/;"	m	class:ft::vector
+allocator_type	includes/vector.hpp	/^		typedef typename std::allocator<value_type> allocator_type;$/;"	t	class:ft::vector
+assign	includes/vector.hpp	/^		   void assign(It first, It last, typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) {$/;"	f	class:ft::vector
+assign	includes/vector.hpp	/^		   void assign(size_type n, const T& u) {$/;"	f	class:ft::vector
+at	includes/vector.hpp	/^		const_reference at(size_type n) const {$/;"	f	class:ft::vector
+at	includes/vector.hpp	/^		reference at(size_type n) {$/;"	f	class:ft::vector
+back	includes/vector.hpp	/^		const_reference back() const {$/;"	f	class:ft::vector
+back	includes/vector.hpp	/^		reference back() {$/;"	f	class:ft::vector
+begin	includes/vector.hpp	/^		const_iterator begin() const { return _first; }$/;"	f	class:ft::vector
+begin	includes/vector.hpp	/^		iterator begin() { return _first; }$/;"	f	class:ft::vector
+c	includes/stack.hpp	/^		Container c;$/;"	m	class:stack
+capacity	includes/vector.hpp	/^		size_type capacity() const { return std::distance(_first, _end); }$/;"	f	class:ft::vector
+clear	includes/vector.hpp	/^		void clear() {$/;"	f	class:ft::vector
+const_iterator	includes/vector.hpp	/^		typedef const T* const_iterator;$/;"	t	class:ft::vector
+const_pointer	includes/vector.hpp	/^		typedef typename allocator_type::const_pointer const_pointer;$/;"	t	class:ft::vector
+const_reference	includes/stack.hpp	/^		typedef typename Container::const_reference const_reference;$/;"	t	class:stack
+const_reference	includes/vector.hpp	/^		typedef const value_type& const_reference;$/;"	t	class:ft::vector
+const_reverse_iterator	includes/vector.hpp	/^		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;$/;"	t	class:ft::vector
+container_type	includes/stack.hpp	/^		typedef Container 							container_type;$/;"	t	class:stack
+difference_type	includes/iterator_traits.hpp	/^	typedef std::ptrdiff_t difference_type;$/;"	t	struct:iterator_traits
+difference_type	includes/iterator_traits.hpp	/^	typedef typename Iterator::difference_type difference_type;$/;"	t	struct:iterator_traits
+difference_type	includes/vector.hpp	/^		typedef typename allocator_type::difference_type difference_type;$/;"	t	class:ft::vector
+empty	includes/stack.hpp	/^		bool empty() const { return c.empty(); }$/;"	f	class:stack
+empty	includes/vector.hpp	/^		bool empty() const {$/;"	f	class:ft::vector
 enable_if	includes/enable_if.hpp	/^struct enable_if {};$/;"	s	namespace:ft
 enable_if	includes/enable_if.hpp	/^struct enable_if<true, T> {$/;"	s	namespace:ft
-end	includes/vector.hpp	/^		const_iterator end() const { return _last; }$/;"	f	class:ft::vector	typeref:typename:const_iterator
-end	includes/vector.hpp	/^		iterator end() { return _last; }$/;"	f	class:ft::vector	typeref:typename:iterator
-erase	includes/vector.hpp	/^		iterator erase(iterator first, iterator last) {$/;"	f	class:ft::vector	typeref:typename:iterator
-erase	includes/vector.hpp	/^		iterator erase(iterator position) {$/;"	f	class:ft::vector	typeref:typename:iterator
-false_type	includes/is_integral.hpp	/^typedef ft::integral_constant<bool, false> false_type;$/;"	t	namespace:ft	typeref:typename:ft::integral_constant<bool,false>
-fclean	Makefile	/^fclean: clean$/;"	t
-file	compile_commands.json	/^    "file": "srcs\/main.cpp"$/;"	s	object:0
+end	includes/vector.hpp	/^		const_iterator end() const { return _last; }$/;"	f	class:ft::vector
+end	includes/vector.hpp	/^		iterator end() { return _last; }$/;"	f	class:ft::vector
+erase	includes/vector.hpp	/^		iterator erase(iterator first, iterator last) {$/;"	f	class:ft::vector
+erase	includes/vector.hpp	/^		iterator erase(iterator position) {$/;"	f	class:ft::vector
+false_type	includes/is_integral.hpp	/^typedef ft::integral_constant<bool, false> false_type;$/;"	t	namespace:ft
+front	includes/vector.hpp	/^		const_reference front() const {$/;"	f	class:ft::vector
+front	includes/vector.hpp	/^		reference front() {$/;"	f	class:ft::vector
 ft	includes/enable_if.hpp	/^namespace ft$/;"	n
 ft	includes/is_integral.hpp	/^namespace ft$/;"	n
 ft	includes/remove_cv.hpp	/^namespace ft$/;"	n
 ft	includes/vector.hpp	/^namespace ft$/;"	n
-ft_containers	README.md	/^# ft_containers$/;"	c
-get_allocator	includes/vector.hpp	/^		   allocator_type get_allocator() const { return _alloc; }$/;"	f	class:ft::vector	typeref:typename:allocator_type
+getInt	srcs/main.cpp	/^	int getInt(void) const { return *_i; }$/;"	f	class:A
+get_allocator	includes/vector.hpp	/^		   allocator_type get_allocator() const { return _alloc; }$/;"	f	class:ft::vector
+insert	includes/vector.hpp	/^		iterator insert(iterator position, const T& x) {$/;"	f	class:ft::vector
+insert	includes/vector.hpp	/^		void insert(iterator pos, size_type n, const T& x) {$/;"	f	class:ft::vector
 integral_constant	includes/is_integral.hpp	/^struct integral_constant$/;"	s	namespace:ft
 is_integral	includes/is_integral.hpp	/^struct is_integral : false_type {};$/;"	s	namespace:ft
 is_integral	includes/is_integral.hpp	/^struct is_integral<bool> : true_type {};$/;"	s	namespace:ft
@@ -80,66 +83,71 @@ is_integral	includes/is_integral.hpp	/^struct is_integral<unsigned char> : true_
 is_integral	includes/is_integral.hpp	/^struct is_integral<unsigned int> : true_type {};$/;"	s	namespace:ft
 is_integral	includes/is_integral.hpp	/^struct is_integral<unsigned long> : true_type {};$/;"	s	namespace:ft
 is_integral	includes/is_integral.hpp	/^struct is_integral<unsigned short> : true_type {};$/;"	s	namespace:ft
-iterator	includes/vector.hpp	/^		typedef T* iterator; $/;"	t	class:ft::vector	typeref:typename:T *
-iterator_category	includes/iterator_traits.hpp	/^	typedef std::random_access_iterator_tag iterator_category;$/;"	t	struct:iterator_traits	typeref:typename:std::random_access_iterator_tag
-iterator_category	includes/iterator_traits.hpp	/^	typedef typename Iterator::iterator_category iterator_category;$/;"	t	struct:iterator_traits	typeref:typename:Iterator::iterator_category
+iterator	includes/vector.hpp	/^		typedef T* iterator; $/;"	t	class:ft::vector
+iterator_category	includes/iterator_traits.hpp	/^	typedef std::random_access_iterator_tag iterator_category;$/;"	t	struct:iterator_traits
+iterator_category	includes/iterator_traits.hpp	/^	typedef typename Iterator::iterator_category iterator_category;$/;"	t	struct:iterator_traits
 iterator_traits	includes/iterator_traits.hpp	/^struct iterator_traits {$/;"	s
 iterator_traits	includes/iterator_traits.hpp	/^struct iterator_traits<T*> {$/;"	s
-main	srcs/main.cpp	/^int main()$/;"	f	typeref:typename:int
-max_size	includes/vector.hpp	/^		size_type max_size() const { return std::numeric_limits<difference_type>::max(); }$/;"	f	class:ft::vector	typeref:typename:size_type
-operator !=	includes/stack.hpp	/^bool operator!=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f	typeref:typename:bool
-operator <	includes/stack.hpp	/^bool operator<(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f	typeref:typename:bool
-operator <=	includes/stack.hpp	/^bool operator<=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f	typeref:typename:bool
-operator =	includes/stack.hpp	/^		stack& operator=(const stack& rhs)$/;"	f	class:stack	typeref:typename:stack &
-operator =	includes/vector.hpp	/^		   vector<T>& operator=(const vector<T>& x) {$/;"	f	class:ft::vector	typeref:typename:vector<T> &
-operator ==	includes/stack.hpp	/^bool operator==(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f	typeref:typename:bool
-operator >	includes/stack.hpp	/^bool operator> (const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f	typeref:typename:bool
-operator >=	includes/stack.hpp	/^bool operator>=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f	typeref:typename:bool
+main	srcs/main.cpp	/^int main()$/;"	f
+max_size	includes/vector.hpp	/^		size_type max_size() const { return std::numeric_limits<difference_type>::max(); }$/;"	f	class:ft::vector
+operator !=	includes/stack.hpp	/^bool operator!=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator <	includes/stack.hpp	/^bool operator<(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator <<	srcs/main.cpp	/^std::ostream & operator<<(std::ostream & o, A const & rhs)$/;"	f
+operator <=	includes/stack.hpp	/^bool operator<=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator =	includes/stack.hpp	/^		stack& operator=(const stack& rhs)$/;"	f	class:stack
+operator =	includes/vector.hpp	/^		   vector<T>& operator=(const vector<T>& x) {$/;"	f	class:ft::vector
+operator =	srcs/main.cpp	/^	A& operator=(const A &rhs) {$/;"	f	class:A
+operator ==	includes/stack.hpp	/^bool operator==(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator >	includes/stack.hpp	/^bool operator> (const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator >=	includes/stack.hpp	/^bool operator>=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
+operator []	includes/vector.hpp	/^		const_reference operator[](size_type n) const {$/;"	f	class:ft::vector
+operator []	includes/vector.hpp	/^		reference operator[](size_type n) {$/;"	f	class:ft::vector
 operator value_type	includes/is_integral.hpp	/^    operator value_type() { $/;"	f	struct:ft::integral_constant
-pointer	includes/iterator_traits.hpp	/^	typedef T* pointer;$/;"	t	struct:iterator_traits	typeref:typename:T *
-pointer	includes/iterator_traits.hpp	/^	typedef typename Iterator::pointer pointer;$/;"	t	struct:iterator_traits	typeref:typename:Iterator::pointer
-pointer	includes/vector.hpp	/^		typedef typename allocator_type::pointer pointer;$/;"	t	class:ft::vector	typeref:typename:allocator_type::pointer
-pop	includes/stack.hpp	/^		void pop() { c.pop_back(); }$/;"	f	class:stack	typeref:typename:void
-pop_back	includes/vector.hpp	/^		void pop_back() {$/;"	f	class:ft::vector	typeref:typename:void
-print	srcs/main.cpp	/^void print(ft::vector<T> container)$/;"	f	typeref:typename:void
-print_and_empty_stack	srcs/main.cpp	/^void print_and_empty_stack(stack<T> & c)$/;"	f	typeref:typename:void
-push	includes/stack.hpp	/^		void push(const value_type& x) { c.push_back(x); }$/;"	f	class:stack	typeref:typename:void
-push_back	includes/vector.hpp	/^		void push_back(const T& x) {$/;"	f	class:ft::vector	typeref:typename:void
-re	Makefile	/^re: fclean all$/;"	t
-reference	includes/iterator_traits.hpp	/^	typedef T& reference;$/;"	t	struct:iterator_traits	typeref:typename:T &
-reference	includes/iterator_traits.hpp	/^	typedef typename Iterator::reference reference;$/;"	t	struct:iterator_traits	typeref:typename:Iterator::reference
-reference	includes/stack.hpp	/^		typedef typename Container::reference 		reference;$/;"	t	class:stack	typeref:typename:Container::reference
-reference	includes/vector.hpp	/^		typedef value_type& reference;$/;"	t	class:ft::vector	typeref:typename:value_type &
+pointer	includes/iterator_traits.hpp	/^	typedef T* pointer;$/;"	t	struct:iterator_traits
+pointer	includes/iterator_traits.hpp	/^	typedef typename Iterator::pointer pointer;$/;"	t	struct:iterator_traits
+pointer	includes/vector.hpp	/^		typedef typename allocator_type::pointer pointer;$/;"	t	class:ft::vector
+pop	includes/stack.hpp	/^		void pop() { c.pop_back(); }$/;"	f	class:stack
+pop_back	includes/vector.hpp	/^		void pop_back() {$/;"	f	class:ft::vector
+print_and_empty_stack	srcs/main.cpp	/^void print_and_empty_stack(stack<T> & c)$/;"	f
+print_vector	srcs/main.cpp	/^void print_vector(const NAMESPACE::vector<T> & c)$/;"	f
+push	includes/stack.hpp	/^		void push(const value_type& x) { c.push_back(x); }$/;"	f	class:stack
+push_back	includes/vector.hpp	/^		void push_back(const T& x) {$/;"	f	class:ft::vector
+reference	includes/iterator_traits.hpp	/^	typedef T& reference;$/;"	t	struct:iterator_traits
+reference	includes/iterator_traits.hpp	/^	typedef typename Iterator::reference reference;$/;"	t	struct:iterator_traits
+reference	includes/stack.hpp	/^		typedef typename Container::reference 		reference;$/;"	t	class:stack
+reference	includes/vector.hpp	/^		typedef value_type& reference;$/;"	t	class:ft::vector
 remove_cv	includes/remove_cv.hpp	/^	struct remove_cv {$/;"	s	namespace:ft
 remove_cv	includes/remove_cv.hpp	/^	struct remove_cv<const T> {$/;"	s	namespace:ft
 remove_cv	includes/remove_cv.hpp	/^	struct remove_cv<const volatile T> {$/;"	s	namespace:ft
 remove_cv	includes/remove_cv.hpp	/^	struct remove_cv<volatile T> {$/;"	s	namespace:ft
-reserve	includes/vector.hpp	/^		void reserve(size_type newCap) {$/;"	f	class:ft::vector	typeref:typename:void
-resize	includes/vector.hpp	/^		void resize(size_type sz, T c = T()) {$/;"	f	class:ft::vector	typeref:typename:void
-reverse_iterator	includes/vector.hpp	/^		typedef std::reverse_iterator<iterator> reverse_iterator;$/;"	t	class:ft::vector	typeref:typename:std::reverse_iterator<iterator>
-size	includes/stack.hpp	/^		size_type size() const { return c.size(); }$/;"	f	class:stack	typeref:typename:size_type
-size	includes/vector.hpp	/^		size_type size() const { return std::distance(_first, _last); }$/;"	f	class:ft::vector	typeref:typename:size_type
-size_type	includes/stack.hpp	/^		typedef typename Container::size_type 		size_type;$/;"	t	class:stack	typeref:typename:Container::size_type
-size_type	includes/vector.hpp	/^		typedef typename allocator_type::size_type size_type;$/;"	t	class:ft::vector	typeref:typename:allocator_type::size_type
+reserve	includes/vector.hpp	/^		void reserve(size_type newCap) {$/;"	f	class:ft::vector
+resize	includes/vector.hpp	/^		void resize(size_type n, T c = T()) {$/;"	f	class:ft::vector
+reverse_iterator	includes/vector.hpp	/^		typedef std::reverse_iterator<iterator> reverse_iterator;$/;"	t	class:ft::vector
+setInt	srcs/main.cpp	/^	void setInt(const int n) { *_i = n; }$/;"	f	class:A
+size	includes/stack.hpp	/^		size_type size() const { return c.size(); }$/;"	f	class:stack
+size	includes/vector.hpp	/^		size_type size() const { return std::distance(this->_first, this->_last); }$/;"	f	class:ft::vector
+size_type	includes/stack.hpp	/^		typedef typename Container::size_type 		size_type;$/;"	t	class:stack
+size_type	includes/vector.hpp	/^		typedef typename allocator_type::size_type size_type;$/;"	t	class:ft::vector
 stack	includes/stack.hpp	/^		explicit stack(const Container& cont = Container()) : c(cont) {}$/;"	f	class:stack
 stack	includes/stack.hpp	/^class stack {$/;"	c
-swap	includes/vector.hpp	/^		void swap(vector<T>& other) {$/;"	f	class:ft::vector	typeref:typename:void
-top	includes/stack.hpp	/^		const value_type& top() const { return c.back(); }$/;"	f	class:stack	typeref:typename:const value_type &
-top	includes/stack.hpp	/^		value_type& top() { return c.back(); }$/;"	f	class:stack	typeref:typename:value_type &
-true_type	includes/is_integral.hpp	/^typedef ft::integral_constant<bool, true> true_type;$/;"	t	namespace:ft	typeref:typename:ft::integral_constant<bool,true>
-type	includes/enable_if.hpp	/^	typedef T type;$/;"	t	struct:ft::enable_if	typeref:typename:T
-type	includes/is_integral.hpp	/^    typedef integral_constant<T, v> type;$/;"	t	struct:ft::integral_constant	typeref:typename:integral_constant<T,v>
-type	includes/remove_cv.hpp	/^		typedef T type;$/;"	t	struct:ft::remove_cv	typeref:typename:T
-value	includes/is_integral.hpp	/^    static const T 					value = v;$/;"	m	struct:ft::integral_constant	typeref:typename:const T
-value_type	includes/is_integral.hpp	/^    typedef T 						value_type;$/;"	t	struct:ft::integral_constant	typeref:typename:T
-value_type	includes/iterator_traits.hpp	/^	typedef T value_type;$/;"	t	struct:iterator_traits	typeref:typename:T
-value_type	includes/iterator_traits.hpp	/^	typedef typename Iterator::value_type value_type;$/;"	t	struct:iterator_traits	typeref:typename:Iterator::value_type
-value_type	includes/stack.hpp	/^		typedef typename Container::value_type 		value_type;$/;"	t	class:stack	typeref:typename:Container::value_type
-value_type	includes/vector.hpp	/^		typedef T value_type;$/;"	t	class:ft::vector	typeref:typename:T
+swap	includes/vector.hpp	/^		void swap(vector<T>& other) {$/;"	f	class:ft::vector
+top	includes/stack.hpp	/^		const value_type& top() const { return c.back(); }$/;"	f	class:stack
+top	includes/stack.hpp	/^		value_type& top() { return c.back(); }$/;"	f	class:stack
+true_type	includes/is_integral.hpp	/^typedef ft::integral_constant<bool, true> true_type;$/;"	t	namespace:ft
+type	includes/enable_if.hpp	/^	typedef T type;$/;"	t	struct:ft::enable_if
+type	includes/is_integral.hpp	/^    typedef integral_constant<T, v> type;$/;"	t	struct:ft::integral_constant
+type	includes/remove_cv.hpp	/^		typedef T type;$/;"	t	struct:ft::remove_cv
+value	includes/is_integral.hpp	/^    static const T 					value = v;$/;"	m	struct:ft::integral_constant
+value_type	includes/is_integral.hpp	/^    typedef T 						value_type;$/;"	t	struct:ft::integral_constant
+value_type	includes/iterator_traits.hpp	/^	typedef T value_type;$/;"	t	struct:iterator_traits
+value_type	includes/iterator_traits.hpp	/^	typedef typename Iterator::value_type value_type;$/;"	t	struct:iterator_traits
+value_type	includes/stack.hpp	/^		typedef typename Container::value_type 		value_type;$/;"	t	class:stack
+value_type	includes/vector.hpp	/^		typedef T value_type;$/;"	t	class:ft::vector
 vector	includes/vector.hpp	/^		explicit vector() : _first(), _last(), _end() { };$/;"	f	class:ft::vector
 vector	includes/vector.hpp	/^		explicit vector(size_type n, const T& value = T()) $/;"	f	class:ft::vector
 vector	includes/vector.hpp	/^		vector(It first, It last, typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0)$/;"	f	class:ft::vector
 vector	includes/vector.hpp	/^		vector(const vector<T>& x)$/;"	f	class:ft::vector
 vector	includes/vector.hpp	/^class vector$/;"	c	namespace:ft
+~A	srcs/main.cpp	/^	~A(void) { delete _i; };$/;"	f	class:A
 ~stack	includes/stack.hpp	/^		~stack() {}$/;"	f	class:stack
 ~vector	includes/vector.hpp	/^		~vector()$/;"	f	class:ft::vector
