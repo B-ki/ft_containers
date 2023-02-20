@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/19 03:14:12 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/20 21:55:38 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,15 +163,15 @@ class vector
 			   }
 			   else {
 				   if (n < sz) {
-					   for (size_type i = 0; i < sz; i++)
-					   {
-						   this->_alloc.destroy(this->_first + i);
-						   this->_alloc.construct(this->_first + i, u);
-					   }
+					   std::fill(this->_first, this->_first + n, u);
+					   for (iterator it = this->_first + n; it != this->_last; it++)
+						   this->_alloc.destroy(it);
 				   }
 				   else {
-
+					   std::fill(this->_first, this->_last, u);
+					   std::uninitialized_fill(this->_last, this->_first + n, u);
 				   }
+				   this->_last = this->_first + n;
 			   }
 		   }
 
@@ -283,8 +283,9 @@ class vector
 			}
 		}
 
-		iterator insert(iterator position, const T& x) {
+		iterator insert(const_iterator position, const T& x) {
 			insert(position, 1lu, x);
+			iterator pos = (iterator)position;
 			/*
 			size_type oldCap = this->capacity();
 
@@ -316,10 +317,11 @@ class vector
 				this->_last++;
 			}
 			*/
-			return (position);
+			return (pos);
 		}
 
-		void insert(iterator pos, size_type n, const T& x) {
+		void insert(const_iterator position, size_type n, const T& x) {
+			iterator pos = (iterator)position;
 			size_type oldCap = this->capacity();
 
 			if (oldCap < this->size() + n) {
@@ -344,20 +346,12 @@ class vector
 				std::copy_backward(pos, oldLast, this->_last);
 				std::fill_n(pos, n, x);
 				*/
-				difference_type cop = (this->_last - pos) - n;;
-				if (cop < 0)
-					cop = 0;
-				std::cout << "cop = " << cop << std::endl;
-				if (pos + n + cop < this->_end)
-					std::uninitialized_copy(pos + cop, std::min(this->_last, pos + cop + n), pos + n + cop);
-				if (cop > 0)
-					std::copy(pos, pos + cop, pos + n);
-				size_type fill = (n < (size_type)(this->_last - pos) ? n : this->_last - pos);
-				std::cout << "fill = " << fill << std::endl;
-				if (pos != this->_last)
-					std::fill_n(pos, fill, x);
-				if (pos + n > this->_last)
-					std::uninitialized_fill_n(this->_last, n - fill, x);
+				iterator cop = (this->_last - n) - pos > 0 ? (this->_last - n) : pos;
+				std::uninitialized_copy(cop, this->end(), (cop + n));
+				std::copy_backward(pos, cop, this->_last);
+				iterator fill = (pos + n) > this->_last ? this->_last : (pos + n);
+				std::fill(pos, fill, x);
+				std::uninitialized_fill(fill, (pos + n), x);
 				this->_last += n;
 			}
 		}
@@ -425,6 +419,7 @@ class vector
 			}
 			_last = _first + n;
 		}
+};
 		/*
 
 		template <class T>
@@ -439,13 +434,14 @@ class vector
 		bool operator>=(const vector<T>& x, const vector<T>& y);
 		template <class T>
 		bool operator<=(const vector<T>& x, const vector<T>& y);
+		*/
 
 		// #################### SPECIALIZED ALGORITHM ####################
 
 		template <class T>
-		void swap(vector<T>& x, vector<T>& y);
-		*/
-};
+		void swap(vector<T>& x, vector<T>& y) {
+			x.swap(y);
+		}
 }
 
 #endif 

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 15:44:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/19 02:36:50 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/20 21:55:00 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,7 +294,7 @@ int main()
 		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
 		std::cout << x.back() << std::endl;
 		print_vector(x);
-		x.insert(x.begin(), 9);
+		x.insert(x.begin(), 1lu, 9);
 		print_vector(x);
 		x.insert(x.begin() + 2, 10);
 		print_vector(x);
@@ -333,16 +333,16 @@ int main()
 	}
 	{
 		std::cout << "\n########## INSERT2  ##########\n\n";
-		NAMESPACE::vector<A> y;
+		NAMESPACE::vector<int> y;
 
 		y.reserve(8);
 		y.push_back(1);
 		y.push_back(2);
 		y.push_back(3);
 		y.push_back(4);	
-		NAMESPACE::vector<A> w;
-		NAMESPACE::vector<A> x;
-		NAMESPACE::vector<A> z;
+		NAMESPACE::vector<int> w;
+		NAMESPACE::vector<int> x;
+		NAMESPACE::vector<int> z;
 		w = y;
 		x = y;
 		z = y;
@@ -355,26 +355,43 @@ int main()
 		print_vector(x);
 		print_vector(y);
 		print_vector(z);
-		w.insert(w.begin(), 2lu, A(7));
-		x.insert(x.begin() + 2, 4lu, A(7));
-		y.insert(y.end(), 4lu, A(7));
-		z.insert(z.begin(), 4lu, A(7));
-		std::cout << "w : cap = " << w.capacity() << ", size = " << w.size() << std::endl;
-		std::cout << "x : cap = " << x.capacity() << ", size = " << x.size() << std::endl;
-		std::cout << "y : cap = " << y.capacity() << ", size = " << y.size() << std::endl;
-		std::cout << "z : cap = " << z.capacity() << ", size = " << z.size() << std::endl;
+		w.insert(w.begin(), 2lu, 7);
+		x.insert(x.begin() + 2, 4lu, 7);
+		y.insert(y.end(), 4lu, 7);
+		z.insert(z.begin(), 4lu, 7);
 		print_vector(w);
 		print_vector(x);
 		print_vector(y);
 		print_vector(z);
-		NAMESPACE::vector<int> a;
-		a.insert(a.begin(), 6lu, 8);
-		print_vector(a);
+
 	}
 	{
 		std::cout << "\n########## ASSIGN  ##########\n\n";
+		NAMESPACE::vector<A> x;
+		x.assign(10, A());
+		std::cout << "x : cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		print_vector(x);
+		NAMESPACE::vector<A> y;
 
-		NAMESPACE::vector<A> a;
+		y.reserve(8);
+		y.push_back(A(1));
+		y.push_back(A(2));
+		y.push_back(A(3));
+		y.push_back(A(4));	
+		std::cout << "y : cap = " << y.capacity() << ", size = " << y.size() << std::endl;
+		print_vector(y);
+		y.assign(6, A(8));
+		std::cout << "y : cap = " << y.capacity() << ", size = " << y.size() << std::endl;
+		print_vector(y);
+		NAMESPACE::vector<A> z;
+		z = y;
+		std::cout << "z : cap = " << z.capacity() << ", size = " << z.size() << std::endl;
+		print_vector(z);
+		z.assign(2, 6);
+		std::cout << "z : cap = " << z.capacity() << ", size = " << z.size() << std::endl;
+		print_vector(z);
+
+
 	}
 	return 0;
 }

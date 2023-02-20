@@ -69,8 +69,8 @@ ft	includes/remove_cv.hpp	/^namespace ft$/;"	n
 ft	includes/vector.hpp	/^namespace ft$/;"	n
 getInt	srcs/main.cpp	/^	int getInt(void) const { return *_i; }$/;"	f	class:A
 get_allocator	includes/vector.hpp	/^		   allocator_type get_allocator() const { return _alloc; }$/;"	f	class:ft::vector
-insert	includes/vector.hpp	/^		iterator insert(iterator position, const T& x) {$/;"	f	class:ft::vector
-insert	includes/vector.hpp	/^		void insert(iterator pos, size_type n, const T& x) {$/;"	f	class:ft::vector
+insert	includes/vector.hpp	/^		iterator insert(const_iterator position, const T& x) {$/;"	f	class:ft::vector
+insert	includes/vector.hpp	/^		void insert(const_iterator position, size_type n, const T& x) {$/;"	f	class:ft::vector
 integral_constant	includes/is_integral.hpp	/^struct integral_constant$/;"	s	namespace:ft
 is_integral	includes/is_integral.hpp	/^struct is_integral : false_type {};$/;"	s	namespace:ft
 is_integral	includes/is_integral.hpp	/^struct is_integral<bool> : true_type {};$/;"	s	namespace:ft
@@ -131,6 +131,7 @@ size_type	includes/vector.hpp	/^		typedef typename allocator_type::size_type siz
 stack	includes/stack.hpp	/^		explicit stack(const Container& cont = Container()) : c(cont) {}$/;"	f	class:stack
 stack	includes/stack.hpp	/^class stack {$/;"	c
 swap	includes/vector.hpp	/^		void swap(vector<T>& other) {$/;"	f	class:ft::vector
+swap	includes/vector.hpp	/^		void swap(vector<T>& x, vector<T>& y) {$/;"	f	namespace:ft
 top	includes/stack.hpp	/^		const value_type& top() const { return c.back(); }$/;"	f	class:stack
 top	includes/stack.hpp	/^		value_type& top() { return c.back(); }$/;"	f	class:stack
 true_type	includes/is_integral.hpp	/^typedef ft::integral_constant<bool, true> true_type;$/;"	t	namespace:ft
