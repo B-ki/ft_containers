@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 11:33:22 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/07 15:01:39 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/22 15:08:05 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <iterator>
 
+namespace ft
+{
 template<class Iterator>
 struct iterator_traits {
 	typedef typename Iterator::iterator_category iterator_category;
@@ -24,6 +26,7 @@ struct iterator_traits {
 	typedef typename Iterator::reference reference;
 };
 
+// Specialisation de la classe si jamais le type passe n'est pas un iterateur mais un pointeur
 template<class T>
 struct iterator_traits<T*> {
 	typedef std::random_access_iterator_tag iterator_category;
@@ -32,5 +35,6 @@ struct iterator_traits<T*> {
 	typedef T* pointer;
 	typedef T& reference;
 };
+}
 
 #endif 

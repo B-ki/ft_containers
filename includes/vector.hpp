@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/20 21:55:38 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/22 23:52:51 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <streambuf>
+#include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -52,9 +53,8 @@ class vector
 		typedef T* iterator; 
 		typedef const T* const_iterator;
 
-		// !!!!!!!!!!!!!!! Il va falloir refaire la class std::reverse_iterator
-		typedef std::reverse_iterator<iterator> reverse_iterator;
-		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator> reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 		// ########## DATA MEMBERS ##########
 
@@ -92,7 +92,6 @@ class vector
 			 for(; first != last; first++, this->_last++)
 				 _alloc.construct(this->_last, *first);
 		 }
-		// !!!!!!!!! MIGHT BE PROBLEM WITH FORWARD AND INPUT ITERATOR !!!!!!!
 
 		//Copy constructor 
 		vector(const vector<T>& x)
@@ -179,19 +178,17 @@ class vector
 
 		// #################### ITERATORS ####################
 
-		iterator begin() { return _first; }
-		const_iterator begin() const { return _first; }
-		iterator end() { return _last; }
-		const_iterator end() const { return _last; }
-		/*
-		reverse_iterator rbegin();
-		const_reverse_iterator rbegin() const;
-		reverse_iterator rend();
-		const_reverse_iterator rend() const;
+		iterator begin() { return iterator(this->_first); }
+		const_iterator begin() const { return const_iterator(this->_first); }
+		iterator end() { return iterator(this->_last); }
+		const_iterator end() const { return const_iterator(this->_last); }
+		reverse_iterator rbegin() { return reverse_iterator(this->_last); }
+		const_reverse_iterator rbegin() const { return const_reverse_iterator(this->_last); }
+		reverse_iterator rend() { return reverse_iterator(this->_first); }
+		const_reverse_iterator rend() const { return const_reverse_iterator(this->_first); }
 
 		// #################### CAPACITY ####################
 
-		*/
 		size_type size() const { return std::distance(this->_first, this->_last); }
 
 		size_type max_size() const { return std::numeric_limits<difference_type>::max(); }
@@ -329,9 +326,15 @@ class vector
 				pointer newFirst = _alloc.allocate(newCap);
 				pointer tmp;
 
-				tmp = std::uninitialized_copy(this->_first, pos, newFirst);
-				tmp = std::uninitialized_fill_n(tmp, n, x);
-				tmp = std::uninitialized_copy(pos, this->_last, tmp);
+				try {
+					tmp = std::uninitialized_copy(this->_first, pos, newFirst);
+				} catch (...) {}
+				try {
+					tmp = std::uninitialized_fill_n(tmp, n, x);
+				} catch (...) {}
+				try {
+					tmp = std::uninitialized_copy(pos, this->_last, tmp);
+				} catch(...) {}
 				this->clear();
 				_alloc.deallocate(this->_first, oldCap);
 				this->_first = newFirst;

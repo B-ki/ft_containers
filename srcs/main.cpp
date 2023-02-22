@@ -6,10 +6,11 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 15:44:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/20 21:55:00 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/22 23:31:43 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "reverse_iterator.hpp"
 #include "stack.hpp"
 #include "vector.hpp"
 #include <iostream>
@@ -363,7 +364,6 @@ int main()
 		print_vector(x);
 		print_vector(y);
 		print_vector(z);
-
 	}
 	{
 		std::cout << "\n########## ASSIGN  ##########\n\n";
@@ -390,8 +390,22 @@ int main()
 		z.assign(2, 6);
 		std::cout << "z : cap = " << z.capacity() << ", size = " << z.size() << std::endl;
 		print_vector(z);
-
-
+	}
+	{
+		std::cout << "\n########## REVERSE_ITERATOR  ##########\n\n";
+		NAMESPACE::vector<A> x;
+		for (int i = 0; i < 10; i++)
+				x.push_back(A(i));
+		std::cout << "x : cap = " << x.capacity() << ", size = " << x.size() << std::endl;
+		print_vector(x);
+		NAMESPACE::vector<A>::reverse_iterator r = x.rbegin();
+		std::cout << "*r :  " << *r << "\n";
+		for (int i = 0; r != x.rend(); r++, i++)
+		{
+			std::cout << "i = " << i << ", *r = " << *r;
+			if (i)
+				std::cout << ", r.base = " << *(r.base()) << ", ";
+		}
 	}
 	return 0;
 }
