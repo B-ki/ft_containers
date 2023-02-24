@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 15:44:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/22 23:31:43 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/23 23:50:27 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ int main()
 	}
 	{
 		std::cout << "\n########## OPERATORS ##########\n\n";
-	}
 		NAMESPACE::vector<A> x;
 		x.push_back(1);
 		x.push_back(2);
@@ -122,6 +121,7 @@ int main()
 		print_vector(x);
 		print_vector(y);
 		print_vector(z);
+	}
 	{
 		std::cout << "\n########## MODIFIERS ##########\n\n";
 		NAMESPACE::vector<A> x;
@@ -303,10 +303,13 @@ int main()
 		print_vector(x);
 		NAMESPACE::vector<int> y;
 
+		std::cout << "cap = " << y.capacity() << ", size = " << y.size() << std::endl;
+		print_vector(y);
 		y.push_back(1);
 		y.push_back(2);
 		y.push_back(3);
 		y.push_back(4);	
+		std::cout << "cap = " << y.capacity() << ", size = " << y.size() << std::endl;
 		print_vector(y);
 		std::cout << "y.insert(end(), 5)\n";
 		y.insert(y.end(), 5);
