@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 15:44:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/23 23:50:27 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/24 17:43:18 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "vector.hpp"
 #include <iostream>
 #include <climits>
+#include <linux/limits.h>
 #include <ostream>
 #include <vector>
 
@@ -56,6 +57,7 @@ class A
 template <class T>
 void print_vector(const NAMESPACE::vector<T> & c)
 {
+	std::cout << "Vector [size = " << c.size() << "], cap = " << c.capacity() << "] = ";
 	std::cout << "{ ";
 	for (typename NAMESPACE::vector<T>::const_iterator it = c.begin(); it != c.end(); it++)
 		std::cout << *it << " ";
@@ -409,6 +411,24 @@ int main()
 			if (i)
 				std::cout << ", r.base = " << *(r.base()) << ", ";
 		}
+	}
+	{
+		std::cout << "\n########## LOGICAL OPERATORS ##########\n\n";
+
+		NAMESPACE::vector<int> x;
+		x.push_back(1);
+		x.push_back(2);
+		x.push_back(3);
+		x.push_back(4);
+		NAMESPACE::vector<int> y;
+		y = x;
+		x.push_back(5);
+		x.erase(x.end() - 1);
+		std::cout << "x : ";
+		print_vector(x);
+		std::cout << "y : ";
+		print_vector(y);
+		std::cout << "x = y ? " << (x == y) << std::endl;
 	}
 	return 0;
 }

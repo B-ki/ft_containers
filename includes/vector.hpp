@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/24 01:06:56 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/24 18:38:15 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include <stdexcept>
 #include <streambuf>
 #include "reverse_iterator.hpp"
+#include "equal.hpp"
 
 namespace ft
 {
@@ -415,21 +416,32 @@ class vector : private vector_base<T>
 			_last = _first + n;
 		}
 };
-		/*
 
 		template <class T>
-		bool operator==(const vector<T>& x, const vector<T>& y);
+		bool operator==(const vector<T>& x, const vector<T>& y) {
+			if (x.size() != y.size())
+				return false;
+			return ft::equal(x.begin(), x.end(), y.begin());
+		}
+
 		template <class T>
-		bool operator< (const vector<T>& x, const vector<T>& y);
-		template <class T>
-		bool operator!=(const vector<T>& x, const vector<T>& y);
+		bool operator!=(const vector<T>& x, const vector<T>& y) {
+			if (x.size() != y.size())
+				return true;
+			return !ft::equal(x.begin(), x.end(), y.begin());
+		}
+
 		template <class T>
 		bool operator> (const vector<T>& x, const vector<T>& y);
+
+		template <class T>
+		bool operator< (const vector<T>& x, const vector<T>& y);
+
 		template <class T>
 		bool operator>=(const vector<T>& x, const vector<T>& y);
+
 		template <class T>
 		bool operator<=(const vector<T>& x, const vector<T>& y);
-		*/
 
 		// #################### SPECIALIZED ALGORITHM ####################
 
