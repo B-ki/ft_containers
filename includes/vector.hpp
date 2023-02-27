@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/24 18:38:15 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/27 18:10:23 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -432,16 +432,24 @@ class vector : private vector_base<T>
 		}
 
 		template <class T>
-		bool operator> (const vector<T>& x, const vector<T>& y);
+		bool operator> (const vector<T>& x, const vector<T>& y) {
+			return ft::lexicographical_compare(y.begin(), y.end(), y.begin(), y.end());
+		}
 
 		template <class T>
-		bool operator< (const vector<T>& x, const vector<T>& y);
+		bool operator< (const vector<T>& x, const vector<T>& y) {
+			return ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
+		}
 
 		template <class T>
-		bool operator>=(const vector<T>& x, const vector<T>& y);
+		bool operator>=(const vector<T>& x, const vector<T>& y) {
+			return !ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
+		}
 
 		template <class T>
-		bool operator<=(const vector<T>& x, const vector<T>& y);
+		bool operator<=(const vector<T>& x, const vector<T>& y) {
+			return !ft::lexicographical_compare(y.begin(), y.end(), x.begin(), x.end());
+		}
 
 		// #################### SPECIALIZED ALGORITHM ####################
 

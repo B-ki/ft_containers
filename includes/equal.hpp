@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 17:52:27 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/24 20:23:52 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/27 18:08:16 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,10 @@ namespace ft
 template< class InputIt1, class InputIt2 >
 bool equal( InputIt1 first1, InputIt1 last1, InputIt2 first2 ) {
 	for (; first1 != last1; ++first1, ++first2)
+	{
 		if (!(*first1 == *first2))
 			return false;
+	}
 	return true;
 }
 
@@ -30,9 +32,10 @@ bool equal( InputIt1 first1, InputIt1 last1, InputIt2 first2 ) {
 template< class InputIt1, class InputIt2, class BinaryPredicate >
 bool equal( InputIt1 first1, InputIt1 last1, InputIt2 first2, BinaryPredicate p ) {
     for (; first1 != last1; ++first1, ++first2)
+	{
         if (!p(*first1, *first2))
             return false;
-
+	}
     return true;
 }
 
@@ -45,7 +48,6 @@ bool lexicographical_compare( InputIt1 first1, InputIt1 last1, InputIt2 first2, 
 		if (*first2 < *first1)
 			return false;
 	}
-
 	return (first1 == last1) && (first2 != last2);
 }
 
@@ -58,7 +60,6 @@ bool lexicographical_compare( InputIt1 first1, InputIt1 last1, InputIt2 first2, 
         if (comp(*first2, *first1))
             return false;
     }
- 
     return (first1 == last1) && (first2 != last2);
 }
 
