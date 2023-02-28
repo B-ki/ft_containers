@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 15:44:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/24 17:43:18 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/02/28 18:46:51 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <linux/limits.h>
 #include <ostream>
 #include <vector>
+#include "binary_heap.hpp"
+#include "binary_search_tree.hpp"
 
 #ifndef NAMESPACE
 # define NAMESPACE std
@@ -429,6 +431,29 @@ int main()
 		std::cout << "y : ";
 		print_vector(y);
 		std::cout << "x = y ? " << (x == y) << std::endl;
+	}
+	{
+		std::cout << "\n########## BINARY HEAP ##########\n\n";
+
+		BinaryHeap tree;
+
+		tree.insert(1);
+		tree.insert(10);
+		tree.insert(9);
+		tree.insert(2);
+		tree.insert(8);
+		tree.insert(3);
+		tree.insert(7);
+		tree.insert(4);
+		tree.insert(6);
+		tree.insert(5);
+		tree.printHeap();
+	}
+	{
+		std::cout << "\n########## BST ##########\n\n";
+		BST bst;
+		bst.createSampleTree1();
+		bst.prettyPrint();
 	}
 	return 0;
 }
