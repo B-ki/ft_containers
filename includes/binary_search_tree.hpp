@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 17:49:51 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/28 19:07:21 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/01 11:39:59 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,9 @@ class BST {
 
 		void printHelperPerso(NodePtr node, std::string indent) {
 			if (node != NULL) {
-				std::cout << indent << node->data << std::endl;
 				indent += "      ";
 				printHelperPerso(node->right, indent);
+				std::cout << indent << node->data << std::endl;
 				printHelperPerso(node->left, indent);
 			}	
 		}

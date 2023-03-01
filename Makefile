@@ -4,14 +4,14 @@ SRC_DIR = srcs/
 INCLUDE_DIR = includes/
 OBJDIR = bin/
 
-SRCS = main.cpp
+SRCS = main_nthimoni.cpp
 
 OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))
 
 NS = ft
 
 CC = c++
-CFLAGS = -Wall -Werror -Wextra -std=c++98 -g -DNAMESPACE=$(NS)
+CFLAGS = -Wall -Werror -Wextra -std=c++98 -g -DNS=$(NS)
 LFLAGS = -I includes
 INCPATH = -I$(INCLUDE_DIR)
 

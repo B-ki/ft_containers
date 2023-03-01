@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/28 15:00:13 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/01 18:47:17 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,25 @@ class vector : private vector_base<T>
 
 		   template <class It>
 		   void assign(It first, It last, typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) {
-			   std::copy(first, last, _first);
+			   size_type sz = size();
+			   size_type cap = capacity();
+			   size_type n = std::distance(first, last);
+			   if (n > cap) {
+				   vector<T> tmp(first, last);
+				   swap(tmp);
+			   }
+			   else {
+				   if (n < sz) {
+					   std::copy(first, last, _first);
+					   for (iterator it = _first + n; it != _last; it++)
+						   _alloc.destroy(it);
+				   }
+				   else {
+					   std::copy(first, first + sz, _first);
+					   std::uninitialized_copy(first + sz, last, _last);
+				   }
+				   _last = _first + n;
+			   }
 		   }
 
 		   void assign(size_type n, const T& u) {
@@ -215,16 +233,12 @@ class vector : private vector_base<T>
 
 		size_type capacity() const { return (_end - _first); }
 
-		bool empty() const {
-			if (_first)
-				return false;
-			return true;
-		}
+		bool empty() const { return !size(); }
 
 		void reserve(size_type newCap) {
 			if (newCap > max_size())
 				throw(std::length_error("ft::vector<t>::reserve : newCap > max_size"));
-			if (newCap <= size())
+			if (newCap <= capacity())
 				return;
 			vector_base<T> tmp(newCap);
 
@@ -300,26 +314,23 @@ class vector : private vector_base<T>
 
 			if (oldCap < size() + n) {
 				size_type newCap = (oldCap + n ? (oldCap + n) * 2 : 1);
-				vector_base<T> tmpVector(newCap);
-				pointer tmp;
-				pointer oldLast = _last;
+				vector<T> tmpVector;
+				tmpVector.reserve(newCap);
 
-				tmp = std::uninitialized_copy(_first, pos, tmpVector._first);
-				_last += (pos - _first);
-				tmp = std::uninitialized_fill_n(tmp, n, x);
-				_last += n;
-				tmp = std::uninitialized_copy(pos, oldLast, tmp);
-				_last += (tmp - pos);
-				ft::swapVectorBase(*this, tmpVector);
+				tmpVector._last = std::uninitialized_copy(_first, pos, tmpVector._first);
+				tmpVector._last= std::uninitialized_fill_n(tmpVector._last, n, x);
+				tmpVector._last = std::uninitialized_copy(pos, _last, tmpVector._last);
+				swap(tmpVector);
 			}
 			else {
+				iterator oldLast = _last;
 				iterator cop = (_last - n) - pos > 0 ? (_last - n) : pos;
-				std::uninitialized_copy(cop, end(), (cop + n));
-				std::copy_backward(pos, cop, _last);
 				iterator fill = (pos + n) > _last ? _last : (pos + n);
-				std::fill(pos, fill, x);
 				std::uninitialized_fill(fill, (pos + n), x);
-				_last += n;
+				_last += ((pos + n) - fill);
+				_last = std::uninitialized_copy(cop, oldLast, (cop + n));
+				std::copy_backward(pos, cop, oldLast);
+				std::fill(pos, fill, x);
 			}
 		}
 
@@ -331,26 +342,24 @@ class vector : private vector_base<T>
 
 			if (oldCap < size() + n) {
 				size_type newCap = (oldCap + n ? (oldCap + n) * 2 : 1);
-				vector_base<T> tmpVector(newCap);
-				pointer tmp;
-				pointer oldLast = _last;
+				vector<T> tmpVector;
+				tmpVector.reserve(newCap);
 
-				tmp = std::uninitialized_copy(_first, pos, tmpVector._first);
-				_last += (pos - _first);
-				tmp = std::uninitialized_copy(first, last, tmp);
-				_last += n;
-				tmp = std::uninitialized_copy(pos, oldLast, tmp);
-				_last += (tmp - pos);
-				ft::swapVectorBase(*this, tmpVector);
+				tmpVector._last = std::uninitialized_copy(_first, pos, tmpVector._first);
+				tmpVector._last = std::uninitialized_copy(first, last, tmpVector._last);
+				tmpVector._last = std::uninitialized_copy(pos, _last, tmpVector._last);
+				swap(tmpVector);
 			}
 			else {
-				iterator cop = (_last - n) - pos > 0 ? (_last - n) : pos;
-				std::uninitialized_copy(cop, end(), (cop + n));
-				std::copy_backward(pos, cop, _last);
-				iterator fill = (pos + n) > _last ? _last : (pos + n);
-				std::copy(first, first + (fill - pos), pos);
-				std::uninitialized_copy(first + (fill - pos), last, fill);
-				_last += n;
+				iterator oldLast = _last;
+				iterator startOwnCopy = (_last - n) - pos > 0 ? (_last - n) : pos;
+				iterator endTargetCopy = (pos + n) > _last ? _last : (pos + n);
+				std::uninitialized_copy(first + (endTargetCopy - pos), last, endTargetCopy);
+				_last += last - first + pos - endTargetCopy;
+				std::uninitialized_copy(startOwnCopy, oldLast, (startOwnCopy + n));
+				_last += oldLast - startOwnCopy;
+				std::copy_backward(pos, startOwnCopy, oldLast);
+				std::copy(endTargetCopy, first + (endTargetCopy - pos), pos);
 			}
 
 		}
@@ -395,24 +404,15 @@ class vector : private vector_base<T>
 
 		void resize(size_type n, T c = T()) {
 			size_type const sz = size();
-			size_type const cap = capacity();
 
-			if (n > cap)
-			{
-				reserve(n);
-				for(size_type i = sz; i < n; i++)
-					_alloc.construct(_first + i, c);
-			}
-			else if (sz > n)
+			reserve(n);
+			if (sz > n)
 			{
 				for (size_type i = n; i < sz; i++)
 					_alloc.destroy(_first + i);
 			}
 			else 
-			{
-				for (size_type i = sz; i < n; i++)
-					_alloc.construct(_first + i, c);
-			}
+				std::uninitialized_fill_n(_first + sz, n - sz, c);
 			_last = _first + n;
 		}
 };

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 15:44:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/28 18:46:51 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/01 14:21:24 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 #include "binary_heap.hpp"
 #include "binary_search_tree.hpp"
 
-#ifndef NAMESPACE
-# define NAMESPACE std
+#ifndef NS
+# define NS std
 #endif
 
 	template <class T>
@@ -57,11 +57,11 @@ class A
 };
 
 template <class T>
-void print_vector(const NAMESPACE::vector<T> & c)
+void print_vector(const NS::vector<T> & c)
 {
-	std::cout << "Vector [size = " << c.size() << "], cap = " << c.capacity() << "] = ";
+	std::cout << "Vector [size = " << c.size() << ", cap = " << c.capacity() << "] = ";
 	std::cout << "{ ";
-	for (typename NAMESPACE::vector<T>::const_iterator it = c.begin(); it != c.end(); it++)
+	for (typename NS::vector<T>::const_iterator it = c.begin(); it != c.end(); it++)
 		std::cout << *it << " ";
 	std::cout << "}\n";
 }
@@ -84,36 +84,36 @@ int main()
 		c1.push(INT_MAX);
 		c1.push(INT_MIN);
 		print_and_empty_stack<int>(c1);
-		NAMESPACE::vector<int> v1;
-		NAMESPACE::vector<int> v2(5, 6);
-		NAMESPACE::vector<std::string> stdv;
+		NS::vector<int> v1;
+		NS::vector<int> v2(5, 6);
+		NS::vector<std::string> stdv;
 		stdv.push_back("Hello");
 		stdv.push_back("Richard");
 		stdv.push_back("Nguyen");
-		NAMESPACE::vector<std::string> v(stdv.begin(), stdv.end());
+		NS::vector<std::string> v(stdv.begin(), stdv.end());
 		std::cout << "{ ";
-		for (NAMESPACE::vector<std::string>::iterator it = stdv.begin(); it != stdv.end(); it++)
+		for (NS::vector<std::string>::iterator it = stdv.begin(); it != stdv.end(); it++)
 			std::cout << *it << " ";
 		std::cout << "}\n";
 	}
 	{
-		NAMESPACE::vector<A> x;
+		NS::vector<A> x;
 		x.push_back(1);
 		x.push_back(2);
 		x.push_back(3);
 	}
 	{
 		std::cout << "\n########## OPERATORS ##########\n\n";
-		NAMESPACE::vector<A> x;
+		NS::vector<A> x;
 		x.push_back(1);
 		x.push_back(2);
 		x.push_back(3);
-		NAMESPACE::vector<A> y;
+		NS::vector<A> y;
 		y.push_back(4);
 		y.push_back(5);
 		y.push_back(6);
 		y.push_back(7);
-		NAMESPACE::vector<A> z;
+		NS::vector<A> z;
 		z.push_back(1);
 		z.push_back(2);
 		print_vector(x);
@@ -128,11 +128,11 @@ int main()
 	}
 	{
 		std::cout << "\n########## MODIFIERS ##########\n\n";
-		NAMESPACE::vector<A> x;
+		NS::vector<A> x;
 		x.push_back(1);
 		x.push_back(2);
 		x.push_back(3);
-		NAMESPACE::vector<A> y;
+		NS::vector<A> y;
 		y.push_back(4);
 		y.push_back(5);
 		y.push_back(6);
@@ -171,7 +171,7 @@ int main()
 	}
 	{
 		std::cout << "\n########## RESIZE ##########\n\n";
-		NAMESPACE::vector<int> x;
+		NS::vector<int> x;
 
 		x.push_back(1);
 		x.push_back(1);
@@ -184,7 +184,7 @@ int main()
 		print_vector(x);
 	}
 	{
-		NAMESPACE::vector<int> x;
+		NS::vector<int> x;
 
 		x.push_back(1);
 		x.push_back(1);
@@ -199,7 +199,7 @@ int main()
 		print_vector(x);	
 	}
 	{
-		NAMESPACE::vector<int> x;
+		NS::vector<int> x;
 
 		x.push_back(1);
 		x.push_back(1);
@@ -213,7 +213,7 @@ int main()
 	}
 	{
 		std::cout << "\n########## VECTOR CAPACITY ##########\n\n";
-		NAMESPACE::vector<A> x;
+		NS::vector<A> x;
 		print_vector(x);
 		std::cout << "x size : " << x.size() << ", x.capacity : " << x.capacity() << ", x empty : " << x.empty() << ", x max_size : " << x.max_size() << std::endl;
 		x.push_back(1);
@@ -227,7 +227,7 @@ int main()
 	}
 	{
 		std::cout << "\n########## VECTOR ELEMENT ACCESS ##########\n\n";
-		NAMESPACE::vector<A> x;
+		NS::vector<A> x;
 		// Should segfault : x[0];
 		// Should throw std::out_of_range : at[0];
 		x.push_back(1);
@@ -241,7 +241,7 @@ int main()
 		std::cout << "x front and back " << x.front() << x.back();
 
 		std::cout << "\nConst vector :\n";
-		const NAMESPACE::vector<A> y(x);
+		const NS::vector<A> y(x);
 		// Should segfault : x[0];
 		// Should throw std::out_of_range : at[0];
 		// Should segfault : x[3];
@@ -258,7 +258,7 @@ int main()
 	}
 	{
 		std::cout << "\n########## VECTOR MODIFIERS ##########\n\n";
-		NAMESPACE::vector<A> x;
+		NS::vector<A> x;
 		x.push_back(1);
 		x.push_back(2);
 		x.push_back(3);
@@ -286,7 +286,7 @@ int main()
 	}
 	{
 		std::cout << "\n########## INSERT ##########\n\n";
-		NAMESPACE::vector<int> x;
+		NS::vector<int> x;
 
 		x.push_back(1);
 		x.push_back(2);
@@ -305,7 +305,7 @@ int main()
 		print_vector(x);
 		x.insert(x.end(), 11);
 		print_vector(x);
-		NAMESPACE::vector<int> y;
+		NS::vector<int> y;
 
 		std::cout << "cap = " << y.capacity() << ", size = " << y.size() << std::endl;
 		print_vector(y);
@@ -341,16 +341,16 @@ int main()
 	}
 	{
 		std::cout << "\n########## INSERT2  ##########\n\n";
-		NAMESPACE::vector<int> y;
+		NS::vector<int> y;
 
 		y.reserve(8);
 		y.push_back(1);
 		y.push_back(2);
 		y.push_back(3);
 		y.push_back(4);	
-		NAMESPACE::vector<int> w;
-		NAMESPACE::vector<int> x;
-		NAMESPACE::vector<int> z;
+		NS::vector<int> w;
+		NS::vector<int> x;
+		NS::vector<int> z;
 		w = y;
 		x = y;
 		z = y;
@@ -371,14 +371,27 @@ int main()
 		print_vector(x);
 		print_vector(y);
 		print_vector(z);
+		NS::vector<A> a;
+		a.insert(a.begin(), A(45));
+		a.insert(a.begin(), A(75));
+		a.insert(a.begin() + 1, A(21));
+		a.insert(a.end() - 1, A(27));
+		a.insert(a.end(), A(18));
+		print_vector(a);
+		a.insert(a.begin(), A(45));
+		a.insert(a.begin(), A(75));
+		a.insert(a.begin(), A(21));
+		a.insert(a.begin(), A(27));
+		a.insert(a.begin(), A(18));
+		print_vector(a);
 	}
 	{
 		std::cout << "\n########## ASSIGN  ##########\n\n";
-		NAMESPACE::vector<A> x;
+		NS::vector<A> x;
 		x.assign(10, A());
 		std::cout << "x : cap = " << x.capacity() << ", size = " << x.size() << std::endl;
 		print_vector(x);
-		NAMESPACE::vector<A> y;
+		NS::vector<A> y;
 
 		y.reserve(8);
 		y.push_back(A(1));
@@ -390,7 +403,7 @@ int main()
 		y.assign(6, A(8));
 		std::cout << "y : cap = " << y.capacity() << ", size = " << y.size() << std::endl;
 		print_vector(y);
-		NAMESPACE::vector<A> z;
+		NS::vector<A> z;
 		z = y;
 		std::cout << "z : cap = " << z.capacity() << ", size = " << z.size() << std::endl;
 		print_vector(z);
@@ -400,12 +413,12 @@ int main()
 	}
 	{
 		std::cout << "\n########## REVERSE_ITERATOR  ##########\n\n";
-		NAMESPACE::vector<A> x;
+		NS::vector<A> x;
 		for (int i = 0; i < 10; i++)
 				x.push_back(A(i));
 		std::cout << "x : cap = " << x.capacity() << ", size = " << x.size() << std::endl;
 		print_vector(x);
-		NAMESPACE::vector<A>::reverse_iterator r = x.rbegin();
+		NS::vector<A>::reverse_iterator r = x.rbegin();
 		std::cout << "*r :  " << *r << "\n";
 		for (int i = 0; r != x.rend(); r++, i++)
 		{
@@ -417,12 +430,12 @@ int main()
 	{
 		std::cout << "\n########## LOGICAL OPERATORS ##########\n\n";
 
-		NAMESPACE::vector<int> x;
+		NS::vector<int> x;
 		x.push_back(1);
 		x.push_back(2);
 		x.push_back(3);
 		x.push_back(4);
-		NAMESPACE::vector<int> y;
+		NS::vector<int> y;
 		y = x;
 		x.push_back(5);
 		x.erase(x.end() - 1);
@@ -457,3 +470,4 @@ int main()
 	}
 	return 0;
 }
+
