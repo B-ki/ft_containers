@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/01 18:47:17 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/02 17:33:34 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -416,6 +416,7 @@ class vector : private vector_base<T>
 			_last = _first + n;
 		}
 };
+		// #################### NON MEMBER FUNCTIONS ####################
 
 		template <class T>
 		bool operator==(const vector<T>& x, const vector<T>& y) {

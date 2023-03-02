@@ -4,7 +4,7 @@ SRC_DIR = srcs/
 INCLUDE_DIR = includes/
 OBJDIR = bin/
 
-SRCS = main_nthimoni.cpp
+SRCS = main.cpp
 
 OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))
 

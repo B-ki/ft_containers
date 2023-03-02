@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 17:49:51 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/01 11:39:59 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/02 09:57:56 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ struct Node {
 	Node *parent;
 	Node *left;
 	Node *right;
+	int bf;
 };
 
 typedef Node* NodePtr;

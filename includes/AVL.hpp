@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 17:49:51 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/01 19:52:55 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/02 12:04:05 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,7 @@
 #define AVL_HPP 
 
 #include <iostream>
-
-struct Node {
-	int data;
-	Node *parent;
-	Node *left;
-	Node *right;
-	int bf;
-};
+#include "binary_search_tree.hpp"
 
 typedef Node* NodePtr;
 
@@ -111,6 +104,8 @@ class AVL {
 					node->right = deleteNodeHelper(node->right, temp->data);
 				}
 			}
+			// Update balance logic
+			updateBalance(node);
 			return node;
 		}
 
@@ -134,9 +129,9 @@ class AVL {
 
 		void printHelperPerso(NodePtr node, std::string indent) {
 			if (node != NULL) {
-				indent += "      ";
+				indent += "            ";
 				printHelperPerso(node->right, indent);
-				std::cout << indent << node->data << std::endl;
+				std::cout << indent << node->data << "(bf=" << node->bf << ")\n";
 				printHelperPerso(node->left, indent);
 			}	
 		}
@@ -216,6 +211,7 @@ class AVL {
 			node->left = NULL;
 			node->right = NULL;
 			node->data = key;
+			node->bf = 0;
 			NodePtr y = NULL;
 			NodePtr x = this->root;
 			while (x != NULL) {
@@ -232,6 +228,8 @@ class AVL {
 				y->left = node;
 			else
 				y->right = node;
+			//updateBalance the node if necessary
+			updateBalance(node);
 		}
 
 		NodePtr getRoot() { return this->root; }
@@ -252,6 +250,7 @@ class AVL {
 //                  b   c                a   b
 
 		void leftRotate(NodePtr x) {
+			std::cout << "leftRotate node " << x->data << std::endl;
 			NodePtr y = x->right;
 			x->right = y->left;
 			if (y->left != NULL)
@@ -266,6 +265,7 @@ class AVL {
 			y->left = x;
 			x->parent = y;
 
+			// BF = height(RightSubTree) - height(LeftSubTree)
 			x->bf = x->bf - 1 - std::max(0, y->bf);
 			y->bf = y->bf - 1 + std::min(0, x->bf);
 		}
@@ -273,11 +273,12 @@ class AVL {
 //                  |                        | 
 //                  x                        y
 //                 / \                      / \
-//                y   c        ==>         a   x
 //               / \                          / \
+e/                y   c        ==>         a   x
 //              a   b                        b   c
 
 		void rightRotate(NodePtr x) {
+			std::cout << "rightRotate node " << x->data << std::endl;
 			NodePtr y = x->left;
 			x->left = y->right;
 			if (y->right != NULL)
@@ -292,28 +293,31 @@ class AVL {
 			y->right = x;
 			x->parent = y;
 			
-			x->bf = x->bf - 1 - std::min(0, y->bf);
-			y->bf = y->bf - 1 + std::max(0, x->bf);
+			x->bf = x->bf + 1 - std::min(0, y->bf);
+			y->bf = y->bf + 1 + std::max(0, x->bf);
 		}
 
 	void updateBalance(NodePtr node) {
-		if (node->bf < -1 || node->bf > 1) {
-			rebalance(node);
+		//std::cout << "updateBalance node " << node->data << ", bf = " << node->bf << std::endl;
+		if (!node)
 			return;
+		// The first ancestor that has a bf < -1 || > 1 is rebalanced. There should be only one considering the fact
+		// that we do this everytime we insert something.
+		if (node->bf < -1 || node->bf > 1) {
+			//std::cout << "Rebalancing node " << node->data << std::endl;
+			rebalance(node);
+			//prettyPrint();
+			return ;
 		}
-
-		if (node->parent != nullptr) {
-			if (node == node->parent->left) {
-				node->parent->bf -= 1;
-			} 
-
-			if (node == node->parent->right) {
-				node->parent->bf += 1;
-			}
-
-			if (node->parent->bf != 0) {
+		if (node->parent != NULL) {
+			//std::cout << "Node parent : data = " << node->parent->data << ", bf = " << node->parent->bf << std::endl;
+			if (node == node->parent->left)
+				node->parent->bf--;
+			if (node == node->parent->right)
+				node->parent->bf++;
+			//std::cout << "Node parent : data = " << node->parent->data << ", bf = " << node->parent->bf << std::endl;
+			if (node->parent->bf != 0)
 				updateBalance(node->parent);
-			}
 		}
 	}
 
@@ -341,11 +345,11 @@ class AVL {
 					leftRotate(node);
 			}
 			else if (node->bf < 0) {
-				if (node->left->bf < 0) {
+				if (node->left->bf > 0) {
 //                  |                           |                   |
-//        BF=2      a               BF=2        a                   b
+//        BF=-2     a               BF=-2       a                   b
 //                 /                           /                   / \
-//        BF=-1   c         ==>     BF=1      b          ==>      a   c    BF=0 partout
+//        BF=1    c         ==>     BF=-1     b          ==>      a   c    BF=0 partout
 //                 \                         /                                /
 //        BF=0      b               BF=0    c        
 //                       leftRotate                  rightRotate
