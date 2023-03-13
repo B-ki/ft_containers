@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/09 21:55:29 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/13 17:49:33 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,26 +81,187 @@ class map {
 
 		map() : RBT() {}
 
-		explicit map (const Compare& comp) : RBT() {}
+		explicit map (const Compare& comp) : RBT(), value_compare(comp) {}
 
 		template<class InputIt>
+		map(InputIt first, InputIt last, 
+				const Compare& comp = Compare()) : RBT(first, last), value_compare(comp) {}
 
+		map (const map& other) : RBT(other.RBT), value_compare(other.value_compare) {}
 
+		~map()
+		{
+			~RBT();
+			~value_compare();
+		}
+
+		map& operator=(const map& other)
+		{
+			if (*this != other)
+				RBT = other.RBT;
+			return *this;
+		}
+
+		allocator_type get_allocator() const { return allocator_type(); }
 
 		// #################### ELEMENT ACCESS ####################
 
+		// Return std::out_of_range is key is not in the RBT
+		T& at(const Key& key)
+		{
+			return RBT(key);
+		}
+
+		const T& at(const Key& key) const
+		{
+			return RBT(key);
+		}
+
+		// insert value_type(key, T()) if key does not exists
+		T& operator[](const Key& key)
+		{
+			if (!RBT(key))
+				RBT.insert(key, T());
+			return RBT(key);
+		}
+
 		// #################### ITERATORS ####################
+
+		iterator begin() { return RBT.min(); }
+
+		const_iterator begin() const { return RBT.min(); }
+
+		iterator end() { return RBT.max(); }
+
+		const_iterator end() const { return RBT.max(); }
+	
+		reverse_iterator rbegin() { return RBT.rmax(); }
+
+		const_reverse_iterator rbegin() const { return RBT.rmax(); }
+
+		reverse_iterator rend() { return RBT.rmin(); }
+
+		const_reverse_iterator rend() const { return RBT.rmin(); }
 
 		// #################### CAPACITY ####################
 
+		bool empty() const
+		{
+			return RBT.empty();
+		}
+
+		size_type size() const
+		{
+			return RBT.size();
+		}
+
+		size_type max_size() const
+		{
+			return RBT.max_size();
+		}
+
 		// #################### MODIFIERS ####################
+
+		void clear()
+		{
+			RBT.clear();
+		}
+
+		ft::pair<iterator, bool> insert(const value_type& value)
+		{
+			return RBT.insert(value);
+		}
+
+		iterator insert(iterator pos, const value_type& value)
+		{
+			return RBT.insert(pos, value);
+		}
+
+		template<class InputIt>
+		void insert(InputIt first, InputIt last)
+		{
+			return RBT.insert(first, last);
+		}
+
+		iterator erase(iterator pos)
+		{
+			return RBT.erase(pos);
+		}
+
+		iterator erase(iterator first, iterator last)
+		{
+			return RBT.erase(first, last);
+		}
+
+		size_type erase(const Key& key)
+		{
+			return RBT.erase(key);
+		}
+
+		void swap(map& other)
+		{
+			RBT.swap(other.RBT);
+		}
 
 		// #################### LOOKUP ####################
 
-		// #################### OBSERVERS ####################
+		size_type count(const Key& key) const
+		{
+			return RBT.count(key);
+		}
+
+		iterator find(const Key& key)
+		{
+			return RBT.find(key);
+		}
+
+		const_iterator find(const Key& key) const
+		{
+			return RBT.find(key);
+		}
+
+		ft::pair<iterator, iterator> equal_range(const Key& key)
+		{
+			return RBT.equal_range(key);
+		}
+
+		ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const
+		{
+			return RBT.equal_range(key);
+		}
+
+		iterator lower_bound(const Key& key)
+		{
+			return RBT.lower_bound(key);
+		}
+
+		const_iterator lower_bound(const Key& key)
+		{
+			return RBT.lower_bound(key);
+		}
+
+		iterator upper_bound(const Key& key)
+		{
+			return RBT.upper_bound(key);
+		}
+
+		const_iterator upper_bound(const Key& key)
+		{
+			return RBT.upper_bound(key);
+		}
 
 		// #################### OBSERVERS ####################
-		
+
+		key_compare key_comp() const
+		{
+			return key_compare();
+		}
+
+		value_compare value_comp() const
+		{
+			return value_compare(key_comp());
+		}
+
 	private:
 		tree_type RBT;
 };
