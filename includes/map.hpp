@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/13 17:49:33 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/14 17:52:23 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,16 @@ class map {
 		typedef Key 												key_type;
 		typedef T 													mapped_type;
 		typedef ft::pair<const Key, T> 								value_type;
+
 		typedef Compare 											key_compare;
 		typedef typename std::allocator<ft::pair<const Key, T> > 	allocator_type;
 		typedef typename allocator_type::size_type 					size_type;
 		typedef typename allocator_type::difference_type 			difference_type;
 
-		typedef value_type& 									reference;
-		typedef const value_type& 								const_reference;
-		typedef typename allocator_type::pointer 				pointer;
-		typedef typename allocator_type::const_pointer 			const_pointer;
+		typedef value_type& 										reference;
+		typedef const value_type& 									const_reference;
+		typedef typename allocator_type::pointer 					pointer;
+		typedef typename allocator_type::const_pointer 				const_pointer;
 
 //             TO DO
 /*
@@ -45,13 +46,14 @@ class map {
 		typedef const T* const_iterator;
 */
 
-		typedef ft::reverse_iterator<iterator> 					reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator> 			const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator> 						reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator> 				const_reverse_iterator;
 
+		// RED and BLACK TREE :
 		typedef RBT<key_type,
 				value_type, 
 				SelectFirst<ft::pair<key_type, value_type> >,
-				key_compare> 									tree_type; 
+				key_compare> 										tree_type; 
 
 		// #################### MEMBER CLASSES ####################
 
