@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/14 17:15:50 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/16 19:09:10 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,18 +71,17 @@ struct RBTNode
 	}
 };
 
-template<class Key, class Value, class KeyOfValue, class KeyCompare>
+template<class Value, class KeyCompare>
 class RBT
 {
 		// #################### MEMBER TYPES ####################
 
-		typedef Key 											key_type;
 		// Value will be a pair in map and set
 		typedef Value 											value_type;
 		typedef KeyCompare 										key_compare;
 
 		typedef typename std::allocator<value_type> 			allocator_type;
-		typedef typename allocator_type::template rebind<RBTNode<value_type> >::other node_allocator;
+		typedef typename std::allocator<RBTNode<value_type> >   node_allocator;
 		typedef typename allocator_type::size_type 				size_type;
 		typedef typename allocator_type::difference_type 		difference_type;
 
@@ -125,10 +124,12 @@ class RBT
 		{
 			return node->value;
 		}
-		
-		static const key_type& node_key(node_ptr node)
+
+		static bool is_value(const node_ptr node, const value_type& value)
 		{
-			return KeyOfValue()(node->value);
+			if (!key_compare(node->value, value) && !key_compare(value, node->value))
+				return true;
+			return false;
 		}
 
 		node_ptr create_node(const value_type& val)
@@ -160,9 +161,9 @@ class RBT
 			node->bf = 0;
 		}
 
-		node_ptr searchTreeHelper(node_ptr node, const key_type& key)
+		node_ptr searchTreeHelper(node_ptr node, const value_type& value)
 		{
-			if (node == NULL || key == node_key (node))
+			if (node == NULL || value == node_key(node))
 			{
 				return node;
 			}
@@ -244,28 +245,28 @@ class RBT
 			postOrderHelper(this->root);
 		}
 
-		NodePtr searchTree(int key) {
+		node_ptr searchTree(int key) {
 			return searchTreeHelper(this->root, key);
 		}
 
-		NodePtr minimum(NodePtr node) {
+		node_ptr minimum(node_ptr node) {
 			while (node->left) {
 				minimum(node->left);
 			}
 			return node;
 		}
 
-		NodePtr maximum(NodePtr node) {
+		node_ptr maximum(node_ptr node) {
 			while (node->right) {
 				maximum(node->right);
 			}
 			return node;
 		}
 
-		NodePtr successor(NodePtr x) {
+		node_ptr successor(node_ptr x) {
 			if (x->right != NULL)
 				return minimum(x->right);
-			NodePtr y = x->parent;
+			node_ptr y = x->parent;
 			while (y != NULL && x == y->right) {
 				x = y;
 				y = y->parent;
@@ -273,10 +274,10 @@ class RBT
 			return y;
 		}
 
-		NodePtr predecessor(NodePtr x) {
+		node_ptr predecessor(node_ptr x) {
 			if (x->left != NULL)
 				maximum(x->left);
-			NodePtr y = x->parent;
+			node_ptr y = x->parent;
 			while (y != NULL && x == y->left) {
 				x = y;
 				y = y->parent;
@@ -285,14 +286,14 @@ class RBT
 		}
 
 		void insert(int key) {
-			NodePtr node = new Node;
+			node_ptr node = node_allocator::allocate(1);
 			node->parent = NULL;
 			node->left = NULL;
 			node->right = NULL;
 			node->data = key;
 			node->bf = 0;
-			NodePtr y = NULL;
-			NodePtr x = this->root;
+			node_ptr y = NULL;
+			node_ptr x = this->root;
 			while (x != NULL) {
 				y = x;
 				if (node->data < x->data)
@@ -311,9 +312,9 @@ class RBT
 			updateBalance(node);
 		}
 
-		NodePtr getRoot() { return this->root; }
+		node_ptr getRoot() { return this->root; }
 
-		NodePtr deleteNode(int data) {
+		node_ptr deleteNode(int data) {
 			return deleteNodeHelper(this->root, data);
 		}
 
@@ -328,9 +329,9 @@ class RBT
 //                   / \                  / \
 //                  b   c                a   b
 
-		void leftRotate(NodePtr x) {
+		void leftRotate(node_ptr x) {
 			std::cout << "leftRotate node " << x->data << std::endl;
-			NodePtr y = x->right;
+			node_ptr y = x->right;
 			x->right = y->left;
 			if (y->left != NULL)
 				y->left->parent = x;
@@ -356,9 +357,9 @@ class RBT
 e/                y   c        ==>         a   x
 //              a   b                        b   c
 
-		void rightRotate(NodePtr x) {
+		void rightRotate(node_ptr x) {
 			std::cout << "rightRotate node " << x->data << std::endl;
-			NodePtr y = x->left;
+			node_ptr y = x->left;
 			x->left = y->right;
 			if (y->right != NULL)
 				y->right->parent = x;
@@ -376,7 +377,7 @@ e/                y   c        ==>         a   x
 			y->bf = y->bf + 1 + std::max(0, x->bf);
 		}
 
-	void updateBalance(NodePtr node) {
+	void updateBalance(node_ptr node) {
 		//std::cout << "updateBalance node " << node->data << ", bf = " << node->bf << std::endl;
 		if (!node)
 			return;
@@ -400,7 +401,7 @@ e/                y   c        ==>         a   x
 		}
 	}
 
-		void rebalance(NodePtr node) {
+		void rebalance(node_ptr node) {
 			if (node->bf > 0) {
 				if (node->right->bf < 0) {
 //                  |                     |                   |

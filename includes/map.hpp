@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/14 17:52:23 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/16 16:06:35 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,16 @@ class map {
 /*
 		typedef T* iterator; 
 		typedef const T* const_iterator;
-*/
 
 		typedef ft::reverse_iterator<iterator> 						reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator> 				const_reverse_iterator;
+*/
 
 		// RED and BLACK TREE :
 		typedef RBT<key_type,
 				value_type, 
 				SelectFirst<ft::pair<key_type, value_type> >,
-				key_compare> 										tree_type; 
+				value_compare> 										tree_type; 
 
 		// #################### MEMBER CLASSES ####################
 
@@ -71,7 +71,7 @@ class map {
 			// ##### OPERATOR #####
 				bool operator()(const value_type&left, const value_type& right) const
 				{
-					return comp(left, right);
+					return comp(left.first, right.first);
 				}
 
 			// ##### PROTECTED MEMBER #####
@@ -129,6 +129,7 @@ class map {
 
 		// #################### ITERATORS ####################
 
+		/*
 		iterator begin() { return RBT.min(); }
 
 		const_iterator begin() const { return RBT.min(); }
@@ -144,6 +145,7 @@ class map {
 		reverse_iterator rend() { return RBT.rmin(); }
 
 		const_reverse_iterator rend() const { return RBT.rmin(); }
+		*/
 
 		// #################### CAPACITY ####################
 
@@ -169,6 +171,7 @@ class map {
 			RBT.clear();
 		}
 
+		/*
 		ft::pair<iterator, bool> insert(const value_type& value)
 		{
 			return RBT.insert(value);
@@ -178,6 +181,7 @@ class map {
 		{
 			return RBT.insert(pos, value);
 		}
+		*/
 
 		template<class InputIt>
 		void insert(InputIt first, InputIt last)
@@ -185,6 +189,7 @@ class map {
 			return RBT.insert(first, last);
 		}
 
+		/*
 		iterator erase(iterator pos)
 		{
 			return RBT.erase(pos);
@@ -194,6 +199,7 @@ class map {
 		{
 			return RBT.erase(first, last);
 		}
+		*/
 
 		size_type erase(const Key& key)
 		{
@@ -212,6 +218,7 @@ class map {
 			return RBT.count(key);
 		}
 
+		/*
 		iterator find(const Key& key)
 		{
 			return RBT.find(key);
@@ -251,6 +258,7 @@ class map {
 		{
 			return RBT.upper_bound(key);
 		}
+		*/
 
 		// #################### OBSERVERS ####################
 
