@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/16 16:06:35 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/17 10:12:48 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,12 @@ class map {
 		typedef ft::reverse_iterator<const_iterator> 				const_reverse_iterator;
 */
 
-		// RED and BLACK TREE :
-		typedef RBT<key_type,
-				value_type, 
-				SelectFirst<ft::pair<key_type, value_type> >,
-				value_compare> 										tree_type; 
-
 		// #################### MEMBER CLASSES ####################
 
 		class value_compare : public binary_function<value_type, value_type, bool>
 		{
 			// ##### MEMBER TYPES #####
+			friend class map;
 			typedef typename binary_function<value_type, value_type, bool>::result_type result_type;
 			typedef typename binary_function<value_type, value_type, bool>::first_argument_type first_argument_type;
 			typedef typename binary_function<value_type, value_type, bool>::second_argument_type second_argument_type;
@@ -79,8 +74,13 @@ class map {
 				key_compare comp;
 		};
 
+	private:
+		// RED and BLACK TREE :
+		typedef RBT<value_type, value_compare> 						tree_type; 
+
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
 
+	public:
 		map() : RBT() {}
 
 		explicit map (const Compare& comp) : RBT(), value_compare(comp) {}

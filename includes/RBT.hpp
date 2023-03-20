@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/16 19:09:10 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/17 19:39:10 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 #define RBT_HPP 
 
 #include <exception>
+#include <functional>
 #include <memory>
 #include <iostream>
 #include "reverse_iterator.hpp"
+#include "ft_utils.hpp"
+#include "pair.hpp"
 
 namespace ft
 {
@@ -42,6 +45,8 @@ struct RBTNode
 	RBTNode(Value v, node_ptr p, node_ptr l, node_ptr r, t_color c, int bf) : 
 		value(v), color(c), parent(p), left(l), right(r), bf(bf) {}; 
 
+	// "static" makes the member accessible out of the class, without needing 
+	// to instantiate an object of the class	
 	static node_ptr minimum(node_ptr node)
 	{
 		while (node->left)
@@ -71,24 +76,26 @@ struct RBTNode
 	}
 };
 
-template<class Value, class KeyCompare>
+template<class Key, class Value, class KeyOfValue, class KeyCompare = std::less<Value> >
 class RBT
 {
 		// #################### MEMBER TYPES ####################
 
 		// Value will be a pair in map and set
 		typedef Value 											value_type;
+		typedef Key 											key_type;
 		typedef KeyCompare 										key_compare;
+		typedef KeyOfValue 										key_of_value;
 
-		typedef typename std::allocator<value_type> 			allocator_type;
+		typedef typename std::allocator<value_type> 			value_allocator;
 		typedef typename std::allocator<RBTNode<value_type> >   node_allocator;
-		typedef typename allocator_type::size_type 				size_type;
-		typedef typename allocator_type::difference_type 		difference_type;
+		typedef typename value_allocator::size_type 			size_type;
+		typedef typename value_allocator::difference_type 		difference_type;
 
 		typedef value_type& 									reference;
 		typedef const value_type& 								const_reference;
-		typedef typename allocator_type::pointer 				pointer;
-		typedef typename allocator_type::const_pointer 			const_pointer;
+		typedef typename value_allocator::pointer 				pointer;
+		typedef typename value_allocator::const_pointer 		const_pointer;
 
 		typedef RBTNode<value_type> 							node_type;
 		typedef RBTNode<value_type>* 							node_ptr;
@@ -119,17 +126,33 @@ class RBT
 		// #################### HELPERS ####################
 
 	private:
+		
+		const key_type& keyOfNode(node_ptr node)
+		{
+			return key_of_value(node->value);
+		}
 
-		static const value_type& node_value(node_ptr node)
+		const value_type& valueOfNode(node_ptr node)
 		{
 			return node->value;
 		}
 
-		static bool is_value(const node_ptr node, const value_type& value)
+		bool isSameKey(const node_ptr node, const key_type& key)
 		{
-			if (!key_compare(node->value, value) && !key_compare(value, node->value))
+			if (!key_compare(keyOfNode(node), key) && 
+					!key_compare(key, keyOfNode(node)))
 				return true;
 			return false;
+		}
+
+		bool isKeyInf(const node_ptr node, const key_type& key)
+		{
+			return key_compare(keyOfNode(node), key);
+		}
+
+		bool isKeySup(const node_ptr node, const key_type& key)
+		{
+			return key_compare(key, keyOfNode(node));
 		}
 
 		node_ptr create_node(const value_type& val)
@@ -147,6 +170,7 @@ class RBT
 
 		void erase_node(node_ptr node)
 		{
+			// No need to destroy node->value, it is called in destroy(node)
 			node_allocator::destroy(node);
 			node_allocator::deallocate(node, 1);		
 		}
@@ -161,13 +185,11 @@ class RBT
 			node->bf = 0;
 		}
 
-		node_ptr searchTreeHelper(node_ptr node, const value_type& value)
+		node_ptr searchTreeHelper(node_ptr node, const key_type& key)
 		{
-			if (node == NULL || value == node_key(node))
-			{
+			if (node == NULL || isSameKey(node, key))
 				return node;
-			}
-			if (key < node_key(node))
+			if (key_compare(keyOfNode(node), key))
 				return searchTreeHelper(node->left, key);
 			return searchTreeHelper(node->right, key);
 		}
@@ -175,9 +197,9 @@ class RBT
 		node_ptr deleteNodeHelper(node_ptr node, const key_type& key) {
 			if (node == NULL) 
 				return node;
-			else if (key < node_key(node))
+			else if (key_compare(key, keyOfNode(node)))
 				node->left = deleteNodeHelper(node->left, key);
-			else if (key > node_key(node))
+			else if (key_compare(keyOfNode(node), key))
 				node->right = deleteNodeHelper(node->right, key);
 			else
 			{
@@ -233,18 +255,6 @@ class RBT
 		}
 
 	public: 
-		void preOrder() {
-			preOrderHelper(this->root);
-		}
-
-		void inOrder() {
-			inOrderHelper(this->root);
-		}
-
-		void postOrder() {
-			postOrderHelper(this->root);
-		}
-
 		node_ptr searchTree(int key) {
 			return searchTreeHelper(this->root, key);
 		}
@@ -263,6 +273,7 @@ class RBT
 			return node;
 		}
 
+		// The successor is the node whose key is next
 		node_ptr successor(node_ptr x) {
 			if (x->right != NULL)
 				return minimum(x->right);
@@ -274,6 +285,7 @@ class RBT
 			return y;
 		}
 
+		// The predecessor is the node whose key is just before
 		node_ptr predecessor(node_ptr x) {
 			if (x->left != NULL)
 				maximum(x->left);
@@ -353,8 +365,8 @@ class RBT
 //                  |                        | 
 //                  x                        y
 //                 / \                      / \
+//                y   c        ==>         a   x
 //               / \                          / \
-e/                y   c        ==>         a   x
 //              a   b                        b   c
 
 		void rightRotate(node_ptr x) {
