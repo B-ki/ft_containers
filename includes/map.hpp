@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/17 10:12:48 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/20 17:37:56 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,9 @@ namespace ft
 {
 template <class Key, class T, class Compare = std::less<Key> >
 class map {
-	public:
 
 		// #################### MEMBER TYPES ####################
-
+	public:
 		typedef Key 												key_type;
 		typedef T 													mapped_type;
 		typedef ft::pair<const Key, T> 								value_type;
@@ -40,14 +39,16 @@ class map {
 		typedef typename allocator_type::pointer 					pointer;
 		typedef typename allocator_type::const_pointer 				const_pointer;
 
-//             TO DO
-/*
-		typedef T* iterator; 
-		typedef const T* const_iterator;
+	private:
+		// RED and BLACK TREE :
+		typedef RBT<key_type, value_type, ft::SelectFirst<value_type>, key_compare> 	tree_type; 
 
-		typedef ft::reverse_iterator<iterator> 						reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator> 				const_reverse_iterator;
-*/
+//             TO DO
+	public:
+		typedef typename tree_type::iterator							iterator; 
+		typedef typename tree_type::const_iterator						const_iterator; 
+		typedef typename tree_type::reverse_iterator					reverse_iterator; 
+		typedef typename tree_type::const_reverse_iterator				const_reverse_iterator; 
 
 		// #################### MEMBER CLASSES ####################
 
@@ -74,10 +75,6 @@ class map {
 				key_compare comp;
 		};
 
-	private:
-		// RED and BLACK TREE :
-		typedef RBT<value_type, value_compare> 						tree_type; 
-
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
 
 	public:
@@ -91,11 +88,7 @@ class map {
 
 		map (const map& other) : RBT(other.RBT), value_compare(other.value_compare) {}
 
-		~map()
-		{
-			~RBT();
-			~value_compare();
-		}
+		~map() {}
 
 		map& operator=(const map& other)
 		{

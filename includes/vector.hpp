@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/09 22:01:53 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/20 19:28:43 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,21 +79,21 @@ class vector : private vector_base<T>
 
 		typedef T value_type;
 		//allocator_type est le type value_type retournee par std::allocator<T>
-		typedef typename std::allocator<value_type> allocator_type;
+		typedef typename std::allocator<value_type> 		allocator_type;
 
-		typedef typename allocator_type::pointer pointer;
-		typedef typename allocator_type::const_pointer const_pointer;
-		typedef typename allocator_type::size_type size_type;
-		typedef typename allocator_type::difference_type difference_type;
+		typedef typename allocator_type::pointer 			pointer;
+		typedef typename allocator_type::const_pointer 		const_pointer;
+		typedef typename allocator_type::size_type 			size_type;
+		typedef typename allocator_type::difference_type 	difference_type;
 
-		typedef value_type& reference;
-		typedef const value_type& const_reference;
+		typedef value_type& 								reference;
+		typedef const value_type& 							const_reference;
 
-		typedef T* iterator; 
-		typedef const T* const_iterator;
+		typedef T* 											iterator; 
+		typedef const T* 									const_iterator;
 
-		typedef ft::reverse_iterator<iterator> reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator> 				reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator> 		const_reverse_iterator;
 
 		// #################### DATA MEMBERS ####################
 

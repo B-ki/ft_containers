@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 15:44:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/02 11:53:18 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/20 18:25:07 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include "binary_heap.hpp"
 #include "AVL.hpp"
 #include "binary_search_tree.hpp"
+#include "map.hpp"
 
 #ifndef NS
 # define NS std
@@ -518,6 +519,15 @@ int main()
 		avl.insert(68);
 		avl.prettyPrint();
 		std::cout << "\n -------------------- \n\n";
+	}
+	{
+		std::cout << "\n########## RBT ##########\n\n";
+
+		ft::map<int, std::string> mapOfString;
+		
+	}
+	{
+
 	}
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/17 19:39:10 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/20 22:16:00 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ struct RBTNode
 
 	RBTNode() : value(), parent(NULL), left(NULL), right(NULL), color(black), bf(0) {}
 
-	RBTNode(Value v, node_ptr p, node_ptr l, node_ptr r, t_color c, int bf) : 
+	RBTNode(Value v, node_ptr p = NULL, node_ptr l = NULL, node_ptr r = NULL, t_color c = black, int bf = 0) : 
 		value(v), color(c), parent(p), left(l), right(r), bf(bf) {}; 
 
 	// "static" makes the member accessible out of the class, without needing 
@@ -74,9 +74,31 @@ struct RBTNode
 			node = node->right;
 		return node;
 	}
+
+	bool isRoot(node_ptr node)
+	{
+		if (!node->parent)
+			return true;
+		return false;
+	}
+
+	bool isRight(node_ptr node)
+	{
+		if (node->parent && node == node->parent->right)
+			return true;
+		return false;
+	}
+
+	bool isLeft(node_ptr node)
+	{
+		if (node->parent && node == node->parent->left)
+			return true;
+		return false;
+	}
+		
 };
 
-template<class Key, class Value, class KeyOfValue, class KeyCompare = std::less<Value> >
+template<class Key, class Value, class KeyOfValue, class KeyCompare = std::less<Key> >
 class RBT
 {
 		// #################### MEMBER TYPES ####################
@@ -115,18 +137,20 @@ class RBT
 	public:
 		RBT() : root(NULL) {}; 
 
-		~RBT() {
+		~RBT()
+		{
 			destructorHelper(this->root);
 		}
 
 		// #################### MEMBERS ####################
 		
-		node_ptr 	root;
+		node_ptr 		root;
+		node_allocator 	allocator;
 
 		// #################### HELPERS ####################
 
 	private:
-		
+
 		const key_type& keyOfNode(node_ptr node)
 		{
 			return key_of_value(node->value);
@@ -171,8 +195,8 @@ class RBT
 		void erase_node(node_ptr node)
 		{
 			// No need to destroy node->value, it is called in destroy(node)
-			node_allocator::destroy(node);
-			node_allocator::deallocate(node, 1);		
+			allocator.destroy(node);
+			allocator.deallocate(node, 1);		
 		}
 
 		void initializeNode(node_ptr node, value_type value = value_type())
@@ -278,7 +302,7 @@ class RBT
 			if (x->right != NULL)
 				return minimum(x->right);
 			node_ptr y = x->parent;
-			while (y != NULL && x == y->right) {
+			while (y != NULL && isRight(x)) {
 				x = y;
 				y = y->parent;
 			}
@@ -290,20 +314,16 @@ class RBT
 			if (x->left != NULL)
 				maximum(x->left);
 			node_ptr y = x->parent;
-			while (y != NULL && x == y->left) {
+			while (y != NULL && isLeft(x)) {
 				x = y;
 				y = y->parent;
 			}
 			return y;
 		}
 
-		void insert(int key) {
+		void insert(value_type val) {
 			node_ptr node = node_allocator::allocate(1);
-			node->parent = NULL;
-			node->left = NULL;
-			node->right = NULL;
-			node->data = key;
-			node->bf = 0;
+			initializeNode(node, val);
 			node_ptr y = NULL;
 			node_ptr x = this->root;
 			while (x != NULL) {
