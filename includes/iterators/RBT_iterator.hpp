@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 17:57:49 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/21 00:48:29 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/21 16:57:24 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 #include "enable_if.hpp"
 #include "iterator_traits.hpp"
-#include "RBT.hpp"
 #include <iterator>
+#include "RBT_node.hpp"
 
 namespace ft
 {
@@ -24,7 +24,7 @@ namespace ft
 template<class PairType, bool IsConst>
 class RBT_iterator
 {
-	// In the RBT ValueType is a pair(Key, Value)
+	public:
 		typedef std::bidirectional_iterator_tag 						iterator_category;
 		typedef std::ptrdiff_t 											difference_type;
 		typedef PairType 												pair_type;
@@ -43,6 +43,8 @@ class RBT_iterator
 
 		RBT_iterator(node_ptr ptr) : _current(ptr) {}
 
+		RBT_iterator(const RBT_iterator<PairType, IsConst>& other) : _current(other._current) {}
+
 		RBT_iterator operator=(const RBT_iterator& other)
 		{
 			if (*this != other)
@@ -50,11 +52,20 @@ class RBT_iterator
 			return *this;
 		}
 
-	/*   TO DO
+		reference operator*() const
+		{
+			return _current->data;
+		}
+
+		pointer operator->() const
+		{
+			return &(_current->data);
+		}			
+
 		//Pre-incrementation : ++It
 		RBT_iterator& operator++()
 		{ 
-			--this->_current; 
+			this->_current = nodeSucessor(_current); 
 			return *this;
 		}
 
@@ -62,34 +73,24 @@ class RBT_iterator
 		RBT_iterator operator++(int) 
 		{ 
 			RBT_iterator tmp(*this); 
-			++(*this); 
+			this->_current = nodeSucessor(_current); 
 			return tmp; 
 		}
 
 		//Pre-incrementation : --It
 		RBT_iterator& operator--() 
 		{ 
-			++this->_current; 
+			this->_current = nodePredecessor(_current); 
 			return *this; 
 		}
 
 		//Post-incrementation : It--
 		RBT_iterator operator--(int) 
 		{ 
-			RBT_iterator tmp(*this);
-			--(*this); return tmp;
+			RBT_iterator tmp(*this); 
+			this->_current = nodePredecessor(_current); 
+			return *tmp; 
 		}
-
-		reference operator*() const
-		{
-			return *(_current - 1);
-		}
-
-		pointer operator->() const
-		{
-			return &(*(_current - 1));
-		}			
-		*/
 
 };
 
@@ -97,14 +98,14 @@ template< class PairType >
 bool operator==( const ft::RBT_iterator<PairType, false>& lhs,
                  const ft::RBT_iterator<PairType, false>& rhs )
 {
-	return (lhs.base() == rhs.base());
+	return (lhs._current == rhs._current);
 }
 
 template< class PairType >
 bool operator!=( const ft::RBT_iterator<PairType, false>& lhs,
                  const ft::RBT_iterator<PairType, false>& rhs )
 {
-	return (lhs.base() != rhs.base());
+	return (lhs._current != rhs._current);
 }
 
 }

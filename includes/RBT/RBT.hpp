@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/20 22:16:00 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/21 17:04:30 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <functional>
 #include <memory>
 #include <iostream>
+#include "RBT_iterator.hpp"
+#include "RBT_node.hpp"
 #include "reverse_iterator.hpp"
 #include "ft_utils.hpp"
 #include "pair.hpp"
@@ -24,86 +26,13 @@
 namespace ft
 {
 
-typedef enum e_color { black, red } t_color;
-
-template<class Value>
-struct RBTNode
-{
-	Value 		value;
-	RBTNode* 	parent;
-	RBTNode* 	left;
-	RBTNode* 	right;
-	t_color 	color;
-	int 		bf;
-
-	typedef RBTNode 		node_type; 
-	typedef RBTNode* 		node_ptr;
-	typedef const RBTNode* 	const_node_ptr;
-
-	RBTNode() : value(), parent(NULL), left(NULL), right(NULL), color(black), bf(0) {}
-
-	RBTNode(Value v, node_ptr p = NULL, node_ptr l = NULL, node_ptr r = NULL, t_color c = black, int bf = 0) : 
-		value(v), color(c), parent(p), left(l), right(r), bf(bf) {}; 
-
-	// "static" makes the member accessible out of the class, without needing 
-	// to instantiate an object of the class	
-	static node_ptr minimum(node_ptr node)
-	{
-		while (node->left)
-			node = node->left;
-		return node;
-	}
-
-	static const_node_ptr minimum(const_node_ptr node)
-	{
-		while (node->left)
-			node = node->left;
-		return node;
-	}
-
-	static node_ptr maximum(node_ptr node)
-	{
-		while (node->right)
-			node = node->right;
-		return node;
-	}
-
-	static const_node_ptr maximum(const_node_ptr node)
-	{
-		while (node->right)
-			node = node->right;
-		return node;
-	}
-
-	bool isRoot(node_ptr node)
-	{
-		if (!node->parent)
-			return true;
-		return false;
-	}
-
-	bool isRight(node_ptr node)
-	{
-		if (node->parent && node == node->parent->right)
-			return true;
-		return false;
-	}
-
-	bool isLeft(node_ptr node)
-	{
-		if (node->parent && node == node->parent->left)
-			return true;
-		return false;
-	}
-		
-};
-
 template<class Key, class Value, class KeyOfValue, class KeyCompare = std::less<Key> >
 class RBT
 {
 		// #################### MEMBER TYPES ####################
 
 		// Value will be a pair in map and set
+	public:
 		typedef Value 											value_type;
 		typedef Key 											key_type;
 		typedef KeyCompare 										key_compare;
@@ -123,18 +52,14 @@ class RBT
 		typedef RBTNode<value_type>* 							node_ptr;
 		typedef const RBTNode<value_type>* 						const_node_ptr;
 
-//             TO DO
-/*
-		typedef T* iterator; 
-		typedef const T* const_iterator;
+		typedef RBT_iterator<value_type, false> 				iterator; 
+		typedef RBT_iterator<value_type, true> 					const_iterator;
 
 		typedef ft::reverse_iterator<iterator> 					reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator> 			const_reverse_iterator;
-*/
 
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
 
-	public:
 		RBT() : root(NULL) {}; 
 
 		~RBT()

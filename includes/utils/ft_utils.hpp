@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 16:29:20 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/09 20:39:09 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/21 17:55:10 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 namespace ft
 {
+
+// ######### UNARY_BINARY_FUNCTION ###########
 
 template <class ArgumentType, class ResultType>
 struct unary_function
@@ -30,6 +32,8 @@ struct binary_function
 		typedef Arg2 	second_argument_type;
 		typedef Result 	result_type;
 	};
+
+// ######### SELECT FIRST ###########
 
 template <class Pair>
 struct SelectFirst : public unary_function<Pair, typename Pair::first_type>
@@ -47,6 +51,8 @@ struct SelectFirst : public unary_function<Pair, typename Pair::first_type>
 	}
 };
 
+// ######### IDENTITY ###########
+
 template <class T>
 struct Identity : public unary_function<T, T>
 {
@@ -62,6 +68,17 @@ struct Identity : public unary_function<T, T>
 		return (value);
 	}
 };
+
+// ######### CONDITIONNAL ###########
+
+template<bool B, class T = void, class U = void>
+struct conditionnal {};
+
+template<class T, class U>
+struct conditionnal<true, T, U> { typedef T type; };
+
+template<class T, class U>
+struct conditionnal<false, T, U> { typedef U type; };
 
 }
 

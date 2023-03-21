@@ -1,10 +1,14 @@
 NAME = ft_container
 
 SRC_DIR = srcs/
-INCLUDE_DIR = includes/
+INC_PARAMS=$(foreach d, $(INCLUDE_DIR), -I$d)
+INCLUDE_DIR = includes/ includes/sandbox/ includes/RBT/ includes/utils/\
+			  includes/iterators/ includes/mySTL/
 OBJDIR = bin/
 
-SRCS = main.cpp
+SRCS = main.cpp\
+	   RBT_test.cpp\
+	   vector_stack_test.cpp
 
 OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))
 
@@ -12,11 +16,10 @@ NS = ft
 
 CC = c++
 CFLAGS = -Wall -Werror -Wextra -std=c++98 -g -DNS=$(NS)
-LFLAGS = -I includes
-INCPATH = -I$(INCLUDE_DIR)
+LFLAGS = $(INC_PARAMS)
 
 $(OBJDIR)%.o : $(SRC_DIR)%.cpp
-	$(CC) $(CFLAGS) $(INCPATH) -o $@ -c $<
+	$(CC) $(CFLAGS) $(INC_PARAMS) -o $@ -c $<
 
 $(NAME): $(OBJDIR) $(OBJS)
 	$(CC) $(OBJS) $(LFLAGS) -o $(NAME)
