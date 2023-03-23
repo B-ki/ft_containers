@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/20 17:37:56 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/22 12:07:36 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 
 namespace ft
 {
+
 template <class Key, class T, class Compare = std::less<Key> >
 class map {
 
@@ -75,25 +76,30 @@ class map {
 				key_compare comp;
 		};
 
+		// #################### MEMBERS ####################
+
+	private:
+		tree_type _RBT;
+
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
 
 	public:
-		map() : RBT() {}
+		map() : _RBT() {}
 
-		explicit map (const Compare& comp) : RBT(), value_compare(comp) {}
+		explicit map (const Compare& comp) : _RBT(comp) {}
 
 		template<class InputIt>
 		map(InputIt first, InputIt last, 
-				const Compare& comp = Compare()) : RBT(first, last), value_compare(comp) {}
+				const Compare& comp = Compare()) : _RBT(first, last, comp) {}
 
-		map (const map& other) : RBT(other.RBT), value_compare(other.value_compare) {}
+		map (const map& other) : _RBT(other._RBT) {}
 
 		~map() {}
 
 		map& operator=(const map& other)
 		{
 			if (*this != other)
-				RBT = other.RBT;
+				_RBT = other._RBT;
 			return *this;
 		}
 
@@ -101,155 +107,155 @@ class map {
 
 		// #################### ELEMENT ACCESS ####################
 
-		// Return std::out_of_range is key is not in the RBT
+		// Return std::out_of_range is key is not in the _RBT
 		T& at(const Key& key)
 		{
-			return RBT(key);
+			return _RBT(key);
 		}
 
 		const T& at(const Key& key) const
 		{
-			return RBT(key);
+			return _RBT(key);
 		}
 
 		// insert value_type(key, T()) if key does not exists
 		T& operator[](const Key& key)
 		{
-			if (!RBT(key))
-				RBT.insert(key, T());
-			return RBT(key);
+			if (!_RBT(key))
+				_RBT.insert(key, T());
+			return _RBT(key);
 		}
 
 		// #################### ITERATORS ####################
 
 		/*
-		iterator begin() { return RBT.min(); }
+		iterator begin() { return _RBT.min(); }
 
-		const_iterator begin() const { return RBT.min(); }
+		const_iterator begin() const { return _RBT.min(); }
 
-		iterator end() { return RBT.max(); }
+		iterator end() { return _RBT.max(); }
 
-		const_iterator end() const { return RBT.max(); }
+		const_iterator end() const { return _RBT.max(); }
 	
-		reverse_iterator rbegin() { return RBT.rmax(); }
+		reverse_iterator rbegin() { return _RBT.rmax(); }
 
-		const_reverse_iterator rbegin() const { return RBT.rmax(); }
+		const_reverse_iterator rbegin() const { return _RBT.rmax(); }
 
-		reverse_iterator rend() { return RBT.rmin(); }
+		reverse_iterator rend() { return _RBT.rmin(); }
 
-		const_reverse_iterator rend() const { return RBT.rmin(); }
+		const_reverse_iterator rend() const { return _RBT.rmin(); }
 		*/
 
 		// #################### CAPACITY ####################
 
 		bool empty() const
 		{
-			return RBT.empty();
+			return _RBT.empty();
 		}
 
 		size_type size() const
 		{
-			return RBT.size();
+			return _RBT.size();
 		}
 
 		size_type max_size() const
 		{
-			return RBT.max_size();
+			return _RBT.max_size();
 		}
 
 		// #################### MODIFIERS ####################
 
 		void clear()
 		{
-			RBT.clear();
+			_RBT.clear();
 		}
 
 		/*
 		ft::pair<iterator, bool> insert(const value_type& value)
 		{
-			return RBT.insert(value);
+			return _RBT.insert(value);
 		}
 
 		iterator insert(iterator pos, const value_type& value)
 		{
-			return RBT.insert(pos, value);
+			return _RBT.insert(pos, value);
 		}
 		*/
 
 		template<class InputIt>
 		void insert(InputIt first, InputIt last)
 		{
-			return RBT.insert(first, last);
+			return _RBT.insert(first, last);
 		}
 
 		/*
 		iterator erase(iterator pos)
 		{
-			return RBT.erase(pos);
+			return _RBT.erase(pos);
 		}
 
 		iterator erase(iterator first, iterator last)
 		{
-			return RBT.erase(first, last);
+			return _RBT.erase(first, last);
 		}
 		*/
 
 		size_type erase(const Key& key)
 		{
-			return RBT.erase(key);
+			return _RBT.erase(key);
 		}
 
 		void swap(map& other)
 		{
-			RBT.swap(other.RBT);
+			_RBT.swap(other._RBT);
 		}
 
 		// #################### LOOKUP ####################
 
 		size_type count(const Key& key) const
 		{
-			return RBT.count(key);
+			return _RBT.count(key);
 		}
 
 		/*
 		iterator find(const Key& key)
 		{
-			return RBT.find(key);
+			return _RBT.find(key);
 		}
 
 		const_iterator find(const Key& key) const
 		{
-			return RBT.find(key);
+			return _RBT.find(key);
 		}
 
 		ft::pair<iterator, iterator> equal_range(const Key& key)
 		{
-			return RBT.equal_range(key);
+			return _RBT.equal_range(key);
 		}
 
 		ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const
 		{
-			return RBT.equal_range(key);
+			return _RBT.equal_range(key);
 		}
 
 		iterator lower_bound(const Key& key)
 		{
-			return RBT.lower_bound(key);
+			return _RBT.lower_bound(key);
 		}
 
 		const_iterator lower_bound(const Key& key)
 		{
-			return RBT.lower_bound(key);
+			return _RBT.lower_bound(key);
 		}
 
 		iterator upper_bound(const Key& key)
 		{
-			return RBT.upper_bound(key);
+			return _RBT.upper_bound(key);
 		}
 
 		const_iterator upper_bound(const Key& key)
 		{
-			return RBT.upper_bound(key);
+			return _RBT.upper_bound(key);
 		}
 		*/
 
@@ -265,8 +271,6 @@ class map {
 			return value_compare(key_comp());
 		}
 
-	private:
-		tree_type RBT;
 };
 
 	// #################### NON-MEMBER FUNCTIONS ####################

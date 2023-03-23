@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 17:49:51 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/02 12:04:05 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/22 10:37:37 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,13 +242,6 @@ class AVL {
 			printHelperPerso(this->root, "");
 		}
 
-//                  |                        | 
-//                  x                        y
-//                 / \                      / \
-//                a   y        ==>         x   c
-//                   / \                  / \
-//                  b   c                a   b
-
 		void leftRotate(NodePtr x) {
 			std::cout << "leftRotate node " << x->data << std::endl;
 			NodePtr y = x->right;
@@ -270,12 +263,6 @@ class AVL {
 			y->bf = y->bf - 1 + std::min(0, x->bf);
 		}
 
-//                  |                        | 
-//                  x                        y
-//                 / \                      / \
-//               / \                          / \
-e/                y   c        ==>         a   x
-//              a   b                        b   c
 
 		void rightRotate(NodePtr x) {
 			std::cout << "rightRotate node " << x->data << std::endl;
@@ -324,46 +311,18 @@ e/                y   c        ==>         a   x
 		void rebalance(NodePtr node) {
 			if (node->bf > 0) {
 				if (node->right->bf < 0) {
-//                  |                     |                   |
-//        BF=2      a               BF=2  a                   b
-//                   \                     \                 / \
-//        BF=-1       c     ==>     BF=1    b      ==>      a   c    BF=0 partout
-//                   /                       \                          /
-//        BF=0      b               BF=0      c
-//                       rightRotate              leftRotate
 					rightRotate(node->right);
 					leftRotate(node);
 				}
 				else
-//                  |                        | 
-//       BF=2       a                        b
-//                   \                      / \
-//       BF=1         b        ==>         a   c       BF=0 partout
-//                     \                                        /
-//       BF=0           c                    
-//                          leftRotate
 					leftRotate(node);
 			}
 			else if (node->bf < 0) {
 				if (node->left->bf > 0) {
-//                  |                           |                   |
-//        BF=-2     a               BF=-2       a                   b
-//                 /                           /                   / \
-//        BF=1    c         ==>     BF=-1     b          ==>      a   c    BF=0 partout
-//                 \                         /                                /
-//        BF=0      b               BF=0    c        
-//                       leftRotate                  rightRotate
 					leftRotate(node->left);
 					rightRotate(node);
 				}
 				else
-//                  |                        | 
-//         BF=-2    c                        b
-//                 /                        / \
-//        BF=-1   b            ==>         a   c       BF=0 partout
-//               /                             
-//      BF=0    a                               
-//                         rightRotate
 					rightRotate(node);
 			}
 		}
