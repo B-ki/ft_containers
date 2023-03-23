@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/22 12:07:36 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/23 17:16:00 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include "pair.hpp"
 #include "ft_utils.hpp"
 #include "RBT.hpp"
+#include <iostream>
+#include <functional>
 
 namespace ft
 {
@@ -28,21 +30,21 @@ class map {
 	public:
 		typedef Key 												key_type;
 		typedef T 													mapped_type;
-		typedef ft::pair<const Key, T> 								value_type;
+		typedef ft::pair<const Key, T> 								pair_type;
 
 		typedef Compare 											key_compare;
 		typedef typename std::allocator<ft::pair<const Key, T> > 	allocator_type;
 		typedef typename allocator_type::size_type 					size_type;
 		typedef typename allocator_type::difference_type 			difference_type;
 
-		typedef value_type& 										reference;
-		typedef const value_type& 									const_reference;
+		typedef pair_type& 											reference;
+		typedef const pair_type& 									const_reference;
 		typedef typename allocator_type::pointer 					pointer;
 		typedef typename allocator_type::const_pointer 				const_pointer;
 
 	private:
 		// RED and BLACK TREE :
-		typedef RBT<key_type, value_type, ft::SelectFirst<value_type>, key_compare> 	tree_type; 
+		typedef RBT<key_type, pair_type, ft::SelectFirst<pair_type>, key_compare> 	tree_type; 
 
 //             TO DO
 	public:
@@ -53,20 +55,20 @@ class map {
 
 		// #################### MEMBER CLASSES ####################
 
-		class value_compare : public binary_function<value_type, value_type, bool>
+		class pair_compare : public binary_function<pair_type, pair_type, bool>
 		{
 			// ##### MEMBER TYPES #####
 			friend class map;
-			typedef typename binary_function<value_type, value_type, bool>::result_type result_type;
-			typedef typename binary_function<value_type, value_type, bool>::first_argument_type first_argument_type;
-			typedef typename binary_function<value_type, value_type, bool>::second_argument_type second_argument_type;
+			typedef typename binary_function<pair_type, pair_type, bool>::result_type result_type;
+			typedef typename binary_function<pair_type, pair_type, bool>::first_argument_type first_argument_type;
+			typedef typename binary_function<pair_type, pair_type, bool>::second_argument_type second_argument_type;
 
 			// ##### CONSTRUCTOR #####
 			public:
-				value_compare(key_compare pred) : comp(pred) {}
+				pair_compare(key_compare pred) : comp(pred) {}
 
 			// ##### OPERATOR #####
-				bool operator()(const value_type&left, const value_type& right) const
+				bool operator()(const pair_type&left, const pair_type& right) const
 				{
 					return comp(left.first, right.first);
 				}
@@ -118,7 +120,7 @@ class map {
 			return _RBT(key);
 		}
 
-		// insert value_type(key, T()) if key does not exists
+		// insert pair_type(key, T()) if key does not exists
 		T& operator[](const Key& key)
 		{
 			if (!_RBT(key))
@@ -170,22 +172,24 @@ class map {
 			_RBT.clear();
 		}
 
-		/*
-		ft::pair<iterator, bool> insert(const value_type& value)
+		ft::pair<iterator, bool> insert(const pair_type& pair)
 		{
-			return _RBT.insert(value);
+			return ft::pair<iterator, bool>(_RBT.insert(pair), true);
 		}
 
-		iterator insert(iterator pos, const value_type& value)
+		// We have an RBT, so we just insert normally
+		iterator insert(iterator pos, const pair_type& pair)
 		{
-			return _RBT.insert(pos, value);
+			return _RBT.insert(pair);
 		}
-		*/
 
 		template<class InputIt>
 		void insert(InputIt first, InputIt last)
 		{
-			return _RBT.insert(first, last);
+			InputIt it = first;
+			for (; it != last - 1; it++)
+				_RBT.insert(it);	
+			return _RBT.insert(it);
 		}
 
 		/*
@@ -266,16 +270,31 @@ class map {
 			return key_compare();
 		}
 
-		value_compare value_comp() const
+		pair_compare pair_comp() const
 		{
-			return value_compare(key_comp());
+			return pair_compare(key_comp());
+		}
+
+	public:
+		// #################### HELPERS ####################
+		
+		void printRBT(void)
+		{
+			_RBT.prettyPrint();
 		}
 
 };
 
 	// #################### NON-MEMBER FUNCTIONS ####################
 
-
+/*
+template<class Key, class T, class Compare = std::less<Key> > 
+std::ostream& operator<<(std::ostream& o, const map<Key, T, Compare>& m)
+{
+	o << m.printRBT();
+	return o;
+}
+*/
 }
 
 #endif 

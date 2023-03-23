@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/22 12:06:45 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/23 18:07:42 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,34 +26,33 @@
 namespace ft
 {
 
-template<class Key, class Value, class KeyOfValue, class KeyCompare = std::less<Key> >
+template<class Key, class Pair, class KeyOfPair, class KeyCompare = std::less<Key> >
 class RBT
 {
 		// #################### MEMBER TYPES ####################
 
-		// Value will be a pair in map and set
 	public:
-		typedef Value 											value_type;
+		typedef Pair 											pair_type;
 		typedef Key 											key_type;
 		typedef KeyCompare 										key_compare;
-		typedef KeyOfValue 										key_of_value;
+		typedef KeyOfPair 										key_of_pair;
 
-		typedef typename std::allocator<value_type> 			value_allocator;
-		typedef typename std::allocator<RBTNode<value_type> >   node_allocator;
-		typedef typename value_allocator::size_type 			size_type;
-		typedef typename value_allocator::difference_type 		difference_type;
+		typedef typename std::allocator<pair_type> 				pair_allocator;
+		typedef typename std::allocator<RBTNode<pair_type> >    node_allocator;
+		typedef typename pair_allocator::size_type 				size_type;
+		typedef typename pair_allocator::difference_type 		difference_type;
 
-		typedef value_type& 									reference;
-		typedef const value_type& 								const_reference;
-		typedef typename value_allocator::pointer 				pointer;
-		typedef typename value_allocator::const_pointer 		const_pointer;
+		typedef pair_type& 										reference;
+		typedef const pair_type& 								const_reference;
+		typedef typename pair_allocator::pointer 				pointer;
+		typedef typename pair_allocator::const_pointer 			const_pointer;
 
-		typedef RBTNode<value_type> 							node_type;
-		typedef RBTNode<value_type>* 							node_ptr;
-		typedef const RBTNode<value_type>* 						const_node_ptr;
+		typedef RBTNode<pair_type> 								node_type;
+		typedef RBTNode<pair_type>* 							node_ptr;
+		typedef const RBTNode<pair_type>* 						const_node_ptr;
 
-		typedef RBT_iterator<value_type, false> 				iterator; 
-		typedef RBT_iterator<value_type, true> 					const_iterator;
+		typedef RBT_iterator<pair_type, false> 					iterator; 
+		typedef RBT_iterator<pair_type, true> 					const_iterator;
 
 		typedef ft::reverse_iterator<iterator> 					reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator> 			const_reverse_iterator;
@@ -64,7 +63,7 @@ class RBT
 
 		RBT(const key_compare& comp) : _root(NULL), _allocator(node_allocator()), _comp(comp) {}; 
 
-		RBT(const RBT<key_type, value_type, key_of_value, key_compare>& other) 
+		RBT(const RBT<key_type, pair_type, key_of_pair, key_compare>& other) 
 			: _allocator(node_allocator()), _comp(key_compare())
 		{
 			for (iterator it = other.begin(); it != other.end(); it++)
@@ -73,7 +72,7 @@ class RBT
 				
 		~RBT()
 		{
-			destructorHelper(this->root);
+			destructorHelper(this->_root);
 		}
 
 		// #################### MEMBERS ####################
@@ -87,11 +86,11 @@ class RBT
 
 		node_ptr getRoot()
 		{
-			return this->root;
+			return this->_root;
 		}
 
 		node_ptr searchTree(int key) {
-			return searchTreeHelper(this->root, key);
+			return searchTreeHelper(this->_root, key);
 		}
 
 		node_ptr minimum(node_ptr node) {
@@ -110,12 +109,12 @@ class RBT
 
 		iterator begin()
 		{
-			return (minimum(getRoot());
+			return (minimum(getRoot()));
 		}
 
 		iterator end()
 		{
-			return (maximum(getRoot)++);
+			return (maximum(getRoot())++);
 		}
 
 		// The successor is the node whose key is next
@@ -142,35 +141,36 @@ class RBT
 			return y;
 		}
 
-		void insert(value_type val) {
-			node_ptr node = node_allocator::allocate(1);
-			initializeNode(node, val);
+		iterator insert(const pair_type& pair) {
+			node_ptr node = _allocator.allocate(1);
+			initializeNode(node, pair);
 			node_ptr y = NULL;
-			node_ptr x = this->root;
+			node_ptr x = this->_root;
 			while (x != NULL) {
 				y = x;
-				if (node->data < x->data)
+				if (nodeCompare(node, x))
 					x = x->left;
 				else
 					x = x->right;
 			}
 			node->parent = y;
 			if (y == NULL)
-				root = node;
-			else if (node->data < y->data)
+				_root = node;
+			else if (nodeCompare(node, y))
 				y->left = node;
 			else
 				y->right = node;
 			//updateBalance the node if necessary
 			updateBalance(node);
+			return iterator(node);
 		}
 
 		node_ptr deleteNode(int data) {
-			return deleteNodeHelper(this->root, data);
+			return deleteNodeHelper(this->_root, data);
 		}
 
 		void prettyPrint() {
-			printHelperPerso(this->root, "");
+			printHelperPerso(this->_root, "");
 		}
 
 /* 				LEFT ROTATE
@@ -189,7 +189,7 @@ class RBT
 				y->left->parent = x;
 			y->parent = x->parent;
 			if (x->parent == NULL)
-				this->root = y;
+				this->_root = y;
 			else if (x == x->parent->left)
 				x->parent->left = y;
 			else
@@ -218,7 +218,7 @@ class RBT
 				y->right->parent = x;
 			y->parent = x->parent;
 			if (x->parent == NULL)
-				this->root = y;
+				this->_root = y;
 			else if (x == x->parent->left)
 				x->parent->left = y;
 			else
@@ -311,14 +311,14 @@ class RBT
 	// #################### HELPERS ####################
 
 	private:
-		const key_type& keyOfNode(node_ptr node)
+		key_type& keyOfNode(node_ptr node)
 		{
-			return key_of_value(node->value);
+			return key_of_pair()(node->data);
 		}
 
-		const value_type& valueOfNode(node_ptr node)
+		const pair_type& pairOfNode(node_ptr node)
 		{
-			return node->value;
+			return node->pair;
 		}
 
 		bool isSameKey(const node_ptr node, const key_type& key)
@@ -339,12 +339,17 @@ class RBT
 			return key_compare(key, keyOfNode(node));
 		}
 
-		node_ptr create_node(const value_type& val)
+		bool nodeCompare(node_ptr a, node_ptr b)
+		{
+			return (key_compare(keyOfNode(a), keyOfNode(b)));
+		}
+
+		node_ptr create_node(const pair_type& val)
 		{
 			node_ptr node = node_allocator::allocate(1);
 			try {
 				node_allocator::construct(node, node_type(val));
-				node->value = val;
+				node->pair = val;
 			} catch (...) {
 				node_allocator::deallocate(node, 1);
 				throw ;
@@ -354,14 +359,14 @@ class RBT
 
 		void erase_node(node_ptr node)
 		{
-			// No need to destroy node->value, it is called in destroy(node)
-			allocator.destroy(node);
-			allocator.deallocate(node, 1);		
+			// No need to destroy node->pair, it is called in destroy(node)
+			_allocator.destroy(node);
+			_allocator.deallocate(node, 1);		
 		}
 
-		void initializeNode(node_ptr node, value_type value = value_type())
+		void initializeNode(node_ptr node, pair_type pair = pair_type())
 		{
-			node->value = value;
+			node->value = pair;
 			node->parent = NULL;
 			node->left = NULL;
 			node->right = NULL;
@@ -412,8 +417,8 @@ class RBT
 				else
 				{
 					node_ptr temp = minimum(node->right);
-					node->value = temp->value;
-					node->right = deleteNodeHelper(node->right, temp->value);
+					node->pair = temp->pair;
+					node->right = deleteNodeHelper(node->right, temp->pair);
 				}
 			}
 			// Update balance logic
@@ -425,7 +430,7 @@ class RBT
 			if (node != NULL) {
 				indent += "            ";
 				printHelperPerso(node->right, indent);
-				std::cout << indent << node->value << "(bf=" << node->bf << ")\n";
+				std::cout << indent << node->pair << "(bf=" << node->bf << ")\n";
 				printHelperPerso(node->left, indent);
 			}	
 		}

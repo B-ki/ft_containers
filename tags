@@ -40,7 +40,7 @@ MAP_HPP	includes/mySTL/map.hpp	14;"	d
 MAX_SIZE	includes/sandbox/binary_heap.hpp	/^		const static int MAX_SIZE = 15;$/;"	m	class:BinaryHeap
 NAME	Makefile	/^NAME = ft_container$/;"	m
 NS	Makefile	/^NS = ft$/;"	m
-NS	srcs/RBT_test.cpp	23;"	d	file:
+NS	srcs/RBT_test.cpp	24;"	d	file:
 NS	srcs/main.cpp	14;"	d	file:
 NS	srcs/main_nthimoni.cpp	14;"	d	file:
 NS	srcs/realtest.cpp	14;"	d	file:
@@ -52,7 +52,7 @@ OBJDIR	Makefile	/^OBJDIR = bin\/$/;"	m
 OBJS	Makefile	/^OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))$/;"	m
 PAIR_HPP	includes/utils/pair.hpp	14;"	d
 RBT	includes/RBT/RBT.hpp	/^		RBT() : _root(NULL), _allocator(node_allocator()), _comp(key_compare()) {}; $/;"	f	class:ft::RBT
-RBT	includes/RBT/RBT.hpp	/^		RBT(const RBT<key_type, value_type, key_of_value, key_compare>& other) $/;"	f	class:ft::RBT
+RBT	includes/RBT/RBT.hpp	/^		RBT(const RBT<key_type, pair_type, key_of_pair, key_compare>& other) $/;"	f	class:ft::RBT
 RBT	includes/RBT/RBT.hpp	/^		RBT(const key_compare& comp) : _root(NULL), _allocator(node_allocator()), _comp(comp) {}; $/;"	f	class:ft::RBT
 RBT	includes/RBT/RBT.hpp	/^class RBT$/;"	c	namespace:ft
 RBTNode	includes/RBT/RBT_node.hpp	/^	RBTNode() : value(), parent(NULL), left(NULL), right(NULL), color(black), bf(0) {}$/;"	f	struct:ft::RBTNode
@@ -62,7 +62,7 @@ RBT_HPP	includes/RBT/RBT.hpp	14;"	d
 RBT_ITERATOR_HPP	includes/iterators/RBT_iterator.hpp	14;"	d
 RBT_NODE_HPP	includes/RBT/RBT_node.hpp	14;"	d
 RBT_iterator	includes/iterators/RBT_iterator.hpp	/^		RBT_iterator() : _current() {}$/;"	f	class:ft::RBT_iterator
-RBT_iterator	includes/iterators/RBT_iterator.hpp	/^		RBT_iterator(const RBT_iterator<PairType, IsConst>& other) : _current(other._current) {}$/;"	f	class:ft::RBT_iterator
+RBT_iterator	includes/iterators/RBT_iterator.hpp	/^		RBT_iterator(const RBT_iterator<Pair, IsConst>& other) : _current(other._current) {}$/;"	f	class:ft::RBT_iterator
 RBT_iterator	includes/iterators/RBT_iterator.hpp	/^		RBT_iterator(node_ptr ptr) : _current(ptr) {}$/;"	f	class:ft::RBT_iterator
 RBT_iterator	includes/iterators/RBT_iterator.hpp	/^class RBT_iterator$/;"	c	namespace:ft
 RBT_test	srcs/RBT_test.cpp	/^void RBT_test(void)$/;"	f
@@ -113,22 +113,22 @@ capacity	includes/mySTL/vector.hpp	/^		size_type capacity() const { return (_end
 clear	includes/mySTL/map.hpp	/^		void clear()$/;"	f	class:ft::map
 clear	includes/mySTL/vector.hpp	/^		void clear()$/;"	f	class:ft::vector
 color	includes/RBT/RBT_node.hpp	/^	t_color 	color;$/;"	m	struct:ft::RBTNode
-comp	includes/mySTL/map.hpp	/^				key_compare comp;$/;"	m	class:ft::map::value_compare
+comp	includes/mySTL/map.hpp	/^				key_compare comp;$/;"	m	class:ft::map::pair_compare
 compareVector	srcs/main_nthimoni.cpp	/^void compareVector(const NS::vector<T>& a, const NS::vector<T>& b)$/;"	f
 compareVector	srcs/realtest.cpp	/^void compareVector(const NS::vector<T>& a, const NS::vector<T>& b)$/;"	f
 conditionnal	includes/utils/ft_utils.hpp	/^struct conditionnal {};$/;"	s	namespace:ft
 conditionnal	includes/utils/ft_utils.hpp	/^struct conditionnal<false, T, U> { typedef U type; };$/;"	s	namespace:ft
 conditionnal	includes/utils/ft_utils.hpp	/^struct conditionnal<true, T, U> { typedef T type; };$/;"	s	namespace:ft
-const_iterator	includes/RBT/RBT.hpp	/^		typedef RBT_iterator<value_type, true> 					const_iterator;$/;"	t	class:ft::RBT
+const_iterator	includes/RBT/RBT.hpp	/^		typedef RBT_iterator<pair_type, true> 					const_iterator;$/;"	t	class:ft::RBT
 const_iterator	includes/mySTL/map.hpp	/^		typedef typename tree_type::const_iterator						const_iterator; $/;"	t	class:ft::map
 const_iterator	includes/mySTL/vector.hpp	/^		typedef const T* 									const_iterator;$/;"	t	class:ft::vector
-const_node_ptr	includes/RBT/RBT.hpp	/^		typedef const RBTNode<value_type>* 						const_node_ptr;$/;"	t	class:ft::RBT
+const_node_ptr	includes/RBT/RBT.hpp	/^		typedef const RBTNode<pair_type>* 						const_node_ptr;$/;"	t	class:ft::RBT
 const_node_ptr	includes/RBT/RBT_node.hpp	/^	typedef const RBTNode* 	const_node_ptr;$/;"	t	struct:ft::RBTNode
-const_pointer	includes/RBT/RBT.hpp	/^		typedef typename value_allocator::const_pointer 		const_pointer;$/;"	t	class:ft::RBT
+const_pointer	includes/RBT/RBT.hpp	/^		typedef typename pair_allocator::const_pointer 			const_pointer;$/;"	t	class:ft::RBT
 const_pointer	includes/mySTL/map.hpp	/^		typedef typename allocator_type::const_pointer 				const_pointer;$/;"	t	class:ft::map
 const_pointer	includes/mySTL/vector.hpp	/^		typedef typename allocator_type::const_pointer 		const_pointer;$/;"	t	class:ft::vector
-const_reference	includes/RBT/RBT.hpp	/^		typedef const value_type& 								const_reference;$/;"	t	class:ft::RBT
-const_reference	includes/mySTL/map.hpp	/^		typedef const value_type& 									const_reference;$/;"	t	class:ft::map
+const_reference	includes/RBT/RBT.hpp	/^		typedef const pair_type& 								const_reference;$/;"	t	class:ft::RBT
+const_reference	includes/mySTL/map.hpp	/^		typedef const pair_type& 									const_reference;$/;"	t	class:ft::map
 const_reference	includes/mySTL/stack.hpp	/^		typedef typename Container::const_reference const_reference;$/;"	t	class:stack
 const_reference	includes/mySTL/vector.hpp	/^		typedef const value_type& 							const_reference;$/;"	t	class:ft::vector
 const_reverse_iterator	includes/RBT/RBT.hpp	/^		typedef ft::reverse_iterator<const_iterator> 			const_reverse_iterator;$/;"	t	class:ft::RBT
@@ -138,7 +138,7 @@ container_type	includes/mySTL/stack.hpp	/^		typedef Container 							container_t
 count	includes/mySTL/map.hpp	/^		size_type count(const Key& key) const$/;"	f	class:ft::map
 createSampleTree1	includes/sandbox/AVL.hpp	/^		void createSampleTree1() {$/;"	f	class:AVL
 createSampleTree1	includes/sandbox/binary_search_tree.hpp	/^		void createSampleTree1() {$/;"	f	class:BST
-create_node	includes/RBT/RBT.hpp	/^		node_ptr create_node(const value_type& val)$/;"	f	class:ft::RBT
+create_node	includes/RBT/RBT.hpp	/^		node_ptr create_node(const pair_type& val)$/;"	f	class:ft::RBT
 data	includes/sandbox/binary_search_tree.hpp	/^	int data;$/;"	m	struct:Node
 data	srcs/main_nthimoni.cpp	/^	int* data;$/;"	m	class:A	file:
 data	srcs/realtest.cpp	/^	int* data;$/;"	m	class:A	file:
@@ -151,7 +151,7 @@ deleteNodeHelper	includes/sandbox/binary_search_tree.hpp	/^		NodePtr deleteNodeH
 destructorHelper	includes/RBT/RBT.hpp	/^		void destructorHelper(node_ptr node) {$/;"	f	class:ft::RBT
 destructorHelper	includes/sandbox/AVL.hpp	/^		void destructorHelper(NodePtr node) {$/;"	f	class:AVL
 destructorHelper	includes/sandbox/binary_search_tree.hpp	/^		void destructorHelper(NodePtr node) {$/;"	f	class:BST
-difference_type	includes/RBT/RBT.hpp	/^		typedef typename value_allocator::difference_type 		difference_type;$/;"	t	class:ft::RBT
+difference_type	includes/RBT/RBT.hpp	/^		typedef typename pair_allocator::difference_type 		difference_type;$/;"	t	class:ft::RBT
 difference_type	includes/iterators/RBT_iterator.hpp	/^		typedef std::ptrdiff_t 											difference_type;$/;"	t	class:ft::RBT_iterator
 difference_type	includes/iterators/reverse_iterator.hpp	/^		typedef typename ft::iterator_traits<It>::difference_type 		difference_type;$/;"	t	class:ft::reverse_iterator
 difference_type	includes/mySTL/map.hpp	/^		typedef typename allocator_type::difference_type 			difference_type;$/;"	t	class:ft::map
@@ -176,7 +176,7 @@ erase_node	includes/RBT/RBT.hpp	/^		void erase_node(node_ptr node)$/;"	f	class:f
 extractMax	includes/sandbox/binary_heap.hpp	/^		int extractMax() {$/;"	f	class:BinaryHeap
 false_type	includes/utils/is_integral.hpp	/^typedef ft::integral_constant<bool, false> false_type;$/;"	t	namespace:ft
 first	includes/utils/pair.hpp	/^	T1 first;$/;"	m	struct:ft::pair
-first_argument_type	includes/mySTL/map.hpp	/^			typedef typename binary_function<value_type, value_type, bool>::first_argument_type first_argument_type;$/;"	t	class:ft::map::value_compare
+first_argument_type	includes/mySTL/map.hpp	/^			typedef typename binary_function<pair_type, pair_type, bool>::first_argument_type first_argument_type;$/;"	t	class:ft::map::pair_compare
 first_argument_type	includes/utils/ft_utils.hpp	/^		typedef Arg1 	first_argument_type;$/;"	t	struct:ft::binary_function
 first_type	includes/utils/pair.hpp	/^	typedef T1 first_type;$/;"	t	struct:ft::pair
 front	includes/mySTL/vector.hpp	/^		const_reference front() const$/;"	f	class:ft::vector
@@ -208,10 +208,12 @@ inOrder	includes/sandbox/AVL.hpp	/^		void inOrder() {$/;"	f	class:AVL
 inOrder	includes/sandbox/binary_search_tree.hpp	/^		void inOrder() {$/;"	f	class:BST
 inOrderHelper	includes/sandbox/AVL.hpp	/^		void inOrderHelper(NodePtr node) {$/;"	f	class:AVL
 inOrderHelper	includes/sandbox/binary_search_tree.hpp	/^		void inOrderHelper(NodePtr node) {$/;"	f	class:BST
-initializeNode	includes/RBT/RBT.hpp	/^		void initializeNode(node_ptr node, value_type value = value_type())$/;"	f	class:ft::RBT
+initializeNode	includes/RBT/RBT.hpp	/^		void initializeNode(node_ptr node, pair_type pair = pair_type())$/;"	f	class:ft::RBT
 initializeNode	includes/sandbox/AVL.hpp	/^		void initializeNode(NodePtr node, int key) {$/;"	f	class:AVL
 initializeNode	includes/sandbox/binary_search_tree.hpp	/^		void initializeNode(NodePtr node, int key) {$/;"	f	class:BST
-insert	includes/RBT/RBT.hpp	/^		void insert(value_type val) {$/;"	f	class:ft::RBT
+insert	includes/RBT/RBT.hpp	/^		iterator insert(const pair_type& pair) {$/;"	f	class:ft::RBT
+insert	includes/mySTL/map.hpp	/^		ft::pair<iterator, bool> insert(const pair_type& pair)$/;"	f	class:ft::map
+insert	includes/mySTL/map.hpp	/^		iterator insert(iterator pos, const pair_type& pair)$/;"	f	class:ft::map
 insert	includes/mySTL/map.hpp	/^		void insert(InputIt first, InputIt last)$/;"	f	class:ft::map
 insert	includes/mySTL/vector.hpp	/^			void insert(const_iterator position, InputIterator first, InputIterator last)$/;"	f	class:ft::vector
 insert	includes/mySTL/vector.hpp	/^		iterator insert(const_iterator position, const T& x)$/;"	f	class:ft::vector
@@ -237,7 +239,7 @@ is_integral	includes/utils/is_integral.hpp	/^struct is_integral<unsigned char> :
 is_integral	includes/utils/is_integral.hpp	/^struct is_integral<unsigned int> : true_type {};$/;"	s	namespace:ft
 is_integral	includes/utils/is_integral.hpp	/^struct is_integral<unsigned long> : true_type {};$/;"	s	namespace:ft
 is_integral	includes/utils/is_integral.hpp	/^struct is_integral<unsigned short> : true_type {};$/;"	s	namespace:ft
-iterator	includes/RBT/RBT.hpp	/^		typedef RBT_iterator<value_type, false> 				iterator; $/;"	t	class:ft::RBT
+iterator	includes/RBT/RBT.hpp	/^		typedef RBT_iterator<pair_type, false> 					iterator; $/;"	t	class:ft::RBT
 iterator	includes/mySTL/map.hpp	/^		typedef typename tree_type::iterator							iterator; $/;"	t	class:ft::map
 iterator	includes/mySTL/vector.hpp	/^		typedef T* 											iterator; $/;"	t	class:ft::vector
 iterator_category	includes/iterators/RBT_iterator.hpp	/^		typedef std::bidirectional_iterator_tag 						iterator_category;$/;"	t	class:ft::RBT_iterator
@@ -247,11 +249,11 @@ iterator_category	includes/utils/iterator_traits.hpp	/^	typedef typename Iterato
 iterator_traits	includes/utils/iterator_traits.hpp	/^struct iterator_traits$/;"	s	namespace:ft
 iterator_traits	includes/utils/iterator_traits.hpp	/^struct iterator_traits<T*>$/;"	s	namespace:ft
 iterator_type	includes/iterators/reverse_iterator.hpp	/^		typedef It 														iterator_type;$/;"	t	class:ft::reverse_iterator
-keyOfNode	includes/RBT/RBT.hpp	/^		const key_type& keyOfNode(node_ptr node)$/;"	f	class:ft::RBT
+keyOfNode	includes/RBT/RBT.hpp	/^		key_type& keyOfNode(node_ptr node)$/;"	f	class:ft::RBT
 key_comp	includes/mySTL/map.hpp	/^		key_compare key_comp() const$/;"	f	class:ft::map
 key_compare	includes/RBT/RBT.hpp	/^		typedef KeyCompare 										key_compare;$/;"	t	class:ft::RBT
 key_compare	includes/mySTL/map.hpp	/^		typedef Compare 											key_compare;$/;"	t	class:ft::map
-key_of_value	includes/RBT/RBT.hpp	/^		typedef KeyOfValue 										key_of_value;$/;"	t	class:ft::RBT
+key_of_pair	includes/RBT/RBT.hpp	/^		typedef KeyOfPair 										key_of_pair;$/;"	t	class:ft::RBT
 key_type	includes/RBT/RBT.hpp	/^		typedef Key 											key_type;$/;"	t	class:ft::RBT
 key_type	includes/mySTL/map.hpp	/^		typedef Key 												key_type;$/;"	t	class:ft::map
 left	includes/RBT/RBT_node.hpp	/^	RBTNode* 	left;$/;"	m	struct:ft::RBTNode
@@ -289,24 +291,24 @@ minimum	includes/RBT/RBT_node.hpp	/^	static const_node_ptr minimum(const_node_pt
 minimum	includes/RBT/RBT_node.hpp	/^	static node_ptr minimum(node_ptr node)$/;"	f	struct:ft::RBTNode
 minimum	includes/sandbox/AVL.hpp	/^		NodePtr minimum(NodePtr node) {$/;"	f	class:AVL
 minimum	includes/sandbox/binary_search_tree.hpp	/^		NodePtr minimum(NodePtr node) {$/;"	f	class:BST
-node	includes/iterators/RBT_iterator.hpp	/^		typedef RBTNode<PairType>										node;$/;"	t	class:ft::RBT_iterator
+nodeCompare	includes/RBT/RBT.hpp	/^		bool nodeCompare(node_ptr a, node_ptr b)$/;"	f	class:ft::RBT
 nodePredecessor	includes/RBT/RBT_node.hpp	/^	static node_ptr nodePredecessor(node_ptr node)$/;"	f	struct:ft::RBTNode
 nodeSucessor	includes/RBT/RBT_node.hpp	/^	static node_ptr nodeSucessor(node_ptr node)$/;"	f	struct:ft::RBTNode
-node_allocator	includes/RBT/RBT.hpp	/^		typedef typename std::allocator<RBTNode<value_type> >   node_allocator;$/;"	t	class:ft::RBT
-node_ptr	includes/RBT/RBT.hpp	/^		typedef RBTNode<value_type>* 							node_ptr;$/;"	t	class:ft::RBT
+node_allocator	includes/RBT/RBT.hpp	/^		typedef typename std::allocator<RBTNode<pair_type> >    node_allocator;$/;"	t	class:ft::RBT
+node_ptr	includes/RBT/RBT.hpp	/^		typedef RBTNode<pair_type>* 							node_ptr;$/;"	t	class:ft::RBT
 node_ptr	includes/RBT/RBT_node.hpp	/^	typedef RBTNode* 		node_ptr;$/;"	t	struct:ft::RBTNode
 node_ptr	includes/iterators/RBT_iterator.hpp	/^		typedef node_type* 												node_ptr;$/;"	t	class:ft::RBT_iterator
-node_type	includes/RBT/RBT.hpp	/^		typedef RBTNode<value_type> 							node_type;$/;"	t	class:ft::RBT
+node_type	includes/RBT/RBT.hpp	/^		typedef RBTNode<pair_type> 								node_type;$/;"	t	class:ft::RBT
 node_type	includes/RBT/RBT_node.hpp	/^	typedef RBTNode 		node_type; $/;"	t	struct:ft::RBTNode
-node_type	includes/iterators/RBT_iterator.hpp	/^		typedef ft::conditionnal<IsConst, const node, node> 			node_type;$/;"	t	class:ft::RBT_iterator
-operator !=	includes/iterators/RBT_iterator.hpp	/^bool operator!=( const ft::RBT_iterator<PairType, false>& lhs,$/;"	f	namespace:ft
+node_type	includes/iterators/RBT_iterator.hpp	/^		typedef RBTNode<pair_type>										node_type;$/;"	t	class:ft::RBT_iterator
+operator !=	includes/iterators/RBT_iterator.hpp	/^bool operator!=( const ft::RBT_iterator<Pair, false>& lhs,$/;"	f	namespace:ft
 operator !=	includes/iterators/reverse_iterator.hpp	/^bool operator!=( const ft::reverse_iterator<Iterator1>& lhs,$/;"	f
 operator !=	includes/mySTL/stack.hpp	/^bool operator!=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
 operator !=	includes/mySTL/vector.hpp	/^bool operator!=(const vector<T>& x, const vector<T>& y)$/;"	f	namespace:ft
 operator !=	includes/utils/pair.hpp	/^		bool operator!=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
 operator &	srcs/main_nthimoni.cpp	/^	A* operator&() { return NULL; }$/;"	f	class:A
 operator &	srcs/realtest.cpp	/^	A* operator&() { return NULL; }$/;"	f	class:A
-operator ()	includes/mySTL/map.hpp	/^				bool operator()(const value_type&left, const value_type& right) const$/;"	f	class:ft::map::value_compare
+operator ()	includes/mySTL/map.hpp	/^				bool operator()(const pair_type&left, const pair_type& right) const$/;"	f	class:ft::map::pair_compare
 operator ()	includes/utils/ft_utils.hpp	/^	result_type& operator()(Pair& p) const$/;"	f	struct:ft::SelectFirst
 operator ()	includes/utils/ft_utils.hpp	/^	result_type& operator()(T& value) const$/;"	f	struct:ft::Identity
 operator ()	includes/utils/ft_utils.hpp	/^	result_type& operator()(const Pair& p) const$/;"	f	struct:ft::SelectFirst
@@ -351,7 +353,7 @@ operator =	includes/utils/pair.hpp	/^	pair<T1, T2>& operator=(const pair& other)
 operator =	srcs/main_nthimoni.cpp	/^	A& operator=(const A& val)$/;"	f	class:A
 operator =	srcs/realtest.cpp	/^	A& operator=(const A& val)$/;"	f	class:A
 operator =	srcs/vector_stack_test.cpp	/^	A& operator=(const A &rhs) {$/;"	f	class:A
-operator ==	includes/iterators/RBT_iterator.hpp	/^bool operator==( const ft::RBT_iterator<PairType, false>& lhs,$/;"	f	namespace:ft
+operator ==	includes/iterators/RBT_iterator.hpp	/^bool operator==( const ft::RBT_iterator<Pair, false>& lhs,$/;"	f	namespace:ft
 operator ==	includes/iterators/reverse_iterator.hpp	/^bool operator==( const ft::reverse_iterator<Iterator1>& lhs,$/;"	f
 operator ==	includes/mySTL/stack.hpp	/^bool operator==(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
 operator ==	includes/mySTL/vector.hpp	/^bool operator==(const vector<T>& x, const vector<T>& y)$/;"	f	namespace:ft
@@ -379,12 +381,19 @@ pair	includes/utils/pair.hpp	/^	pair(const T1& x, const T2& y) : first(x), secon
 pair	includes/utils/pair.hpp	/^	pair(const pair<U1, U2>& p) : first(p.first), second(p.second) {};$/;"	f	struct:ft::pair
 pair	includes/utils/pair.hpp	/^	pair(void) : first(), second() {}$/;"	f	struct:ft::pair
 pair	includes/utils/pair.hpp	/^struct pair$/;"	s	namespace:ft
-pair_type	includes/iterators/RBT_iterator.hpp	/^		typedef PairType 												pair_type;$/;"	t	class:ft::RBT_iterator
+pairOfNode	includes/RBT/RBT.hpp	/^		const pair_type& pairOfNode(node_ptr node)$/;"	f	class:ft::RBT
+pair_allocator	includes/RBT/RBT.hpp	/^		typedef typename std::allocator<pair_type> 				pair_allocator;$/;"	t	class:ft::RBT
+pair_comp	includes/mySTL/map.hpp	/^		pair_compare pair_comp() const$/;"	f	class:ft::map
+pair_compare	includes/mySTL/map.hpp	/^				pair_compare(key_compare pred) : comp(pred) {}$/;"	f	class:ft::map::pair_compare
+pair_compare	includes/mySTL/map.hpp	/^		class pair_compare : public binary_function<pair_type, pair_type, bool>$/;"	c	class:ft::map
+pair_type	includes/RBT/RBT.hpp	/^		typedef Pair 											pair_type;$/;"	t	class:ft::RBT
+pair_type	includes/iterators/RBT_iterator.hpp	/^		typedef Pair 													pair_type;$/;"	t	class:ft::RBT_iterator
+pair_type	includes/mySTL/map.hpp	/^		typedef ft::pair<const Key, T> 								pair_type;$/;"	t	class:ft::map
 parent	includes/RBT/RBT_node.hpp	/^	RBTNode* 	parent;$/;"	m	struct:ft::RBTNode
 parent	includes/sandbox/binary_heap.hpp	/^		static int parent(int i) {$/;"	f	class:BinaryHeap
 parent	includes/sandbox/binary_search_tree.hpp	/^	Node *parent;$/;"	m	struct:Node
-pointer	includes/RBT/RBT.hpp	/^		typedef typename value_allocator::pointer 				pointer;$/;"	t	class:ft::RBT
-pointer	includes/iterators/RBT_iterator.hpp	/^		typedef value_type*												pointer;$/;"	t	class:ft::RBT_iterator
+pointer	includes/RBT/RBT.hpp	/^		typedef typename pair_allocator::pointer 				pointer;$/;"	t	class:ft::RBT
+pointer	includes/iterators/RBT_iterator.hpp	/^		typedef pair_type*												pointer;$/;"	t	class:ft::RBT_iterator
 pointer	includes/iterators/reverse_iterator.hpp	/^		typedef typename ft::iterator_traits<It>::pointer 				pointer;$/;"	t	class:ft::reverse_iterator
 pointer	includes/mySTL/map.hpp	/^		typedef typename allocator_type::pointer 					pointer;$/;"	t	class:ft::map
 pointer	includes/mySTL/vector.hpp	/^		typedef typename allocator_type::pointer 			pointer;$/;"	t	class:ft::vector
@@ -412,6 +421,7 @@ printHelper	includes/sandbox/binary_search_tree.hpp	/^		void printHelper(NodePtr
 printHelperPerso	includes/RBT/RBT.hpp	/^		void printHelperPerso(node_ptr node, std::string indent) {$/;"	f	class:ft::RBT
 printHelperPerso	includes/sandbox/AVL.hpp	/^		void printHelperPerso(NodePtr node, std::string indent) {$/;"	f	class:AVL
 printHelperPerso	includes/sandbox/binary_search_tree.hpp	/^		void printHelperPerso(NodePtr node, std::string indent) {$/;"	f	class:BST
+printRBT	includes/mySTL/map.hpp	/^		void printRBT(void)$/;"	f	class:ft::map
 printVector	srcs/main_nthimoni.cpp	/^void printVector(const T& a)$/;"	f
 printVector	srcs/realtest.cpp	/^void printVector(const T& a)$/;"	f
 print_and_empty_stack	srcs/vector_stack_test.cpp	/^void print_and_empty_stack(stack<T> & c)$/;"	f
@@ -423,10 +433,10 @@ rbegin	includes/mySTL/vector.hpp	/^		reverse_iterator rbegin() { return reverse_
 rebalance	includes/RBT/RBT.hpp	/^		void rebalance(node_ptr node) {$/;"	f	class:ft::RBT
 rebalance	includes/sandbox/AVL.hpp	/^		void rebalance(NodePtr node) {$/;"	f	class:AVL
 red	includes/RBT/RBT_node.hpp	/^typedef enum e_color { black, red } t_color;$/;"	e	enum:ft::e_color
-reference	includes/RBT/RBT.hpp	/^		typedef value_type& 									reference;$/;"	t	class:ft::RBT
-reference	includes/iterators/RBT_iterator.hpp	/^		typedef value_type&												reference;$/;"	t	class:ft::RBT_iterator
+reference	includes/RBT/RBT.hpp	/^		typedef pair_type& 										reference;$/;"	t	class:ft::RBT
+reference	includes/iterators/RBT_iterator.hpp	/^		typedef pair_type&												reference;$/;"	t	class:ft::RBT_iterator
 reference	includes/iterators/reverse_iterator.hpp	/^		typedef typename ft::iterator_traits<It>::reference 			reference;$/;"	t	class:ft::reverse_iterator
-reference	includes/mySTL/map.hpp	/^		typedef value_type& 										reference;$/;"	t	class:ft::map
+reference	includes/mySTL/map.hpp	/^		typedef pair_type& 											reference;$/;"	t	class:ft::map
 reference	includes/mySTL/stack.hpp	/^		typedef typename Container::reference 		reference;$/;"	t	class:stack
 reference	includes/mySTL/vector.hpp	/^		typedef value_type& 								reference;$/;"	t	class:ft::vector
 reference	includes/utils/iterator_traits.hpp	/^	typedef T& 									reference;$/;"	t	struct:ft::iterator_traits
@@ -439,7 +449,7 @@ rend	includes/mySTL/vector.hpp	/^		const_reverse_iterator rend() const { return 
 rend	includes/mySTL/vector.hpp	/^		reverse_iterator rend() { return reverse_iterator(_first); }$/;"	f	class:ft::vector
 reserve	includes/mySTL/vector.hpp	/^		void reserve(size_type newCap)$/;"	f	class:ft::vector
 resize	includes/mySTL/vector.hpp	/^		void resize(size_type n, T c = T())$/;"	f	class:ft::vector
-result_type	includes/mySTL/map.hpp	/^			typedef typename binary_function<value_type, value_type, bool>::result_type result_type;$/;"	t	class:ft::map::value_compare
+result_type	includes/mySTL/map.hpp	/^			typedef typename binary_function<pair_type, pair_type, bool>::result_type result_type;$/;"	t	class:ft::map::pair_compare
 result_type	includes/utils/ft_utils.hpp	/^		typedef Result 	result_type;$/;"	t	struct:ft::binary_function
 result_type	includes/utils/ft_utils.hpp	/^		typedef ResultType 		result_type;$/;"	t	struct:ft::unary_function
 result_type	includes/utils/ft_utils.hpp	/^	typedef typename unary_function<Pair, typename Pair::first_type>::result_type result_type;$/;"	t	struct:ft::SelectFirst
@@ -465,7 +475,7 @@ searchTreeHelper	includes/RBT/RBT.hpp	/^		node_ptr searchTreeHelper(node_ptr nod
 searchTreeHelper	includes/sandbox/AVL.hpp	/^		NodePtr searchTreeHelper(NodePtr node, int key) {$/;"	f	class:AVL
 searchTreeHelper	includes/sandbox/binary_search_tree.hpp	/^		NodePtr searchTreeHelper(NodePtr node, int key) {$/;"	f	class:BST
 second	includes/utils/pair.hpp	/^	T2 second;$/;"	m	struct:ft::pair
-second_argument_type	includes/mySTL/map.hpp	/^			typedef typename binary_function<value_type, value_type, bool>::second_argument_type second_argument_type;$/;"	t	class:ft::map::value_compare
+second_argument_type	includes/mySTL/map.hpp	/^			typedef typename binary_function<pair_type, pair_type, bool>::second_argument_type second_argument_type;$/;"	t	class:ft::map::pair_compare
 second_argument_type	includes/utils/ft_utils.hpp	/^		typedef Arg2 	second_argument_type;$/;"	t	struct:ft::binary_function
 second_type	includes/utils/pair.hpp	/^	typedef T2 second_type;$/;"	t	struct:ft::pair
 setInt	srcs/vector_stack_test.cpp	/^	void setInt(const int n) { *_i = n; }$/;"	f	class:A
@@ -473,7 +483,7 @@ size	includes/mySTL/map.hpp	/^		size_type size() const$/;"	f	class:ft::map
 size	includes/mySTL/stack.hpp	/^		size_type size() const { return c.size(); }$/;"	f	class:stack
 size	includes/mySTL/vector.hpp	/^		size_type size() const { return (_last - _first); }$/;"	f	class:ft::vector
 size	includes/sandbox/binary_heap.hpp	/^		int size;$/;"	m	class:BinaryHeap
-size_type	includes/RBT/RBT.hpp	/^		typedef typename value_allocator::size_type 			size_type;$/;"	t	class:ft::RBT
+size_type	includes/RBT/RBT.hpp	/^		typedef typename pair_allocator::size_type 				size_type;$/;"	t	class:ft::RBT
 size_type	includes/mySTL/map.hpp	/^		typedef typename allocator_type::size_type 					size_type;$/;"	t	class:ft::map
 size_type	includes/mySTL/stack.hpp	/^		typedef typename Container::size_type 		size_type;$/;"	t	class:stack
 size_type	includes/mySTL/vector.hpp	/^		typedef typename allocator_type::size_type 			size_type;$/;"	t	class:ft::vector
@@ -490,7 +500,7 @@ swapVectorBase	includes/mySTL/vector.hpp	/^void swapVectorBase(vector_base<T>& a
 t_color	includes/RBT/RBT_node.hpp	/^typedef enum e_color { black, red } t_color;$/;"	t	namespace:ft	typeref:enum:ft::e_color
 top	includes/mySTL/stack.hpp	/^		const value_type& top() const { return c.back(); }$/;"	f	class:stack
 top	includes/mySTL/stack.hpp	/^		value_type& top() { return c.back(); }$/;"	f	class:stack
-tree_type	includes/mySTL/map.hpp	/^		typedef RBT<key_type, value_type, ft::SelectFirst<value_type>, key_compare> 	tree_type; $/;"	t	class:ft::map
+tree_type	includes/mySTL/map.hpp	/^		typedef RBT<key_type, pair_type, ft::SelectFirst<pair_type>, key_compare> 	tree_type; $/;"	t	class:ft::map
 true_type	includes/utils/is_integral.hpp	/^typedef ft::integral_constant<bool, true> true_type;$/;"	t	namespace:ft
 type	includes/utils/enable_if.hpp	/^	typedef T type;$/;"	t	struct:ft::enable_if
 type	includes/utils/ft_utils.hpp	/^struct conditionnal<false, T, U> { typedef U type; };$/;"	t	struct:ft::conditionnal
@@ -502,15 +512,7 @@ updateBalance	includes/RBT/RBT.hpp	/^	void updateBalance(node_ptr node) {$/;"	f	
 updateBalance	includes/sandbox/AVL.hpp	/^	void updateBalance(NodePtr node) {$/;"	f	class:AVL
 value	includes/RBT/RBT_node.hpp	/^	Value 		value;$/;"	m	struct:ft::RBTNode
 value	includes/utils/is_integral.hpp	/^    static const T 					value = v;$/;"	m	struct:ft::integral_constant
-valueOfNode	includes/RBT/RBT.hpp	/^		const value_type& valueOfNode(node_ptr node)$/;"	f	class:ft::RBT
-value_allocator	includes/RBT/RBT.hpp	/^		typedef typename std::allocator<value_type> 			value_allocator;$/;"	t	class:ft::RBT
-value_comp	includes/mySTL/map.hpp	/^		value_compare value_comp() const$/;"	f	class:ft::map
-value_compare	includes/mySTL/map.hpp	/^				value_compare(key_compare pred) : comp(pred) {}$/;"	f	class:ft::map::value_compare
-value_compare	includes/mySTL/map.hpp	/^		class value_compare : public binary_function<value_type, value_type, bool>$/;"	c	class:ft::map
-value_type	includes/RBT/RBT.hpp	/^		typedef Value 											value_type;$/;"	t	class:ft::RBT
-value_type	includes/iterators/RBT_iterator.hpp	/^		typedef ft::conditionnal<IsConst, const pair_type, pair_type> 	value_type;$/;"	t	class:ft::RBT_iterator
 value_type	includes/iterators/reverse_iterator.hpp	/^		typedef typename ft::iterator_traits<It>::value_type 			value_type;$/;"	t	class:ft::reverse_iterator
-value_type	includes/mySTL/map.hpp	/^		typedef ft::pair<const Key, T> 								value_type;$/;"	t	class:ft::map
 value_type	includes/mySTL/stack.hpp	/^		typedef typename Container::value_type 		value_type;$/;"	t	class:stack
 value_type	includes/mySTL/vector.hpp	/^		typedef T value_type;$/;"	t	class:ft::vector
 value_type	includes/utils/is_integral.hpp	/^    typedef T 						value_type;$/;"	t	struct:ft::integral_constant

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/22 10:44:17 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/23 17:01:26 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "AVL.hpp"
 #include "binary_search_tree.hpp"
 #include "map.hpp"
+#include <map>
 
 #ifndef NS
 # define NS std
@@ -98,7 +99,9 @@ void RBT_test(void)
 	}
 	{
 		std::cout << "\n########## RBT ##########\n\n";
-		ft::map<int, std::string> mapOfString;
+		NS::map<int, std::string> mapOfString;
+		mapOfString.insert(NS::pair<int, std::string>(0, "ab"));
 	}
 	return;
 }
+

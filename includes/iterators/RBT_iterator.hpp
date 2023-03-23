@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 17:57:49 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/21 16:57:24 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/23 17:33:58 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,18 @@
 namespace ft
 {
 
-template<class PairType, bool IsConst>
+template<class Pair, bool IsConst>
 class RBT_iterator
 {
 	public:
 		typedef std::bidirectional_iterator_tag 						iterator_category;
 		typedef std::ptrdiff_t 											difference_type;
-		typedef PairType 												pair_type;
-		typedef ft::conditionnal<IsConst, const pair_type, pair_type> 	value_type;
-		typedef value_type*												pointer;
-		typedef value_type&												reference;
-		typedef RBTNode<PairType>										node;
-		typedef ft::conditionnal<IsConst, const node, node> 			node_type;
+		typedef Pair 													pair_type;
+		//typedef ft::conditionnal<IsConst, const pair, pair> 			pair_type;
+		typedef pair_type*												pointer;
+		typedef pair_type&												reference;
+		typedef RBTNode<pair_type>										node_type;
+		//typedef ft::conditionnal<IsConst, const node, node> 			node_type;
 		typedef node_type* 												node_ptr;
 
 	protected:
@@ -43,7 +43,7 @@ class RBT_iterator
 
 		RBT_iterator(node_ptr ptr) : _current(ptr) {}
 
-		RBT_iterator(const RBT_iterator<PairType, IsConst>& other) : _current(other._current) {}
+		RBT_iterator(const RBT_iterator<Pair, IsConst>& other) : _current(other._current) {}
 
 		RBT_iterator operator=(const RBT_iterator& other)
 		{
@@ -94,16 +94,16 @@ class RBT_iterator
 
 };
 
-template< class PairType >
-bool operator==( const ft::RBT_iterator<PairType, false>& lhs,
-                 const ft::RBT_iterator<PairType, false>& rhs )
+template< class Pair >
+bool operator==( const ft::RBT_iterator<Pair, false>& lhs,
+                 const ft::RBT_iterator<Pair, false>& rhs )
 {
 	return (lhs._current == rhs._current);
 }
 
-template< class PairType >
-bool operator!=( const ft::RBT_iterator<PairType, false>& lhs,
-                 const ft::RBT_iterator<PairType, false>& rhs )
+template< class Pair >
+bool operator!=( const ft::RBT_iterator<Pair, false>& lhs,
+                 const ft::RBT_iterator<Pair, false>& rhs )
 {
 	return (lhs._current != rhs._current);
 }
