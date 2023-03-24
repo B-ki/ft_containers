@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/23 17:16:00 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/24 11:13:43 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class map {
 	public:
 		typedef Key 												key_type;
 		typedef T 													mapped_type;
-		typedef ft::pair<const Key, T> 								pair_type;
+		typedef ft::pair<Key, T> 								pair_type;
 
 		typedef Compare 											key_compare;
 		typedef typename std::allocator<ft::pair<const Key, T> > 	allocator_type;

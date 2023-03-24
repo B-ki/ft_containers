@@ -40,7 +40,7 @@ MAP_HPP	includes/mySTL/map.hpp	14;"	d
 MAX_SIZE	includes/sandbox/binary_heap.hpp	/^		const static int MAX_SIZE = 15;$/;"	m	class:BinaryHeap
 NAME	Makefile	/^NAME = ft_container$/;"	m
 NS	Makefile	/^NS = ft$/;"	m
-NS	srcs/RBT_test.cpp	24;"	d	file:
+NS	srcs/RBT_test.cpp	25;"	d	file:
 NS	srcs/main.cpp	14;"	d	file:
 NS	srcs/main_nthimoni.cpp	14;"	d	file:
 NS	srcs/realtest.cpp	14;"	d	file:
@@ -51,12 +51,12 @@ NodePtr	includes/sandbox/binary_search_tree.hpp	/^typedef Node* NodePtr;$/;"	t
 OBJDIR	Makefile	/^OBJDIR = bin\/$/;"	m
 OBJS	Makefile	/^OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))$/;"	m
 PAIR_HPP	includes/utils/pair.hpp	14;"	d
-RBT	includes/RBT/RBT.hpp	/^		RBT() : _root(NULL), _allocator(node_allocator()), _comp(key_compare()) {}; $/;"	f	class:ft::RBT
+RBT	includes/RBT/RBT.hpp	/^		RBT() : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(key_compare()) {}; $/;"	f	class:ft::RBT
 RBT	includes/RBT/RBT.hpp	/^		RBT(const RBT<key_type, pair_type, key_of_pair, key_compare>& other) $/;"	f	class:ft::RBT
-RBT	includes/RBT/RBT.hpp	/^		RBT(const key_compare& comp) : _root(NULL), _allocator(node_allocator()), _comp(comp) {}; $/;"	f	class:ft::RBT
+RBT	includes/RBT/RBT.hpp	/^		RBT(const key_compare& comp) : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(comp) {}; $/;"	f	class:ft::RBT
 RBT	includes/RBT/RBT.hpp	/^class RBT$/;"	c	namespace:ft
-RBTNode	includes/RBT/RBT_node.hpp	/^	RBTNode() : value(), parent(NULL), left(NULL), right(NULL), color(black), bf(0) {}$/;"	f	struct:ft::RBTNode
-RBTNode	includes/RBT/RBT_node.hpp	/^	RBTNode(Value v, node_ptr p = NULL, node_ptr l = NULL, node_ptr r = NULL, t_color c = black, int bf = 0) : $/;"	f	struct:ft::RBTNode
+RBTNode	includes/RBT/RBT_node.hpp	/^	RBTNode() : pair(), parent(NULL), left(NULL), right(NULL), color(black), bf(0) {}$/;"	f	struct:ft::RBTNode
+RBTNode	includes/RBT/RBT_node.hpp	/^	RBTNode(Pair v, node_ptr p = NULL, node_ptr l = NULL, node_ptr r = NULL, t_color c = black, int bf = 0) : $/;"	f	struct:ft::RBTNode
 RBTNode	includes/RBT/RBT_node.hpp	/^struct RBTNode$/;"	s	namespace:ft
 RBT_HPP	includes/RBT/RBT.hpp	14;"	d
 RBT_ITERATOR_HPP	includes/iterators/RBT_iterator.hpp	14;"	d
@@ -76,14 +76,16 @@ TESTS_HPP	includes/tests.hpp	14;"	d
 VECTOR_HPP	includes/mySTL/vector.hpp	14;"	d
 _RBT	includes/mySTL/map.hpp	/^		tree_type _RBT;$/;"	m	class:ft::map
 _alloc	includes/mySTL/vector.hpp	/^		std::allocator<T> _alloc;$/;"	m	class:ft::vector_base
-_allocator	includes/RBT/RBT.hpp	/^		node_allocator 	_allocator;$/;"	m	class:ft::RBT
 _comp	includes/RBT/RBT.hpp	/^		key_compare 	_comp;$/;"	m	class:ft::RBT
 _current	includes/iterators/RBT_iterator.hpp	/^		node_ptr _current;$/;"	m	class:ft::RBT_iterator
 _current	includes/iterators/reverse_iterator.hpp	/^		iterator_type _current;$/;"	m	class:ft::reverse_iterator
 _end	includes/mySTL/vector.hpp	/^		T* _end;$/;"	m	class:ft::vector_base
 _first	includes/mySTL/vector.hpp	/^		T* _first;$/;"	m	class:ft::vector_base
 _i	srcs/vector_stack_test.cpp	/^		int* _i;$/;"	m	class:A	file:
+_key_of_pair	includes/RBT/RBT.hpp	/^		key_of_pair 	_key_of_pair;$/;"	m	class:ft::RBT
 _last	includes/mySTL/vector.hpp	/^		T* _last;$/;"	m	class:ft::vector_base
+_node_allocator	includes/RBT/RBT.hpp	/^		node_allocator 	_node_allocator;$/;"	m	class:ft::RBT
+_pair_allocator	includes/RBT/RBT.hpp	/^		pair_allocator  _pair_allocator;$/;"	m	class:ft::RBT
 _root	includes/RBT/RBT.hpp	/^		node_ptr 		_root;$/;"	m	class:ft::RBT
 a	srcs/main_nthimoni.cpp	/^	static int a;$/;"	m	class:A	file:
 a	srcs/main_nthimoni.cpp	/^int A::a = 0;$/;"	m	class:A	file:
@@ -208,7 +210,7 @@ inOrder	includes/sandbox/AVL.hpp	/^		void inOrder() {$/;"	f	class:AVL
 inOrder	includes/sandbox/binary_search_tree.hpp	/^		void inOrder() {$/;"	f	class:BST
 inOrderHelper	includes/sandbox/AVL.hpp	/^		void inOrderHelper(NodePtr node) {$/;"	f	class:AVL
 inOrderHelper	includes/sandbox/binary_search_tree.hpp	/^		void inOrderHelper(NodePtr node) {$/;"	f	class:BST
-initializeNode	includes/RBT/RBT.hpp	/^		void initializeNode(node_ptr node, pair_type pair = pair_type())$/;"	f	class:ft::RBT
+initializeNode	includes/RBT/RBT.hpp	/^		void initializeNode(node_ptr node, pair_type pair)$/;"	f	class:ft::RBT
 initializeNode	includes/sandbox/AVL.hpp	/^		void initializeNode(NodePtr node, int key) {$/;"	f	class:AVL
 initializeNode	includes/sandbox/binary_search_tree.hpp	/^		void initializeNode(NodePtr node, int key) {$/;"	f	class:BST
 insert	includes/RBT/RBT.hpp	/^		iterator insert(const pair_type& pair) {$/;"	f	class:ft::RBT
@@ -249,7 +251,7 @@ iterator_category	includes/utils/iterator_traits.hpp	/^	typedef typename Iterato
 iterator_traits	includes/utils/iterator_traits.hpp	/^struct iterator_traits$/;"	s	namespace:ft
 iterator_traits	includes/utils/iterator_traits.hpp	/^struct iterator_traits<T*>$/;"	s	namespace:ft
 iterator_type	includes/iterators/reverse_iterator.hpp	/^		typedef It 														iterator_type;$/;"	t	class:ft::reverse_iterator
-keyOfNode	includes/RBT/RBT.hpp	/^		key_type& keyOfNode(node_ptr node)$/;"	f	class:ft::RBT
+keyOfNode	includes/RBT/RBT.hpp	/^		key_type keyOfNode(node_ptr node)$/;"	f	class:ft::RBT
 key_comp	includes/mySTL/map.hpp	/^		key_compare key_comp() const$/;"	f	class:ft::map
 key_compare	includes/RBT/RBT.hpp	/^		typedef KeyCompare 										key_compare;$/;"	t	class:ft::RBT
 key_compare	includes/mySTL/map.hpp	/^		typedef Compare 											key_compare;$/;"	t	class:ft::map
@@ -268,7 +270,7 @@ log	srcs/realtest.cpp	/^	static void log()$/;"	f	class:A
 main	srcs/main.cpp	/^int main()$/;"	f
 main	srcs/main_nthimoni.cpp	/^int main()$/;"	f
 main	srcs/realtest.cpp	/^int main()$/;"	f
-make_pair	includes/utils/pair.hpp	/^	pair<T1, T2> make_pair (T1 t, T2 u) {$/;"	f	struct:ft::pair
+make_pair	includes/utils/pair.hpp	/^pair<T1, T2> make_pair (T1 t, T2 u) {$/;"	f	namespace:ft
 map	includes/mySTL/map.hpp	/^		explicit map (const Compare& comp) : _RBT(comp) {}$/;"	f	class:ft::map
 map	includes/mySTL/map.hpp	/^		map (const map& other) : _RBT(other._RBT) {}$/;"	f	class:ft::map
 map	includes/mySTL/map.hpp	/^		map() : _RBT() {}$/;"	f	class:ft::map
@@ -305,7 +307,7 @@ operator !=	includes/iterators/RBT_iterator.hpp	/^bool operator!=( const ft::RBT
 operator !=	includes/iterators/reverse_iterator.hpp	/^bool operator!=( const ft::reverse_iterator<Iterator1>& lhs,$/;"	f
 operator !=	includes/mySTL/stack.hpp	/^bool operator!=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
 operator !=	includes/mySTL/vector.hpp	/^bool operator!=(const vector<T>& x, const vector<T>& y)$/;"	f	namespace:ft
-operator !=	includes/utils/pair.hpp	/^		bool operator!=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
+operator !=	includes/utils/pair.hpp	/^bool operator!=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
 operator &	srcs/main_nthimoni.cpp	/^	A* operator&() { return NULL; }$/;"	f	class:A
 operator &	srcs/realtest.cpp	/^	A* operator&() { return NULL; }$/;"	f	class:A
 operator ()	includes/mySTL/map.hpp	/^				bool operator()(const pair_type&left, const pair_type& right) const$/;"	f	class:ft::map::pair_compare
@@ -332,7 +334,7 @@ operator ->	includes/iterators/reverse_iterator.hpp	/^		pointer operator->() con
 operator <	includes/iterators/reverse_iterator.hpp	/^bool operator<( const ft::reverse_iterator<Iterator1>& lhs,$/;"	f
 operator <	includes/mySTL/stack.hpp	/^bool operator<(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
 operator <	includes/mySTL/vector.hpp	/^bool operator< (const vector<T>& x, const vector<T>& y)$/;"	f	namespace:ft
-operator <	includes/utils/pair.hpp	/^		bool operator<(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
+operator <	includes/utils/pair.hpp	/^bool operator<(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
 operator <	srcs/main_nthimoni.cpp	/^	bool operator<(const A& val) const { return *data < *(val.data); }$/;"	f	class:A
 operator <	srcs/realtest.cpp	/^	bool operator<(const A& val) const { return *data < *(val.data); }$/;"	f	class:A
 operator <<	srcs/main_nthimoni.cpp	/^std::ostream& operator<<(std::ostream& out, const A& val)$/;"	f
@@ -341,7 +343,7 @@ operator <<	srcs/vector_stack_test.cpp	/^std::ostream & operator<<(std::ostream 
 operator <=	includes/iterators/reverse_iterator.hpp	/^bool operator<=( const ft::reverse_iterator<Iterator1>& lhs,$/;"	f
 operator <=	includes/mySTL/stack.hpp	/^bool operator<=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
 operator <=	includes/mySTL/vector.hpp	/^bool operator<=(const vector<T>& x, const vector<T>& y)$/;"	f	namespace:ft
-operator <=	includes/utils/pair.hpp	/^		bool operator<=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
+operator <=	includes/utils/pair.hpp	/^bool operator<=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
 operator <=	srcs/main_nthimoni.cpp	/^	bool operator<=(const A& val) const { return *data <= *(val.data); }$/;"	f	class:A
 operator <=	srcs/realtest.cpp	/^	bool operator<=(const A& val) const { return *data <= *(val.data); }$/;"	f	class:A
 operator =	includes/iterators/RBT_iterator.hpp	/^		RBT_iterator operator=(const RBT_iterator& other)$/;"	f	class:ft::RBT_iterator
@@ -349,7 +351,7 @@ operator =	includes/iterators/reverse_iterator.hpp	/^		reverse_iterator operator
 operator =	includes/mySTL/map.hpp	/^		map& operator=(const map& other)$/;"	f	class:ft::map
 operator =	includes/mySTL/stack.hpp	/^		stack& operator=(const stack& rhs)$/;"	f	class:stack
 operator =	includes/mySTL/vector.hpp	/^		vector<T>& operator=(const vector<T>& x)$/;"	f	class:ft::vector
-operator =	includes/utils/pair.hpp	/^	pair<T1, T2>& operator=(const pair& other) {$/;"	f	struct:ft::pair
+operator =	includes/utils/pair.hpp	/^	pair& operator=(const pair& other) {$/;"	f	struct:ft::pair
 operator =	srcs/main_nthimoni.cpp	/^	A& operator=(const A& val)$/;"	f	class:A
 operator =	srcs/realtest.cpp	/^	A& operator=(const A& val)$/;"	f	class:A
 operator =	srcs/vector_stack_test.cpp	/^	A& operator=(const A &rhs) {$/;"	f	class:A
@@ -357,19 +359,19 @@ operator ==	includes/iterators/RBT_iterator.hpp	/^bool operator==( const ft::RBT
 operator ==	includes/iterators/reverse_iterator.hpp	/^bool operator==( const ft::reverse_iterator<Iterator1>& lhs,$/;"	f
 operator ==	includes/mySTL/stack.hpp	/^bool operator==(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
 operator ==	includes/mySTL/vector.hpp	/^bool operator==(const vector<T>& x, const vector<T>& y)$/;"	f	namespace:ft
-operator ==	includes/utils/pair.hpp	/^		bool operator==(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
+operator ==	includes/utils/pair.hpp	/^bool operator==(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
 operator ==	srcs/main_nthimoni.cpp	/^	bool operator==(const A& val) const { return *data == *(val.data); }$/;"	f	class:A
 operator ==	srcs/realtest.cpp	/^	bool operator==(const A& val) const { return *data == *(val.data); }$/;"	f	class:A
 operator >	includes/iterators/reverse_iterator.hpp	/^bool operator>( const ft::reverse_iterator<Iterator1>& lhs,$/;"	f
 operator >	includes/mySTL/stack.hpp	/^bool operator> (const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
 operator >	includes/mySTL/vector.hpp	/^bool operator> (const vector<T>& x, const vector<T>& y)$/;"	f	namespace:ft
-operator >	includes/utils/pair.hpp	/^		bool operator>(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
+operator >	includes/utils/pair.hpp	/^bool operator>(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
 operator >	srcs/main_nthimoni.cpp	/^	bool operator>(const A& val) const { return *data > *(val.data); }$/;"	f	class:A
 operator >	srcs/realtest.cpp	/^	bool operator>(const A& val) const { return *data > *(val.data); }$/;"	f	class:A
 operator >=	includes/iterators/reverse_iterator.hpp	/^bool operator>=( const ft::reverse_iterator<Iterator1>& lhs,$/;"	f
 operator >=	includes/mySTL/stack.hpp	/^bool operator>=(const stack<T, Container>& x, const stack<T, Container>& y)$/;"	f
 operator >=	includes/mySTL/vector.hpp	/^bool operator>=(const vector<T>& x, const vector<T>& y)$/;"	f	namespace:ft
-operator >=	includes/utils/pair.hpp	/^		bool operator>=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
+operator >=	includes/utils/pair.hpp	/^bool operator>=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {$/;"	f	namespace:ft
 operator >=	srcs/main_nthimoni.cpp	/^	bool operator>=(const A& val) const { return *data >= *(val.data); }$/;"	f	class:A
 operator >=	srcs/realtest.cpp	/^	bool operator>=(const A& val) const { return *data >= *(val.data); }$/;"	f	class:A
 operator []	includes/iterators/reverse_iterator.hpp	/^		reference operator[](difference_type n) const$/;"	f	class:ft::reverse_iterator
@@ -377,6 +379,7 @@ operator []	includes/mySTL/map.hpp	/^		T& operator[](const Key& key)$/;"	f	class
 operator []	includes/mySTL/vector.hpp	/^		const_reference operator[](size_type n) const$/;"	f	class:ft::vector
 operator []	includes/mySTL/vector.hpp	/^		reference operator[](size_type n)$/;"	f	class:ft::vector
 operator value_type	includes/utils/is_integral.hpp	/^    operator value_type() { $/;"	f	struct:ft::integral_constant
+pair	includes/RBT/RBT_node.hpp	/^	Pair 		pair;$/;"	m	struct:ft::RBTNode
 pair	includes/utils/pair.hpp	/^	pair(const T1& x, const T2& y) : first(x), second(y) {};$/;"	f	struct:ft::pair
 pair	includes/utils/pair.hpp	/^	pair(const pair<U1, U2>& p) : first(p.first), second(p.second) {};$/;"	f	struct:ft::pair
 pair	includes/utils/pair.hpp	/^	pair(void) : first(), second() {}$/;"	f	struct:ft::pair
@@ -388,7 +391,7 @@ pair_compare	includes/mySTL/map.hpp	/^				pair_compare(key_compare pred) : comp(
 pair_compare	includes/mySTL/map.hpp	/^		class pair_compare : public binary_function<pair_type, pair_type, bool>$/;"	c	class:ft::map
 pair_type	includes/RBT/RBT.hpp	/^		typedef Pair 											pair_type;$/;"	t	class:ft::RBT
 pair_type	includes/iterators/RBT_iterator.hpp	/^		typedef Pair 													pair_type;$/;"	t	class:ft::RBT_iterator
-pair_type	includes/mySTL/map.hpp	/^		typedef ft::pair<const Key, T> 								pair_type;$/;"	t	class:ft::map
+pair_type	includes/mySTL/map.hpp	/^		typedef ft::pair<Key, T> 								pair_type;$/;"	t	class:ft::map
 parent	includes/RBT/RBT_node.hpp	/^	RBTNode* 	parent;$/;"	m	struct:ft::RBTNode
 parent	includes/sandbox/binary_heap.hpp	/^		static int parent(int i) {$/;"	f	class:BinaryHeap
 parent	includes/sandbox/binary_search_tree.hpp	/^	Node *parent;$/;"	m	struct:Node
@@ -510,7 +513,6 @@ type	includes/utils/remove_cv.hpp	/^		typedef T type;$/;"	t	struct:ft::remove_cv
 unary_function	includes/utils/ft_utils.hpp	/^struct unary_function$/;"	s	namespace:ft
 updateBalance	includes/RBT/RBT.hpp	/^	void updateBalance(node_ptr node) {$/;"	f	class:ft::RBT
 updateBalance	includes/sandbox/AVL.hpp	/^	void updateBalance(NodePtr node) {$/;"	f	class:AVL
-value	includes/RBT/RBT_node.hpp	/^	Value 		value;$/;"	m	struct:ft::RBTNode
 value	includes/utils/is_integral.hpp	/^    static const T 					value = v;$/;"	m	struct:ft::integral_constant
 value_type	includes/iterators/reverse_iterator.hpp	/^		typedef typename ft::iterator_traits<It>::value_type 			value_type;$/;"	t	class:ft::reverse_iterator
 value_type	includes/mySTL/stack.hpp	/^		typedef typename Container::value_type 		value_type;$/;"	t	class:stack

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/23 18:07:42 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/24 22:29:00 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,12 @@ class RBT
 
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
 
-		RBT() : _root(NULL), _allocator(node_allocator()), _comp(key_compare()) {}; 
+		RBT() : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(key_compare()) {}; 
 
-		RBT(const key_compare& comp) : _root(NULL), _allocator(node_allocator()), _comp(comp) {}; 
+		RBT(const key_compare& comp) : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(comp) {}; 
 
 		RBT(const RBT<key_type, pair_type, key_of_pair, key_compare>& other) 
-			: _allocator(node_allocator()), _comp(key_compare())
+			: _pair_allocator(pair_allocator()),  _node_allocator(node_allocator()), _comp(key_compare())
 		{
 			for (iterator it = other.begin(); it != other.end(); it++)
 				this->insert(it);
@@ -79,8 +79,10 @@ class RBT
 		
 	private:
 		node_ptr 		_root;
-		node_allocator 	_allocator;
+		pair_allocator  _pair_allocator;
+		node_allocator 	_node_allocator;
 		key_compare 	_comp;
+		key_of_pair 	_key_of_pair;
 
 	public: 
 
@@ -142,7 +144,9 @@ class RBT
 		}
 
 		iterator insert(const pair_type& pair) {
-			node_ptr node = _allocator.allocate(1);
+			node_ptr node = _node_allocator.allocate(1);
+			_pair_allocator.construct(&node->pair, pair);	
+std::cout << "pair.RBTinsert(" << pair.first << ", " << pair.second << ")\n";
 			initializeNode(node, pair);
 			node_ptr y = NULL;
 			node_ptr x = this->_root;
@@ -182,7 +186,8 @@ class RBT
                   b   c                a   b
 */
 		void leftRotate(node_ptr x) {
-			std::cout << "leftRotate node " << x->data << std::endl;
+			std::cout << "rightRotate node (" << x->pair.first;
+			std::cout << ", " << x->pair.second << ")" << std::endl;
 			node_ptr y = x->right;
 			x->right = y->left;
 			if (y->left != NULL)
@@ -211,7 +216,8 @@ class RBT
 */
 
 		void rightRotate(node_ptr x) {
-			std::cout << "rightRotate node " << x->data << std::endl;
+			std::cout << "rightRotate node (" << x->pair.first;
+			std::cout << ", " << x->pair.second << ")" << std::endl;
 			node_ptr y = x->left;
 			x->left = y->right;
 			if (y->right != NULL)
@@ -231,13 +237,13 @@ class RBT
 		}
 
 	void updateBalance(node_ptr node) {
-		//std::cout << "updateBalance node " << node->data << ", bf = " << node->bf << std::endl;
+		//std::cout << "updateBalance node " << node->pair << ", bf = " << node->bf << std::endl;
 		if (!node)
 			return;
 		// The first ancestor that has a bf < -1 || > 1 is rebalanced. There should be only one considering the fact
 		// that we do this everytime we insert something.
 		if (node->bf < -1 || node->bf > 1) {
-			//std::cout << "Rebalancing node " << node->data << std::endl;
+			//std::cout << "Rebalancing node " << node->pair << std::endl;
 			rebalance(node);
 			//prettyPrint();
 			return ;
@@ -311,9 +317,9 @@ class RBT
 	// #################### HELPERS ####################
 
 	private:
-		key_type& keyOfNode(node_ptr node)
+		key_type keyOfNode(node_ptr node)
 		{
-			return key_of_pair()(node->data);
+			return key_of_pair()(node->pair);
 		}
 
 		const pair_type& pairOfNode(node_ptr node)
@@ -323,7 +329,7 @@ class RBT
 
 		bool isSameKey(const node_ptr node, const key_type& key)
 		{
-			if (!key_compare(keyOfNode(node), key) && 
+			if (!_comp(keyOfNode(node), key) && 
 					!key_compare(key, keyOfNode(node)))
 				return true;
 			return false;
@@ -331,17 +337,17 @@ class RBT
 
 		bool isKeyInf(const node_ptr node, const key_type& key)
 		{
-			return key_compare(keyOfNode(node), key);
+			return _comp(keyOfNode(node), key);
 		}
 
 		bool isKeySup(const node_ptr node, const key_type& key)
 		{
-			return key_compare(key, keyOfNode(node));
+			return _comp(key, keyOfNode(node));
 		}
 
 		bool nodeCompare(node_ptr a, node_ptr b)
 		{
-			return (key_compare(keyOfNode(a), keyOfNode(b)));
+			return (_comp(keyOfNode(a), keyOfNode(b)));
 		}
 
 		node_ptr create_node(const pair_type& val)
@@ -360,13 +366,13 @@ class RBT
 		void erase_node(node_ptr node)
 		{
 			// No need to destroy node->pair, it is called in destroy(node)
-			_allocator.destroy(node);
-			_allocator.deallocate(node, 1);		
+			_node_allocator.destroy(node);
+			_node_allocator.deallocate(node, 1);		
 		}
 
-		void initializeNode(node_ptr node, pair_type pair = pair_type())
+		void initializeNode(node_ptr node, pair_type pair)
 		{
-			node->value = pair;
+			(void)pair;
 			node->parent = NULL;
 			node->left = NULL;
 			node->right = NULL;
@@ -430,7 +436,8 @@ class RBT
 			if (node != NULL) {
 				indent += "            ";
 				printHelperPerso(node->right, indent);
-				std::cout << indent << node->pair << "(bf=" << node->bf << ")\n";
+				std::cout << indent << "(" << node->pair.first;
+				std::cout << ", " << node->pair.second << ") (bf=" << node->bf << ")\n";
 				printHelperPerso(node->left, indent);
 			}	
 		}

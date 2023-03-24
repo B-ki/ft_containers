@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 16:56:13 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/21 16:58:26 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/24 11:19:40 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ namespace ft
 
 typedef enum e_color { black, red } t_color;
 
-template<class Value>
+template<class Pair>
 struct RBTNode
 {
-	Value 		value;
+	Pair 		pair;
 	RBTNode* 	parent;
 	RBTNode* 	left;
 	RBTNode* 	right;
@@ -34,10 +34,10 @@ struct RBTNode
 	typedef RBTNode* 		node_ptr;
 	typedef const RBTNode* 	const_node_ptr;
 
-	RBTNode() : value(), parent(NULL), left(NULL), right(NULL), color(black), bf(0) {}
+	RBTNode() : pair(), parent(NULL), left(NULL), right(NULL), color(black), bf(0) {}
 
-	RBTNode(Value v, node_ptr p = NULL, node_ptr l = NULL, node_ptr r = NULL, t_color c = black, int bf = 0) : 
-		value(v), color(c), parent(p), left(l), right(r), bf(bf) {}; 
+	RBTNode(Pair v, node_ptr p = NULL, node_ptr l = NULL, node_ptr r = NULL, t_color c = black, int bf = 0) : 
+		pair(v), color(c), parent(p), left(l), right(r), bf(bf) {}; 
 
 	// "static" makes the member accessible out of the class, without needing 
 	// to instantiate an object of the class	
