@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/24 22:30:12 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/27 22:18:44 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,38 @@ void RBT_test(void)
 		NS::pair<int, std::string> pair3 = NS::make_pair(2, "ef");
 		NS::pair<int, std::string> pair4 = NS::make_pair(3, "gh");
 		NS::pair<int, std::string> pair5 = NS::make_pair(4, "ij");
+		NS::pair<int, std::string> pair6 = NS::make_pair(5, "kl");
+		NS::pair<int, std::string> pair7 = NS::make_pair(6, "mn");
+		NS::pair<int, std::string> pair8 = NS::make_pair(7, "op");
 		mapOfString.insert(pair1);
+		mapOfString.printRBT();
 		mapOfString.insert(pair2);
+		mapOfString.printRBT();
 		mapOfString.insert(pair3);
+		mapOfString.printRBT();
 		mapOfString.insert(pair4);
+		mapOfString.printRBT();
 		mapOfString.insert(pair5);
 		mapOfString.printRBT();
+		mapOfString.insert(pair6);
+		mapOfString.printRBT();
+		mapOfString.insert(pair7);
+		mapOfString.printRBT();
+		mapOfString.insert(pair8);
+		mapOfString.printRBT();
+		std::cout << mapOfString.size() << std::endl;
+		std::cout << mapOfString.max_size() << std::endl;
+		std::cout << "Value at key=5 : \n" << mapOfString.at(5) << std::endl;
+		try {
+		std::cout << "Value at key=8 : " << mapOfString.at(8) << std::endl;
+		} catch (...) {
+			std::cout << "Key 8 doesn't exists\n";
+		}
+		std::cout << "Value at key=4 : " << mapOfString[4] << std::endl;
+		std::cout << "Value at key=9 : " << mapOfString[9] << std::endl;
+		mapOfString.printRBT();
+		NS::map<int, std::string> mapCopy(mapOfString);
+		//mapCopy.printRBT();
 	}
 	return;
 }

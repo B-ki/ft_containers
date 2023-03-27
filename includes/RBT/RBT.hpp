@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/24 22:29:00 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/27 22:23:08 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <functional>
 #include <memory>
 #include <iostream>
+#include <stdexcept>
 #include "RBT_iterator.hpp"
 #include "RBT_node.hpp"
 #include "reverse_iterator.hpp"
@@ -67,16 +68,16 @@ class RBT
 			: _pair_allocator(pair_allocator()),  _node_allocator(node_allocator()), _comp(key_compare())
 		{
 			for (iterator it = other.begin(); it != other.end(); it++)
-				this->insert(it);
+				this->insert(*it);
 		}
-				
+
 		~RBT()
 		{
 			destructorHelper(this->_root);
 		}
 
 		// #################### MEMBERS ####################
-		
+
 	private:
 		node_ptr 		_root;
 		pair_allocator  _pair_allocator;
@@ -86,45 +87,48 @@ class RBT
 
 	public: 
 
-		node_ptr getRoot()
+		// ########## CAPACITY ##########
+
+		bool empty() const
 		{
-			return this->_root;
+			if (this->_root)
+				return true;
+			return false;
 		}
 
-		node_ptr searchTree(int key) {
-			return searchTreeHelper(this->_root, key);
-		}
-
-		node_ptr minimum(node_ptr node) {
-			while (node->left) {
-				minimum(node->left);
-			}
-			return node;
-		}
-
-		node_ptr maximum(node_ptr node) {
-			while (node->right) {
-				maximum(node->right);
-			}
-			return node;
-		}
-
-		iterator begin()
+		size_type size() const 
 		{
-			return (minimum(getRoot()));
+			return sizeHelper(this->_root) - 1;
 		}
 
-		iterator end()
+		size_type sizeHelper(node_ptr node) const
 		{
-			return (maximum(getRoot())++);
+			if (!node)
+				return 1;
+			return (sizeHelper(node->left) + sizeHelper(node->right));
+		}
+
+		// ########## FINDERS ##########
+
+		iterator begin() const
+		{
+			iterator ret(getRoot()->minimum());
+			return (ret);
+		}
+
+		iterator end() const
+		{
+			iterator ret(NULL);
+			return (ret);
 		}
 
 		// The successor is the node whose key is next
-		node_ptr successor(node_ptr x) {
+		node_ptr successor(node_ptr x) const
+		{
 			if (x->right != NULL)
-				return minimum(x->right);
+				return x->right->minimum();
 			node_ptr y = x->parent;
-			while (y != NULL && isRight(x)) {
+			while (y != NULL && x->isRight()) {
 				x = y;
 				y = y->parent;
 			}
@@ -132,21 +136,60 @@ class RBT
 		}
 
 		// The predecessor is the node whose key is just before
-		node_ptr predecessor(node_ptr x) {
+		node_ptr predecessor(node_ptr x) const
+		{
 			if (x->left != NULL)
-				maximum(x->left);
+				x->left->maximum();
 			node_ptr y = x->parent;
-			while (y != NULL && isLeft(x)) {
+			while (y != NULL && x->isLeft()) {
 				x = y;
 				y = y->parent;
 			}
 			return y;
 		}
 
-		iterator insert(const pair_type& pair) {
+		node_ptr searchTree(key_type key) const
+		{
+			return searchTreeHelper(this->_root, key);
+		}
+
+		pair_type& getPair(key_type key) const
+		{
+			node_ptr temp = searchTree(key);
+
+			if (temp)
+				return (temp->pair);
+			else
+				throw (std::out_of_range("Key doesn't exists"));
+		}
+
+		node_ptr minimum(node_ptr node) const
+		{
+			while (node->left) {
+				minimum(node->left);
+			}
+			return node;
+		}
+
+		node_ptr maximum(node_ptr node) const
+		{
+			while (node->right) {
+				maximum(node->right);
+			}
+			return node;
+		}
+
+		node_ptr getRoot() const
+		{
+			return this->_root;
+		}
+
+		// ########## MODIFIERS ##########
+
+		iterator insert(const pair_type& pair)
+		{
 			node_ptr node = _node_allocator.allocate(1);
 			_pair_allocator.construct(&node->pair, pair);	
-std::cout << "pair.RBTinsert(" << pair.first << ", " << pair.second << ")\n";
 			initializeNode(node, pair);
 			node_ptr y = NULL;
 			node_ptr x = this->_root;
@@ -169,23 +212,30 @@ std::cout << "pair.RBTinsert(" << pair.first << ", " << pair.second << ")\n";
 			return iterator(node);
 		}
 
-		node_ptr deleteNode(int data) {
+		node_ptr deleteNode(int data)
+		{
 			return deleteNodeHelper(this->_root, data);
 		}
 
-		void prettyPrint() {
+		// ########## PRINTERS ##########
+
+		void prettyPrint() const
+		{
 			printHelperPerso(this->_root, "");
 		}
 
+		// ########## BALANCERS ##########
+
 /* 				LEFT ROTATE
-                  |                        | 
-                  x                        y
-                 / \                      / \
-                a   y        ==>         x   c
-                   / \                  / \
-                  b   c                a   b
+				|                        | 
+				x                        y
+				/ \                      / \
+				a   y        ==>         x   c
+				/ \                  / \
+				b   c                a   b
 */
-		void leftRotate(node_ptr x) {
+		void leftRotate(node_ptr x)
+		{
 			std::cout << "rightRotate node (" << x->pair.first;
 			std::cout << ", " << x->pair.second << ")" << std::endl;
 			node_ptr y = x->right;
@@ -206,16 +256,17 @@ std::cout << "pair.RBTinsert(" << pair.first << ", " << pair.second << ")\n";
 			x->bf = x->bf - 1 - std::max(0, y->bf);
 			y->bf = y->bf - 1 + std::min(0, x->bf);
 		}
-/* 				RIGHT ROTATE
-                  |                        | 
-                  x                        y
-                 / \                      / \
-                y   c        ==>         a   x
-               / \                          / \
-              a   b                        b   c
-*/
 
-		void rightRotate(node_ptr x) {
+/* 				RIGHT ROTATE
+				|                        | 
+				x                        y
+				/ \                      / \
+				y   c        ==>         a   x
+				/ \                          / \
+				a   b                        b   c
+*/
+		void rightRotate(node_ptr x)
+		{
 			std::cout << "rightRotate node (" << x->pair.first;
 			std::cout << ", " << x->pair.second << ")" << std::endl;
 			node_ptr y = x->left;
@@ -231,121 +282,111 @@ std::cout << "pair.RBTinsert(" << pair.first << ", " << pair.second << ")\n";
 				x->parent->right = y;
 			y->right = x;
 			x->parent = y;
-			
+
 			x->bf = x->bf + 1 - std::min(0, y->bf);
 			y->bf = y->bf + 1 + std::max(0, x->bf);
 		}
 
-	void updateBalance(node_ptr node) {
-		//std::cout << "updateBalance node " << node->pair << ", bf = " << node->bf << std::endl;
-		if (!node)
-			return;
-		// The first ancestor that has a bf < -1 || > 1 is rebalanced. There should be only one considering the fact
-		// that we do this everytime we insert something.
-		if (node->bf < -1 || node->bf > 1) {
-			//std::cout << "Rebalancing node " << node->pair << std::endl;
-			rebalance(node);
-			//prettyPrint();
-			return ;
+		void updateBalance(node_ptr node)
+		{
+			if (!node)
+				return;
+			// The first ancestor that has a bf < -1 || > 1 is rebalanced. There should be only one considering the fact
+			// that we do this everytime we insert something.
+			if (node->bf < -1 || node->bf > 1) {
+				rebalance(node);
+				return ;
+			}
+			if (node->parent != NULL) {
+				if (node == node->parent->left)
+					node->parent->bf--;
+				if (node == node->parent->right)
+					node->parent->bf++;
+				if (node->parent->bf != 0)
+					updateBalance(node->parent);
+			}
 		}
-		if (node->parent != NULL) {
-			//std::cout << "Node parent : data = " << node->parent->data << ", bf = " << node->parent->bf << std::endl;
-			if (node == node->parent->left)
-				node->parent->bf--;
-			if (node == node->parent->right)
-				node->parent->bf++;
-			//std::cout << "Node parent : data = " << node->parent->data << ", bf = " << node->parent->bf << std::endl;
-			if (node->parent->bf != 0)
-				updateBalance(node->parent);
-		}
-	}
 
-		void rebalance(node_ptr node) {
+		void rebalance(node_ptr node)
+		{
 			if (node->bf > 0) {
 				if (node->right->bf < 0) {
-/*
-                  |                     |                   |
-        BF=2      a               BF=2  a                   b
-                   \                     \                 / \
-        BF=-1       c     ==>     BF=1    b      ==>      a   c    BF=0 partout
-                   /                       \                          /
-        BF=0      b               BF=0      c
-                       rightRotate              leftRotate
-*/
+/*           |                     |                   |
+   BF=2      a               BF=2  a                   b
+              \                     \                 / \
+   BF=-1       c     ==>     BF=1    b      ==>      a   c    BF=0 partout
+              /                       \                          /
+   BF=0      b               BF=0      c
+   rightRotate              leftRotate */
 					rightRotate(node->right);
 					leftRotate(node);
 				}
 				else
-/*
-                  |                        | 
-       BF=2       a                        b
-                   \                      / \
-       BF=1         b        ==>         a   c       BF=0 partout
-                     \                                        /
-       BF=0           c                    
-                          leftRotate
-*/
+/*            |                        | 
+   BF=2       a                        b
+               \                      / \
+   BF=1         b        ==>         a   c       BF=0 partout
+                 \                                        /
+   BF=0           c                    
+   leftRotate */
 					leftRotate(node);
 			}
 			else if (node->bf < 0) {
 				if (node->left->bf > 0) {
-/*
-                  |                           |                   |
-        BF=-2     a               BF=-2       a                   b
-                 /                           /                   / \
-        BF=1    c         ==>     BF=-1     b          ==>      a   c    BF=0 partout
-                 \                         /                                
-        BF=0      b               BF=0    c        
-                       leftRotate                  rightRotate
-*/
+/*           |                           |                   |
+   BF=-2     a               BF=-2       a                   b
+            /                           /                   / \
+   BF=1    c         ==>     BF=-1     b          ==>      a   c    BF=0 partout
+            \                         /                                
+   BF=0      b               BF=0    c        
+   leftRotate                  rightRotate */
 					leftRotate(node->left);
 					rightRotate(node);
 				}
 				else
-/*
-                  |                        | 
-         BF=-2    c                        b
-                 /                        / \
-        BF=-1   b            ==>         a   c       BF=0 partout
-               /                             
-      BF=0    a                               
-                         rightRotate
-*/
+/*          |                        | 
+   BF=-2    c                        b
+           /                        / \
+   BF=-1  b            ==>         a   c       BF=0 partout
+   		   \                             
+   BF=0     a                               
+   rightRotate */
 					rightRotate(node);
 			}
 		}
-	// #################### HELPERS ####################
+
+		// #################### HELPERS ####################
 
 	private:
-		key_type keyOfNode(node_ptr node)
+		key_type keyOfNode(node_ptr node) const
 		{
 			return key_of_pair()(node->pair);
 		}
 
-		const pair_type& pairOfNode(node_ptr node)
+		const pair_type& pairOfNode(node_ptr node) const
 		{
 			return node->pair;
 		}
 
-		bool isSameKey(const node_ptr node, const key_type& key)
+		bool isSameKey(const node_ptr node, const key_type& key) const
 		{
 			if (!_comp(keyOfNode(node), key) && 
-					!key_compare(key, keyOfNode(node)))
+				!_comp(key, keyOfNode(node)))
 				return true;
 			return false;
 		}
 
-		bool isKeyInf(const node_ptr node, const key_type& key)
+		bool isKeyInf(const node_ptr node, const key_type& key) const
 		{
 			return _comp(keyOfNode(node), key);
 		}
 
-		bool isKeySup(const node_ptr node, const key_type& key)
+		bool isKeySup(const node_ptr node, const key_type& key) const
 		{
 			return _comp(key, keyOfNode(node));
 		}
 
-		bool nodeCompare(node_ptr a, node_ptr b)
+		bool nodeCompare(node_ptr a, node_ptr b) const
 		{
 			return (_comp(keyOfNode(a), keyOfNode(b)));
 		}
@@ -380,16 +421,23 @@ std::cout << "pair.RBTinsert(" << pair.first << ", " << pair.second << ")\n";
 			node->bf = 0;
 		}
 
-		node_ptr searchTreeHelper(node_ptr node, const key_type& key)
+		node_ptr searchTreeHelper(node_ptr node, const key_type& key) const
 		{
 			if (node == NULL || isSameKey(node, key))
 				return node;
-			if (key_compare(keyOfNode(node), key))
-				return searchTreeHelper(node->left, key);
-			return searchTreeHelper(node->right, key);
+			if (!isKeyInf(node, key))
+			{
+				if (node->left)
+					return searchTreeHelper(node->left, key);
+				return NULL;
+			}
+			if (node->right)
+				return searchTreeHelper(node->right, key);
+			return NULL;
 		}
 
-		node_ptr deleteNodeHelper(node_ptr node, const key_type& key) {
+		node_ptr deleteNodeHelper(node_ptr node, const key_type& key)
+		{
 			if (node == NULL) 
 				return node;
 			else if (key_compare(key, keyOfNode(node)))
@@ -399,7 +447,6 @@ std::cout << "pair.RBTinsert(" << pair.first << ", " << pair.second << ")\n";
 			else
 			{
 				//The key has been found, now we have to delete it
-
 				//Case 1 : The node to delete is a leaf Node
 				if (node->left == NULL && node->right == NULL)
 				{
@@ -422,7 +469,7 @@ std::cout << "pair.RBTinsert(" << pair.first << ", " << pair.second << ")\n";
 				//Case 3 : The node has 2 children
 				else
 				{
-					node_ptr temp = minimum(node->right);
+					node_ptr temp = node->right->minimum();
 					node->pair = temp->pair;
 					node->right = deleteNodeHelper(node->right, temp->pair);
 				}
@@ -432,7 +479,8 @@ std::cout << "pair.RBTinsert(" << pair.first << ", " << pair.second << ")\n";
 			return node;
 		}
 
-		void printHelperPerso(node_ptr node, std::string indent) {
+		void printHelperPerso(node_ptr node, std::string indent) const
+		{
 			if (node != NULL) {
 				indent += "            ";
 				printHelperPerso(node->right, indent);

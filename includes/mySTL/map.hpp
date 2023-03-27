@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/24 11:13:43 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/27 19:30:24 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "RBT.hpp"
 #include <iostream>
 #include <functional>
+#include <limits>
 
 namespace ft
 {
@@ -30,10 +31,10 @@ class map {
 	public:
 		typedef Key 												key_type;
 		typedef T 													mapped_type;
-		typedef ft::pair<Key, T> 								pair_type;
+		typedef ft::pair<Key, T> 									pair_type;
 
 		typedef Compare 											key_compare;
-		typedef typename std::allocator<ft::pair<const Key, T> > 	allocator_type;
+		typedef typename std::allocator<ft::pair<Key, T> > 			allocator_type;
 		typedef typename allocator_type::size_type 					size_type;
 		typedef typename allocator_type::difference_type 			difference_type;
 
@@ -48,10 +49,10 @@ class map {
 
 //             TO DO
 	public:
-		typedef typename tree_type::iterator							iterator; 
-		typedef typename tree_type::const_iterator						const_iterator; 
-		typedef typename tree_type::reverse_iterator					reverse_iterator; 
-		typedef typename tree_type::const_reverse_iterator				const_reverse_iterator; 
+		typedef typename tree_type::iterator						iterator; 
+		typedef typename tree_type::const_iterator					const_iterator; 
+		typedef typename tree_type::reverse_iterator				reverse_iterator; 
+		typedef typename tree_type::const_reverse_iterator			const_reverse_iterator; 
 
 		// #################### MEMBER CLASSES ####################
 
@@ -110,22 +111,22 @@ class map {
 		// #################### ELEMENT ACCESS ####################
 
 		// Return std::out_of_range is key is not in the _RBT
-		T& at(const Key& key)
+		T& at(const Key& key) 
 		{
-			return _RBT(key);
+			return (_RBT.getPair(key)).second;
 		}
 
 		const T& at(const Key& key) const
 		{
-			return _RBT(key);
+			return (_RBT.getPair(key)).second;
 		}
 
 		// insert pair_type(key, T()) if key does not exists
 		T& operator[](const Key& key)
 		{
-			if (!_RBT(key))
-				_RBT.insert(key, T());
-			return _RBT(key);
+			if (!_RBT.searchTree(key))
+				return (*_RBT.insert(ft::make_pair(key, T()))).second;
+			return (_RBT.getPair(key)).second;
 		}
 
 		// #################### ITERATORS ####################
@@ -162,7 +163,7 @@ class map {
 
 		size_type max_size() const
 		{
-			return _RBT.max_size();
+			return std::numeric_limits<difference_type>::max();
 		}
 
 		// #################### MODIFIERS ####################
@@ -180,6 +181,7 @@ class map {
 		// We have an RBT, so we just insert normally
 		iterator insert(iterator pos, const pair_type& pair)
 		{
+			(void) pos;
 			return _RBT.insert(pair);
 		}
 

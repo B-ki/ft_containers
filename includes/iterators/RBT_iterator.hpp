@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 17:57:49 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/23 17:33:58 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/27 21:53:28 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,18 @@ class RBT_iterator
 
 		reference operator*() const
 		{
-			return _current->data;
+			return _current->pair;
 		}
 
 		pointer operator->() const
 		{
-			return &(_current->data);
+			return &(_current->pair);
 		}			
 
 		//Pre-incrementation : ++It
 		RBT_iterator& operator++()
 		{ 
-			this->_current = nodeSucessor(_current); 
+			this->_current = this->_current->successor(); 
 			return *this;
 		}
 
@@ -73,14 +73,14 @@ class RBT_iterator
 		RBT_iterator operator++(int) 
 		{ 
 			RBT_iterator tmp(*this); 
-			this->_current = nodeSucessor(_current); 
+			this->_current = this->_current->successor(); 
 			return tmp; 
 		}
 
 		//Pre-incrementation : --It
 		RBT_iterator& operator--() 
 		{ 
-			this->_current = nodePredecessor(_current); 
+			this->_current = this->_current->predecessor(); 
 			return *this; 
 		}
 
@@ -88,8 +88,13 @@ class RBT_iterator
 		RBT_iterator operator--(int) 
 		{ 
 			RBT_iterator tmp(*this); 
-			this->_current = nodePredecessor(_current); 
+			this->_current = this->_current->predecessor(); 
 			return *tmp; 
+		}
+
+		RBT_iterator base() const
+		{
+			return this->_current;
 		}
 
 };
@@ -98,14 +103,14 @@ template< class Pair >
 bool operator==( const ft::RBT_iterator<Pair, false>& lhs,
                  const ft::RBT_iterator<Pair, false>& rhs )
 {
-	return (lhs._current == rhs._current);
+	return (lhs.base() == rhs.base());
 }
 
 template< class Pair >
 bool operator!=( const ft::RBT_iterator<Pair, false>& lhs,
                  const ft::RBT_iterator<Pair, false>& rhs )
 {
-	return (lhs._current != rhs._current);
+	return (lhs.base() != rhs.base());
 }
 
 }
