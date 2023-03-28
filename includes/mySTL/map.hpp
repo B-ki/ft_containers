@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/27 19:30:24 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/28 22:25:32 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,31 +170,32 @@ class map {
 
 		void clear()
 		{
-			_RBT.clear();
+			_RBT.clearTree();
 		}
 
 		ft::pair<iterator, bool> insert(const pair_type& pair)
 		{
-			return ft::pair<iterator, bool>(_RBT.insert(pair), true);
+			iterator it = _RBT.insert(pair);
+			bool ret = true;
+
+			if (it.base() == NULL)
+				ret = false;
+			return ft::make_pair(it, ret);
 		}
 
 		// We have an RBT, so we just insert normally
 		iterator insert(iterator pos, const pair_type& pair)
 		{
-			(void) pos;
-			return _RBT.insert(pair);
+			return _RBT.insert(pos, pair);
 		}
 
 		template<class InputIt>
 		void insert(InputIt first, InputIt last)
 		{
-			InputIt it = first;
-			for (; it != last - 1; it++)
-				_RBT.insert(it);	
-			return _RBT.insert(it);
+			for (InputIt it = first; it != last; it++)
+				_RBT.insert(*it);	
 		}
 
-		/*
 		iterator erase(iterator pos)
 		{
 			return _RBT.erase(pos);
@@ -204,11 +205,13 @@ class map {
 		{
 			return _RBT.erase(first, last);
 		}
-		*/
 
 		size_type erase(const Key& key)
 		{
-			return _RBT.erase(key);
+			iterator it = _RBT.deleteNode(key);
+			if (it.base() != NULL)
+				return 1;
+			return 0;
 		}
 
 		void swap(map& other)

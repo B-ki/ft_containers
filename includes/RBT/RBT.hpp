@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/27 22:23:08 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/29 01:05:46 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,15 @@
 #include "reverse_iterator.hpp"
 #include "ft_utils.hpp"
 #include "pair.hpp"
+
+# define RED "\033[1;31m"
+# define GREEN "\033[1;32m"
+# define YELLOW "\033[1;33m"
+# define BLUE "\033[1;34m"
+# define MAGENTA "\033[1;35m"
+# define CYAN "\033[1;36m"
+# define BLACK "\033[1;38m"
+# define NORMAL "\033[0m"
 
 namespace ft
 {
@@ -67,8 +76,10 @@ class RBT
 		RBT(const RBT<key_type, pair_type, key_of_pair, key_compare>& other) 
 			: _pair_allocator(pair_allocator()),  _node_allocator(node_allocator()), _comp(key_compare())
 		{
-			for (iterator it = other.begin(); it != other.end(); it++)
-				this->insert(*it);
+			if (other._root)
+				_root = copyNodeHelper(other._root);
+			else
+				_root = NULL;
 		}
 
 		~RBT()
@@ -188,12 +199,11 @@ class RBT
 
 		iterator insert(const pair_type& pair)
 		{
-			node_ptr node = _node_allocator.allocate(1);
-			_pair_allocator.construct(&node->pair, pair);	
-			initializeNode(node, pair);
+			node_ptr node = createNode(pair);
 			node_ptr y = NULL;
 			node_ptr x = this->_root;
-			while (x != NULL) {
+			while (x != NULL)
+			{
 				y = x;
 				if (nodeCompare(node, x))
 					x = x->left;
@@ -208,20 +218,65 @@ class RBT
 			else
 				y->right = node;
 			//updateBalance the node if necessary
+			if (node->parent == NULL)
+			{
+				this->_root = node;
+				return iterator(node);
+			}
+			if (node->parent->parent == NULL)
+				return iterator(node);
 			updateBalance(node);
 			return iterator(node);
 		}
-
-		node_ptr deleteNode(int data)
+		
+		iterator insert(iterator pos, const pair_type& pair)
 		{
-			return deleteNodeHelper(this->_root, data);
+			node_ptr nodePos = pos.base();
+			node_ptr newNode = createNode(pair);
+			node_ptr y = NULL;
+			node_ptr x = this->_root;
+			if (nodePos == NULL)
+				_root = newNode;
+			else if (isKeySupToNode(nodePos, _key_of_pair(pair)) &&
+					isKeyInfToNode(nodePos->successor(), _key_of_pair(pair)))
+				 x = nodePos;
+			while (x != NULL)
+			{
+				y = x;
+				if (nodeCompare(newNode, x))
+					x = x->left;
+				else
+					x = x->right;
+			}
+			newNode->parent = y;
+			if (y == NULL)
+				_root = newNode;
+			else if (nodeCompare(newNode, y))
+				y->left = newNode;
+			else
+				y->right = newNode;
+			//updateBalance the node if necessary
+			updateBalance(newNode);
+			return iterator(newNode);
+		}
+
+		iterator deleteNode(const key_type& key)
+		{
+			return iterator(deleteNodeHelper(this->_root, key));
+		}
+
+		void clearTree()
+		{
+			destructorHelper(this->_root);
 		}
 
 		// ########## PRINTERS ##########
 
 		void prettyPrint() const
 		{
+			std::cout << "--------------------------------------------\n";
 			printHelperPerso(this->_root, "");
+			std::cout << "--------------------------------------------\n";
 		}
 
 		// ########## BALANCERS ##########
@@ -291,26 +346,65 @@ class RBT
 		{
 			if (!node)
 				return;
-			// The first ancestor that has a bf < -1 || > 1 is rebalanced. There should be only one considering the fact
-			// that we do this everytime we insert something.
-			if (node->bf < -1 || node->bf > 1) {
-				rebalance(node);
-				return ;
+			node->color = red;
+			while (node->parent->color == red)
+			{
+				if (node->parent->isRight()) 
+				{
+					node_ptr uncle = node->parent->parent->left;
+					if (uncle != NULL && uncle->color == red)
+					{
+						uncle->color = black;
+						node->parent->color = black;
+						node->parent->parent->color = red;
+						node = node->parent->parent;
+					}
+					else 
+					{
+						if (node->isLeft())
+						{
+							node = node->parent;
+							rightRotate(node);
+						}
+						node->parent->color = black;
+						node->parent->parent->color = red;
+						leftRotate(node->parent->parent);
+					}
+				}
+				else 
+				{
+					node_ptr uncle = node->parent->parent->right;
+					if (uncle != NULL && uncle->color == red)
+					{
+						uncle->color = black;
+						node->parent->color = black;
+						node->parent->parent->color = red;
+						node = node->parent->parent;
+					}
+					else 
+					{
+						if (node->isRight())
+						{
+							node = node->parent;
+							leftRotate(node);
+						}
+						node->parent->color = black;
+						node->parent->parent->color = red;
+						rightRotate(node->parent->parent);
+					}	
+				}
+				if (node->parent == NULL)
+					break;
 			}
-			if (node->parent != NULL) {
-				if (node == node->parent->left)
-					node->parent->bf--;
-				if (node == node->parent->right)
-					node->parent->bf++;
-				if (node->parent->bf != 0)
-					updateBalance(node->parent);
-			}
+			getRoot()->color = black;
 		}
 
 		void rebalance(node_ptr node)
 		{
-			if (node->bf > 0) {
-				if (node->right->bf < 0) {
+			if (node->bf > 0)
+			{
+				if (node->right->bf < 0)
+				{
 /*           |                     |                   |
    BF=2      a               BF=2  a                   b
               \                     \                 / \
@@ -331,8 +425,10 @@ class RBT
    leftRotate */
 					leftRotate(node);
 			}
-			else if (node->bf < 0) {
-				if (node->left->bf > 0) {
+			else if (node->bf < 0)
+			{
+				if (node->left->bf > 0)
+				{
 /*           |                           |                   |
    BF=-2     a               BF=-2       a                   b
             /                           /                   / \
@@ -376,12 +472,12 @@ class RBT
 			return false;
 		}
 
-		bool isKeyInf(const node_ptr node, const key_type& key) const
+		bool isKeySupToNode(const node_ptr node, const key_type& key) const
 		{
 			return _comp(keyOfNode(node), key);
 		}
 
-		bool isKeySup(const node_ptr node, const key_type& key) const
+		bool isKeyInfToNode(const node_ptr node, const key_type& key) const
 		{
 			return _comp(key, keyOfNode(node));
 		}
@@ -391,22 +487,24 @@ class RBT
 			return (_comp(keyOfNode(a), keyOfNode(b)));
 		}
 
-		node_ptr create_node(const pair_type& val)
+		node_ptr createNode(const pair_type& pair)
 		{
-			node_ptr node = node_allocator::allocate(1);
-			try {
-				node_allocator::construct(node, node_type(val));
-				node->pair = val;
-			} catch (...) {
-				node_allocator::deallocate(node, 1);
+			node_ptr node = _node_allocator.allocate(1);
+			try 
+			{
+				_pair_allocator.construct(&node->pair, pair);
+				initializeNode(node, pair);
+			} 
+			catch (...) 
+			{
+				_node_allocator.deallocate(node, 1);
 				throw ;
 			}
 			return node;
 		}
 
-		void erase_node(node_ptr node)
+		void eraseNode(node_ptr node)
 		{
-			// No need to destroy node->pair, it is called in destroy(node)
 			_node_allocator.destroy(node);
 			_node_allocator.deallocate(node, 1);		
 		}
@@ -417,7 +515,7 @@ class RBT
 			node->parent = NULL;
 			node->left = NULL;
 			node->right = NULL;
-			node->color = black;
+			node->color = red;
 			node->bf = 0;
 		}
 
@@ -425,7 +523,7 @@ class RBT
 		{
 			if (node == NULL || isSameKey(node, key))
 				return node;
-			if (!isKeyInf(node, key))
+			if (!isKeySupToNode(node, key))
 			{
 				if (node->left)
 					return searchTreeHelper(node->left, key);
@@ -440,9 +538,9 @@ class RBT
 		{
 			if (node == NULL) 
 				return node;
-			else if (key_compare(key, keyOfNode(node)))
+			else if (isKeyInfToNode(node, key))
 				node->left = deleteNodeHelper(node->left, key);
-			else if (key_compare(keyOfNode(node), key))
+			else if (isKeySupToNode(node, key))
 				node->right = deleteNodeHelper(node->right, key);
 			else
 			{
@@ -450,7 +548,7 @@ class RBT
 				//Case 1 : The node to delete is a leaf Node
 				if (node->left == NULL && node->right == NULL)
 				{
-					erase_node(node);
+					eraseNode(node);
 					node = NULL;
 				}
 				//Case 2 : The node has only one child
@@ -458,20 +556,20 @@ class RBT
 				{
 					node_ptr temp = node;
 					node = node->left;
-					erase_node(temp);
+					eraseNode(temp);
 				}
 				else if (node->right == NULL)
 				{
 					node_ptr temp = node;
 					node = node->right;
-					erase_node(temp);
+					eraseNode(temp);
 				}
 				//Case 3 : The node has 2 children
 				else
 				{
 					node_ptr temp = node->right->minimum();
 					node->pair = temp->pair;
-					node->right = deleteNodeHelper(node->right, temp->pair);
+					node->right = deleteNodeHelper(node->right, keyOfNode(temp));
 				}
 			}
 			// Update balance logic
@@ -481,24 +579,40 @@ class RBT
 
 		void printHelperPerso(node_ptr node, std::string indent) const
 		{
-			if (node != NULL) {
+			if (node != NULL)
+			{
 				indent += "            ";
 				printHelperPerso(node->right, indent);
+				if (node->color == red)
+					std::cout << RED;
+				else
+					std::cout << BLUE;
 				std::cout << indent << "(" << node->pair.first;
-				std::cout << ", " << node->pair.second << ") (bf=" << node->bf << ")\n";
+				std::cout << ", " << node->pair.second << ")\n" << NORMAL;
 				printHelperPerso(node->left, indent);
 			}	
 		}
 
-		void destructorHelper(node_ptr node) {
-			if (node != NULL) {
+		void destructorHelper(node_ptr node)
+		{
+			if (node != NULL)
+			{
 				destructorHelper(node->left);
 				destructorHelper(node->right);
-				erase_node(node);	
+				eraseNode(node);	
 			}	
 		}
 
-
+		node_ptr copyNodeHelper(node_ptr nodeToCopy)
+		{
+			node_ptr newNode = createNode(nodeToCopy->pair);
+			newNode->color = nodeToCopy->color;
+			if (nodeToCopy->right)
+				newNode->right = copyNodeHelper(nodeToCopy->right);
+			if (nodeToCopy->left)
+				newNode->left = copyNodeHelper(nodeToCopy->left);
+			return newNode;
+		}
 };
 }
 

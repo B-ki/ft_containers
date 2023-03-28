@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 17:57:49 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/27 21:53:28 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/28 18:11:25 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ class RBT_iterator
 			return *tmp; 
 		}
 
-		RBT_iterator base() const
+		node_ptr base() const
 		{
 			return this->_current;
 		}

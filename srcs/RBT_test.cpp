@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/27 22:18:44 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/29 00:48:49 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void RBT_test(void)
 		mapOfString.printRBT();
 		mapOfString.insert(pair7);
 		mapOfString.printRBT();
-		mapOfString.insert(pair8);
+		std::cout << (mapOfString.insert(pair8)).second << std::endl;
 		mapOfString.printRBT();
 		std::cout << mapOfString.size() << std::endl;
 		std::cout << mapOfString.max_size() << std::endl;
@@ -135,9 +135,13 @@ void RBT_test(void)
 		}
 		std::cout << "Value at key=4 : " << mapOfString[4] << std::endl;
 		std::cout << "Value at key=9 : " << mapOfString[9] << std::endl;
+		std::cout << "Value at key=9 : " << mapOfString[999] << std::endl;
 		mapOfString.printRBT();
 		NS::map<int, std::string> mapCopy(mapOfString);
-		//mapCopy.printRBT();
+		mapCopy.printRBT();
+		//mapCopy.erase(5);
+		mapCopy.printRBT();
+		//mapCopy.erase(10);
 	}
 	return;
 }
