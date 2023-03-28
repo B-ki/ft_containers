@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/29 01:05:46 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/29 01:21:09 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -608,9 +608,15 @@ class RBT
 			node_ptr newNode = createNode(nodeToCopy->pair);
 			newNode->color = nodeToCopy->color;
 			if (nodeToCopy->right)
+			{
 				newNode->right = copyNodeHelper(nodeToCopy->right);
+				newNode->right->parent = newNode;
+			}
 			if (nodeToCopy->left)
+			{
 				newNode->left = copyNodeHelper(nodeToCopy->left);
+				newNode->left->parent = newNode;
+			}
 			return newNode;
 		}
 };
