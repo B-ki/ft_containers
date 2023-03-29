@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/29 01:21:09 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/29 19:18:36 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,10 +217,10 @@ class RBT
 				y->left = node;
 			else
 				y->right = node;
-			//updateBalance the node if necessary
 			if (node->parent == NULL)
 			{
-				this->_root = node;
+				_root = node;
+				_root->color = black;
 				return iterator(node);
 			}
 			if (node->parent->parent == NULL)
@@ -519,62 +519,83 @@ class RBT
 			node->bf = 0;
 		}
 
-		node_ptr searchTreeHelper(node_ptr node, const key_type& key) const
+		node_ptr searchTreeHelper(node_ptr startSearch, const key_type& key) const
 		{
-			if (node == NULL || isSameKey(node, key))
+			node_ptr node = startSearch;
+			if (node == NULL)
 				return node;
-			if (!isKeySupToNode(node, key))
+			while (node && !isSameKey(node, key))
 			{
-				if (node->left)
-					return searchTreeHelper(node->left, key);
-				return NULL;
+				if (isKeySupToNode(node, key))
+					node = node->right;
+				else
+					node = node->left;
 			}
-			if (node->right)
-				return searchTreeHelper(node->right, key);
-			return NULL;
+			return node;
 		}
 
-		node_ptr deleteNodeHelper(node_ptr node, const key_type& key)
+		// Transplant function, node v will replace node u in the tree.
+		// But node v is not deleted still.
+		void rbtTransplant(node_ptr u, node_ptr v)
 		{
-			if (node == NULL) 
-				return node;
-			else if (isKeyInfToNode(node, key))
-				node->left = deleteNodeHelper(node->left, key);
-			else if (isKeySupToNode(node, key))
-				node->right = deleteNodeHelper(node->right, key);
+			if (u->parent == NULL)
+				this->_root = v;
+			else if (u->isLeft())
+				u->parent->left = v;
+			else
+				u->parent->right = v;
+			v->parent = u->parent;
+		}
+
+		node_ptr deleteNodeHelper(node_ptr startSearch, const key_type& key)
+		{
+			if (startSearch == NULL) 
+				return NULL;
+			node_ptr node = searchTreeHelper(startSearch, key);
+			if (node == NULL)
+				return NULL;
+			//The key has been found, now we have to delete it
+			node_ptr y = node;
+			node_ptr x;
+			e_color originalColor = node->color;
+			if (node->left == NULL) // No children or only right child
+			{
+				x = node->right;
+				rbtTransplant(node, x);
+				eraseNode(node);
+			}
+			else if (node->right == NULL) // Only left child
+			{
+				x = node->left;
+				rbtTransplant(node, x);
+				eraseNode(node);
+			}
 			else
 			{
-				//The key has been found, now we have to delete it
-				//Case 1 : The node to delete is a leaf Node
-				if (node->left == NULL && node->right == NULL)
+				y = node->minimum();
+				x = y->right;
+				originalColor = y->color;
+				if (y->parent == node)
+					x->parent = y;
+				else 
 				{
-					eraseNode(node);
-					node = NULL;
+					rbtTransplant(y, x);
+					y->right = node->right;
+					y->right->parent = y;
 				}
-				//Case 2 : The node has only one child
-				else if (node->left == NULL)
-				{
-					node_ptr temp = node;
-					node = node->left;
-					eraseNode(temp);
-				}
-				else if (node->right == NULL)
-				{
-					node_ptr temp = node;
-					node = node->right;
-					eraseNode(temp);
-				}
-				//Case 3 : The node has 2 children
-				else
-				{
-					node_ptr temp = node->right->minimum();
-					node->pair = temp->pair;
-					node->right = deleteNodeHelper(node->right, keyOfNode(temp));
-				}
+				rbtTransplant(node, y);
+				y->left = node->left;
+				y->color = node->color;
+				eraseNode(node);
 			}
-			// Update balance logic
-			updateBalance(node);
+			if (originalColor == black)
+				fixDelete(x);
 			return node;
+		}
+
+		void fixDelete(node_ptr node)
+		{
+
 		}
 
 		void printHelperPerso(node_ptr node, std::string indent) const
