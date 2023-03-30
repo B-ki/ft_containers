@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/30 17:33:16 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/30 17:15:45 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -528,7 +528,7 @@ class RBT
 			{
 				if (isKeySupToNode(node, key))
 					node = node->right;
-			else
+				else
 					node = node->left;
 			}
 			return node;
@@ -574,8 +574,7 @@ class RBT
 			}
 			else
 			{
-				y = node->right->minimum();
-				printNode(y);
+				y = node->minimum();
 				x = y->right;
 				originalColor = y->color;
 				if (y->parent == node)
@@ -687,10 +686,8 @@ class RBT
 			}	
 		}
 
-		void printNode(node_ptr node) const
+		void printNode(node_ptr node)
 		{
-			if (node == NULL)
-				return;
 			if (node->color == red)
 				std::cout << RED;
 			else

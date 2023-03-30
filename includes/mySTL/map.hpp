@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/28 22:25:32 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/30 17:21:34 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,12 +226,12 @@ class map {
 			return _RBT.count(key);
 		}
 
-		/*
 		iterator find(const Key& key)
 		{
-			return _RBT.find(key);
+			return iterator(_RBT.searchTree(key));
 		}
 
+		/*
 		const_iterator find(const Key& key) const
 		{
 			return _RBT.find(key);
@@ -265,8 +265,7 @@ class map {
 		const_iterator upper_bound(const Key& key)
 		{
 			return _RBT.upper_bound(key);
-		}
-		*/
+		}*/
 
 		// #################### OBSERVERS ####################
 

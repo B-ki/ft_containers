@@ -191,10 +191,12 @@ erase	includes/mySTL/vector.hpp	/^		iterator erase(iterator position)$/;"	f	clas
 eraseNode	includes/RBT/RBT.hpp	/^		void eraseNode(node_ptr node)$/;"	f	class:ft::RBT
 extractMax	includes/sandbox/binary_heap.hpp	/^		int extractMax() {$/;"	f	class:BinaryHeap
 false_type	includes/utils/is_integral.hpp	/^typedef ft::integral_constant<bool, false> false_type;$/;"	t	namespace:ft
+find	includes/mySTL/map.hpp	/^		iterator find(const Key& key)$/;"	f	class:ft::map
 first	includes/utils/pair.hpp	/^	T1 first;$/;"	m	struct:ft::pair
 first_argument_type	includes/mySTL/map.hpp	/^			typedef typename binary_function<pair_type, pair_type, bool>::first_argument_type first_argument_type;$/;"	t	class:ft::map::pair_compare
 first_argument_type	includes/utils/ft_utils.hpp	/^		typedef Arg1 	first_argument_type;$/;"	t	struct:ft::binary_function
 first_type	includes/utils/pair.hpp	/^	typedef T1 first_type;$/;"	t	struct:ft::pair
+fixDelete	includes/RBT/RBT.hpp	/^		void fixDelete(node_ptr node)$/;"	f	class:ft::RBT
 front	includes/mySTL/vector.hpp	/^		const_reference front() const$/;"	f	class:ft::vector
 front	includes/mySTL/vector.hpp	/^		reference front()$/;"	f	class:ft::vector
 ft	includes/RBT/RBT.hpp	/^namespace ft$/;"	n
@@ -439,6 +441,7 @@ printHelper	includes/sandbox/binary_search_tree.hpp	/^		void printHelper(NodePtr
 printHelperPerso	includes/RBT/RBT.hpp	/^		void printHelperPerso(node_ptr node, std::string indent) const$/;"	f	class:ft::RBT
 printHelperPerso	includes/sandbox/AVL.hpp	/^		void printHelperPerso(NodePtr node, std::string indent) {$/;"	f	class:AVL
 printHelperPerso	includes/sandbox/binary_search_tree.hpp	/^		void printHelperPerso(NodePtr node, std::string indent) {$/;"	f	class:BST
+printNode	includes/RBT/RBT.hpp	/^		void printNode(node_ptr node) const$/;"	f	class:ft::RBT
 printRBT	includes/mySTL/map.hpp	/^		void printRBT(void)$/;"	f	class:ft::map
 printVector	srcs/main_nthimoni.cpp	/^void printVector(const T& a)$/;"	f
 printVector	srcs/realtest.cpp	/^void printVector(const T& a)$/;"	f

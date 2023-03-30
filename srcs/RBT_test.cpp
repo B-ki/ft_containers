@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/29 00:48:49 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/03/30 17:21:16 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,8 @@ void RBT_test(void)
 		mapOfString.printRBT();
 		NS::map<int, std::string> mapCopy(mapOfString);
 		mapCopy.printRBT();
-		//mapCopy.erase(5);
+		mapCopy.find(5);
+		mapCopy.erase(5);
 		mapCopy.printRBT();
 		//mapCopy.erase(10);
 	}
