@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 16:56:13 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/27 22:12:20 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/03 14:24:09 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ struct RBTNode
 
 	bool isLeft()
 	{
-		if (this->parent && this == this->parent->left)
+		if (this->parent != NULL && this->parent->left != NULL && this == this->parent->left)
 			return true;
 		return false;
 	}
