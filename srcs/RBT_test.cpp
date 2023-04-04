@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/03 14:47:55 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/04 14:26:12 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,9 +147,9 @@ void RBT_test(void)
 		mapCopy.printRBT();
 		mapCopy.erase(0);
 		mapCopy.printRBT();*/
-		mapCopy.printRBT();
-		mapCopy.erase(3);
-		//mapCopy.printRBT();
+	//	mapCopy.printRBT();
+	//	mapCopy.erase(3);
+	//	mapCopy.printRBT();
 	}
 	return;
 }

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/03 19:01:59 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/04 14:39:25 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,20 @@ class RBT
 
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
 
-		RBT() : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(key_compare()) {}; 
+		RBT() : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(key_compare())
+		{
+			_NULL_NODE = createNullNode();
+		}; 
 
-		RBT(const key_compare& comp) : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(comp) {}; 
+		RBT(const key_compare& comp) : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(comp) 
+		{
+			_NULL_NODE = createNullNode();
+		}; 
 
 		RBT(const RBT<key_type, pair_type, key_of_pair, key_compare>& other) 
 			: _pair_allocator(pair_allocator()),  _node_allocator(node_allocator()), _comp(key_compare())
 		{
+			_NULL_NODE = createNullNode();
 			if (other._root)
 				_root = copyNodeHelper(other._root);
 			else
@@ -85,6 +92,7 @@ class RBT
 		~RBT()
 		{
 			destructorHelper(this->_root);
+			_node_allocator.deallocate(_NULL_NODE, 1);		
 		}
 
 		// #################### MEMBERS ####################
@@ -95,6 +103,7 @@ class RBT
 		node_allocator 	_node_allocator;
 		key_compare 	_comp;
 		key_of_pair 	_key_of_pair;
+		node_ptr 		_NULL_NODE;
 
 	public: 
 
@@ -262,7 +271,7 @@ class RBT
 
 		iterator deleteNode(const key_type& key)
 		{
-			return iterator(deleteNodeHelper(this->_root, key));
+			return iterator(deleteNodeHelperOLD(this->_root, key));
 		}
 
 		void clearTree()
@@ -488,6 +497,16 @@ class RBT
 			return (_comp(keyOfNode(a), keyOfNode(b)));
 		}
 
+		node_ptr createNullNode()
+		{
+			node_ptr node = _node_allocator.allocate(1);
+			node->parent = NULL;
+			node->right = NULL;
+			node->left = NULL;
+			node->color = black;
+			return node;
+		}
+
 		node_ptr createNode(const pair_type& pair)
 		{
 			node_ptr node = _node_allocator.allocate(1);
@@ -515,8 +534,8 @@ class RBT
 		{
 			(void)pair;
 			node->parent = NULL;
-			node->left = NULL;
-			node->right = NULL;
+			node->left = _NULL_NODE;
+			node->right = _NULL_NODE;
 			node->color = red;
 			node->bf = 0;
 		}
@@ -536,23 +555,9 @@ class RBT
 			return node;
 		}
 
-		// Transplant function, node v will replace node u in the tree.
-		// But node v is not deleted still.
+		// v is taking u's place, but v keeps its child
 		void rbtTransplant(node_ptr u, node_ptr v)
 		{
-			std::cout << "Node to transplant : ";
-			if (u != NULL)
-				printNode(u);
-			else
-				std::cout << "NULL";
-			std::cout << ", ";
-			if (v != NULL)
-				printNode(v);
-			else
-				std::cout << "NULL";
-			std::cout << std::endl;
-			if (u->parent != NULL)
-				printNode(u->parent);
 			if (u->parent == NULL)
 				this->_root = v;
 			else if (u->isLeft())
@@ -563,105 +568,25 @@ class RBT
 				v->parent = u->parent;
 		}
 
-		node_ptr deleteOneNode(node_ptr node)
+		// a is replaced by b, b->child = a->child
+		void replaceNode(node_ptr a, node_ptr b)
 		{
-			if (node->left == NULL && node->right == NULL)
-				eraseNode(node);
-			else if (node->right == NULL) // Only left child
-			{
-				node_ptr temp = node;
-				node = node->left;
-				eraseNode(temp);
-			}
-			else if (node->left == NULL) // Only right child
-			{
-				node_ptr temp = node;
-				node = node->right;
-				eraseNode(temp);
-			}
+			if (a->parent == NULL)
+				this->_root = b;
+			else if (a->isLeft())
+				a->parent->left = b;
 			else
-			{
-				node_ptr temp = node->right->minimum();
-				node->pair = temp->pair;
-				node->right = deleteOneNode(temp);
-			}
-			return node;
+				a->parent->right = b;
+			b->parent = a->parent;
+			b->right = a->right;
+			b->left = a->left;
+			if (b->right != NULL)
+				b->right->parent = b;
+			if (b->left != NULL)
+				b->left->parent = b;
 		}
 
-		/*node_ptr deleteOneNodeOLD(node_ptr node)
-		{
-			if (node->left == NULL && node->right == NULL)
-			{
-				if (node->isRoot())
-					this->_root = NULL;
-				else if (node->isLeft())
-					node->parent->left = NULL;
-				else if (node->isRight())
-					node->parent->right = NULL;
-				eraseNode(node);
-			}
-			else if (node->right == NULL) // Only left child
-			{
-				node_ptr child = node->left;
-				if (node->isRoot())
-					this->_root = child;
-				else if (node->isLeft())
-					node->parent->left = child;
-				else if (node->isRight())
-					node->parent->right = child;
-				child->parent = node->parent;
-				eraseNode(node);
-				return (child);
-			}
-			else if (node->left == NULL) // Only right child
-			{
-				node_ptr child = node->right;
-				if (node->isRoot())
-					this->_root = child;
-				else if (node->isLeft())
-					node->parent->left = child;
-				else if (node->isRight())
-					node->parent->right = child;
-				child->parent = node->parent;
-				eraseNode(node);
-				return (child);
-			}
-			else
-			{
-				node_ptr temp = node->right->minimum();
-				if (node->isRoot())
-					this->_root = deleteOneNode(temp);
-				else if (node->isLeft())
-					node->parent->left = deleteOneNode(temp);
-				else if (node->isRight())
-					node->parent->right = deleteOneNode(temp);
-			}
-			return node;
-		}*/
-
-		node_ptr deleteNodeHelper(node_ptr startSearch, const key_type& key)
-		{
-			if (startSearch == NULL) 
-				return NULL;
-			node_ptr node = searchTreeHelper(startSearch, key);
-			std::cout << "REAL Node to delete is :";
-			printNode(node);
-			if (node == NULL)
-				return NULL;
-			//The key has been found, now we have to delete it
-			node_ptr x;
-			//e_color originalColor = node->color;
-			if (node->right == NULL) // Only left child
-				x = node->left;
-			else
-				x = node->right;
-			deleteOneNode(node);
-			//if (x != NULL && originalColor == black)
-			//	fixDelete(x);
-			return node;
-		}
-
-		/*node_ptr deleteNodeHelperOLD(node_ptr startSearch, const key_type& key)
+		node_ptr deleteNodeHelperOLD(node_ptr startSearch, const key_type& key)
 		{
 			if (startSearch == NULL) 
 				return NULL;
@@ -670,20 +595,31 @@ class RBT
 			printNode(node);
 			if (node == NULL)
 				return NULL;
-			//The key has been found, now we have to delete it
 			node_ptr y = node;
 			node_ptr x;
 			e_color originalColor = node->color;
-			if (node->left == NULL) // No children or only right child
+			if (node->left == NULL && node->right == NULL)
 			{
 				x = node->right;
-				rbtTransplant(node, x);
+				if (node->parent != NULL)
+				{
+					if (node->isLeft())
+						node->parent->left = NULL;
+					else
+						node->parent->right = NULL;
+				}
+				eraseNode(node);
+			}
+			else if (node->left == NULL) // No children or only right child
+			{
+				x = node->right;
+				rbtTransplant(node, node->right);
 				eraseNode(node);
 			}
 			else if (node->right == NULL) // Only left child
 			{
 				x = node->left;
-				rbtTransplant(node, x);
+				rbtTransplant(node, node->left);
 				eraseNode(node);
 			}
 			else
@@ -691,8 +627,10 @@ class RBT
 				y = node->right->minimum();
 				x = y->right;
 				originalColor = y->color;
-				if (y->parent == node)
+				if (y->parent == node) {
 					x->parent = y;
+					std::cout << "y->parent == node\n";
+				}
 				else 
 				{
 					rbtTransplant(y, x);
@@ -707,8 +645,64 @@ class RBT
 			if (x != NULL && originalColor == black)
 				fixDelete(x);
 			return node;
-		}*/
+		}
 
+		void deleteOneNode(node_ptr node)
+		{
+			node_ptr x;
+			e_color originalColor = node->color;
+			if (node == NULL)
+				return;
+			if (node->left == NULL && node->right == NULL)
+			{
+				x = node->right;
+				if (node->parent != NULL)
+				{
+					if (node->isLeft())
+						node->parent->left = NULL;
+					else
+						node->parent->right = NULL;
+				}
+				eraseNode(node);
+			}
+			else if (node->right == NULL) // Only left child
+			{
+				x = node->left;
+				rbtTransplant(node, node->left);
+				eraseNode(node);
+			}
+			else if (node->left == NULL) // Only right child
+			{
+				x = node->right;
+				rbtTransplant(node, node->right);
+				eraseNode(node);
+			}
+			else
+			{
+				x = node->right;
+				node_ptr temp = node->right->minimum();
+				node_ptr newNode = createNode(temp->pair);
+				newNode->color = temp->color;
+				replaceNode(node, newNode);
+				eraseNode(node);
+				deleteOneNode(temp);
+			}
+			if (x != NULL && originalColor == black)
+				fixDelete(x);
+		}
+
+		node_ptr deleteNodeHelper(node_ptr startSearch, const key_type& key)
+		{
+			if (startSearch == NULL) 
+				return NULL;
+			node_ptr node = searchTreeHelper(startSearch, key);
+			std::cout << "REAL Node to delete is :";
+			printNode(node);
+			if (node == NULL)
+				return NULL;
+			deleteOneNode(node);
+			return node;
+		}
 		void fixDelete(node_ptr node)
 		{
 			node_ptr sister = NULL;
