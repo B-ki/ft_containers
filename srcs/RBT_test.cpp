@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/04 14:26:12 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/04 19:20:49 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void RBT_test(void)
 		std::cout << mapOfString.max_size() << std::endl;
 		std::cout << "Value at key=5 : \n" << mapOfString.at(5) << std::endl;
 		try {
-		std::cout << "Value at key=8 : " << mapOfString.at(8) << std::endl;
+			std::cout << "Value at key=8 : " << mapOfString.at(8) << std::endl;
 		} catch (...) {
 			std::cout << "Key 8 doesn't exists\n";
 		}
@@ -141,15 +141,26 @@ void RBT_test(void)
 		mapCopy.printRBT();
 		mapCopy.find(5);
 		mapCopy.erase(5);
-		/*mapCopy.printRBT();
+		mapCopy.printRBT();
 		mapCopy.erase(10);
 		mapCopy.erase(6);
 		mapCopy.printRBT();
 		mapCopy.erase(0);
-		mapCopy.printRBT();*/
-	//	mapCopy.printRBT();
-	//	mapCopy.erase(3);
-	//	mapCopy.printRBT();
+		mapCopy.printRBT();
+		mapCopy.erase(3);
+		mapCopy.printRBT();
+		mapCopy.erase(4);
+		mapCopy.printRBT();
+		mapCopy.erase(1);
+		mapCopy.printRBT();
+		mapCopy.erase(2);
+		mapCopy.printRBT();
+		mapCopy.erase(7);
+		mapCopy.printRBT();
+		mapCopy.erase(999);
+		mapCopy.printRBT();
+		mapCopy.erase(9);
+		mapCopy.printRBT();
 	}
 	return;
 }

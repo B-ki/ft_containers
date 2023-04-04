@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 16:56:13 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/03 14:24:09 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/04 21:49:51 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,41 +41,10 @@ struct RBTNode
 
 	// "static" makes the member accessible out of the class, without needing 
 	// to instantiate an object of the class	
-	node_ptr minimum()
-	{
-		node_ptr node = this;
-		while (node->left)
-			node = node->left;
-		return node;
-	}
-
-	const_node_ptr minimum() const
-	{
-		node_ptr node = this;
-		while (node->left)
-			node = node->left;
-		return node;
-	}
-
-	node_ptr maximum()
-	{
-		node_ptr node = this;
-		while (node->right)
-			node = node->right;
-		return node;
-	}
-
-	const_node_ptr maximum() const
-	{
-		node_ptr node = this;
-		while (node->right)
-			node = node->right;
-		return node;
-	}
 
 	bool isRoot()
 	{
-		if (!this->parent)
+		if (this->parent == NULL)
 			return true;
 		return false;
 	}
@@ -94,14 +63,35 @@ struct RBTNode
 		return false;
 	}
 
+	bool isNull()
+	{
+		if (parent == NULL && left == NULL && right == NULL)
+			return true;
+		return false;
+	}
+
+	node_ptr maximum()
+	{
+		node_ptr node = this;
+		while (!node->right->isNull())
+			node = node->right;
+	}
+
+	node_ptr minimum()
+	{
+		node_ptr node = this;
+		while (!node->left->isNull())
+			node = node->left;
+	}
+
 	// Return the next node in the tree, if no next return NULL
 	node_ptr successor()
 	{
 		node_ptr node = this;
-		if (node->left)
+		if (!node->right->isNull())
 			return (node->right->minimum());
 		node_ptr y = node->parent;
-		while (node->isRight() && y)
+		while (node->isRight() && y != NULL)
 		{
 			node = y;
 			y = node->parent;
@@ -113,10 +103,10 @@ struct RBTNode
 	node_ptr predecessor(node_ptr)
 	{
 		node_ptr node = this;
-		if (node->left)
-			return (node->right->maximum());
+		if (!node->left->isNull())
+			return (node->left->maximum());
 		node_ptr y = node->parent;
-		while (node->isLeft() && y)
+		while (node->isLeft() && y != NULL)
 		{
 			node = y;
 			y = node->parent;
