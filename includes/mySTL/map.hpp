@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/30 17:21:34 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/05 18:28:53 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,7 @@ class map {
 
 		// #################### ITERATORS ####################
 
-		/*
-		iterator begin() { return _RBT.min(); }
+		iterator begin() { return _RBT.begin(); }
 
 		const_iterator begin() const { return _RBT.min(); }
 
@@ -147,7 +146,6 @@ class map {
 		reverse_iterator rend() { return _RBT.rmin(); }
 
 		const_reverse_iterator rend() const { return _RBT.rmin(); }
-		*/
 
 		// #################### CAPACITY ####################
 

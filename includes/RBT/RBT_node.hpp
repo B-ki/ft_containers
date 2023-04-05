@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 16:56:13 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/04 21:49:51 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/05 21:53:14 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ struct RBTNode
 
 	bool isNull()
 	{
-		if (parent == NULL && left == NULL && right == NULL)
+		if (parent == NULL && left == right)
 			return true;
 		return false;
 	}
@@ -75,6 +75,7 @@ struct RBTNode
 		node_ptr node = this;
 		while (!node->right->isNull())
 			node = node->right;
+		return node;
 	}
 
 	node_ptr minimum()
@@ -82,6 +83,7 @@ struct RBTNode
 		node_ptr node = this;
 		while (!node->left->isNull())
 			node = node->left;
+		return node;
 	}
 
 	// Return the next node in the tree, if no next return NULL
@@ -96,11 +98,13 @@ struct RBTNode
 			node = y;
 			y = node->parent;
 		}
+		if (y == NULL)
+			return this->maximum()->right;
 		return y;
 	}
 		
 	// Idem
-	node_ptr predecessor(node_ptr)
+	node_ptr predecessor()
 	{
 		node_ptr node = this;
 		if (!node->left->isNull())
@@ -111,6 +115,8 @@ struct RBTNode
 			node = y;
 			y = node->parent;
 		}
+		if (y == NULL)
+			return this->maximum()->right;
 		return y;
 	}
 		

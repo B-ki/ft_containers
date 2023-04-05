@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/04 19:20:49 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/05 23:13:22 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,49 @@ void RBT_test(void)
 		mapCopy.printRBT();
 		mapCopy.erase(9);
 		mapCopy.printRBT();
+	}
+	{
+		std::cout << "\n########## RBT TESTS ##########\n\n";
+		NS::map<int, std::string> c;
+		NS::map<int, std::string>::iterator i = c.begin();
+		NS::map<int, std::string>::iterator j = c.begin();
+		(void)i;
+		(void)j;
+		NS::pair<int, std::string> p1 = NS::make_pair(0, "a");
+		c.insert(p1);
+		i++;
+		j--;
+		std::cout << i->second << std::endl;
+		std::cout << j->second << std::endl;
+	}
+	{
+		std::cout << "\n########## RBT ITERATORS ##########\n\n";
+		NS::map<int, std::string> c;
+		NS::pair<int, std::string> p1 = NS::make_pair(0, "a");
+		c.insert(p1);
+		NS::pair<int, std::string> p2 = NS::make_pair(1, "b");
+		c.insert(p2);
+		NS::pair<int, std::string> p3 = NS::make_pair(2, "c");
+		c.insert(p3);
+		NS::map<int, std::string>::iterator i = c.begin();
+		std::cout << i->second << std::endl;
+		i++;
+		std::cout << i->second << std::endl;
+		i++;
+		std::cout << i->second << std::endl;	
+		i++;
+		c.erase(0);
+		i--;
+		std::cout << i->second << std::endl;	
+		//i--;
+		c.erase(1);
+		std::cout << i->second << std::endl;	
+		i++;
+		c.erase(2);
+		i++;
+		c.insert(p1);
+		i--;
+		std::cout << i->second << std::endl;	
 	}
 	return;
 }

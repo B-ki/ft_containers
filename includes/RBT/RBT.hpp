@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/05 12:44:57 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/05 23:02:59 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,31 +69,31 @@ class RBT
 
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
 
-		RBT() : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(key_compare())
-		{
-			_sentinel.parent = NULL;
-			_sentinel.left = reinterpret_cast<node_ptr>(&_root);
-			_sentinel.right = reinterpret_cast<node_ptr>(&_root);
-			_NULL_NODE = createNullNode();
-		}; 
+		RBT() : _pair_allocator(pair_allocator()),
+				_node_allocator(node_allocator()),
+				_m_null(createNullNode()),
+				_root(_m_null),
+				_comp(key_compare())
+		{ } 
 
-		RBT(const key_compare& comp) : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(comp) 
-		{
-			_sentinel.parent = NULL;
-			_sentinel.left = reinterpret_cast<node_ptr>(&_root);
-			_sentinel.right = reinterpret_cast<node_ptr>(&_root);
-			_NULL_NODE = createNullNode();
-		}; 
+		RBT(const key_compare& comp) : 	_pair_allocator(pair_allocator()), 
+										_node_allocator(node_allocator()), 
+										_m_null(createNullNode()), 
+										_root(NULL), 
+										_comp(comp)
+		{ } 
 
 		RBT(const RBT<key_type, pair_type, key_of_pair, key_compare>& other) 
-			: _pair_allocator(pair_allocator()),  _node_allocator(node_allocator()), _comp(key_compare())
+			: 	_pair_allocator(pair_allocator()),
+				_node_allocator(node_allocator()),
+				_m_null(createNullNode()),
+				_comp(key_compare())
 		{
-			_sentinel.parent = NULL;
-			_sentinel.left = reinterpret_cast<node_ptr>(&_root);
-			_sentinel.right = reinterpret_cast<node_ptr>(&_root);
-			_NULL_NODE = createNullNode();
 			if (other._root)
+			{
 				_root = copyNodeHelper(other._root, other);
+				majNull();
+			}
 			else
 				_root = NULL;
 		}
@@ -101,19 +101,18 @@ class RBT
 		~RBT()
 		{
 			destructorHelper(this->_root);
-			_node_allocator.deallocate(_NULL_NODE, 1);		
+			_node_allocator.deallocate(_m_null, 1);		
 		}
 
 		// #################### MEMBERS ####################
 
 	private:
-		node_type		_sentinel;
-		node_ptr 		_root;
 		pair_allocator  _pair_allocator;
 		node_allocator 	_node_allocator;
-		key_compare 	_comp;
 		key_of_pair 	_key_of_pair;
-		node_ptr 		_NULL_NODE;
+		node_ptr 		_m_null;
+		node_ptr 		_root;
+		key_compare 	_comp;
 
 	public: 
 
@@ -133,7 +132,7 @@ class RBT
 
 		size_type sizeHelper(node_ptr node) const
 		{
-			if (!node)
+			if (node == _m_null)
 				return 1;
 			return (sizeHelper(node->left) + sizeHelper(node->right));
 		}
@@ -148,17 +147,19 @@ class RBT
 
 		iterator end() const
 		{
-			iterator ret(NULL);
+			iterator ret(_m_null);
 			return (ret);
 		}
+
+
 
 		// The successor is the node whose key is next
 		node_ptr successor(node_ptr x) const
 		{
-			if (x->right != _NULL_NODE)
+			if (x->right != _m_null)
 				return minimum(x->right);
 			node_ptr y = x->parent;
-			while (y != _NULL_NODE && x->isRight()) {
+			while (y != _m_null && x->isRight()) {
 				x = y;
 				y = y->parent;
 			}
@@ -168,10 +169,10 @@ class RBT
 		// The predecessor is the node whose key is just before
 		node_ptr predecessor(node_ptr x) const
 		{
-			if (x->left != _NULL_NODE)
+			if (x->left != _m_null)
 				return maximum(x->left);
 			node_ptr y = x->parent;
-			while (y != _NULL_NODE && x->isLeft()) {
+			while (y != _m_null && x->isLeft()) {
 				x = y;
 				y = y->parent;
 			}
@@ -182,7 +183,7 @@ class RBT
 		{
 			node_ptr ret;
 			ret = searchTreeHelper(this->_root, key);
-			if (ret == _NULL_NODE)
+			if (ret == _m_null)
 				return NULL;
 			return ret;
 		}
@@ -204,50 +205,19 @@ class RBT
 
 		// ########## MODIFIERS ##########
 
+		void majNull(void)
+		{
+			_m_null->parent = NULL;
+			_m_null->left = _root;
+			_m_null->right = _root;
+		}
+
 		iterator insert(const pair_type& pair)
 		{
-			node_ptr node = createNode(pair);
-			node_ptr y = NULL;
-			node_ptr x = this->_root;
-			while (x != _NULL_NODE && x != NULL)
-			{
-				y = x;
-				if (nodeCompare(node, x))
-					x = x->left;
-				else
-					x = x->right;
-			}
-			node->parent = y;
-			if (y == NULL)
-				_root = node;
-			else if (nodeCompare(node, y))
-				y->left = node;
-			else
-				y->right = node;
-			if (node->parent == NULL)
-			{
-				_root = node;
-				_root->color = black;
-				return iterator(node);
-			}
-			if (node->parent->parent == NULL)
-				return iterator(node);
-			updateBalance(node);
-			return iterator(node);
-		}
-		
-		iterator insert(iterator pos, const pair_type& pair)
-		{
-			node_ptr nodePos = pos.base();
 			node_ptr newNode = createNode(pair);
-			node_ptr y = NULL;
+			node_ptr y = _m_null;
 			node_ptr x = this->_root;
-			if (nodePos == NULL)
-				_root = newNode;
-			else if (isKeySupToNode(nodePos, _key_of_pair(pair)) &&
-					isKeyInfToNode(nodePos->successor(), _key_of_pair(pair)))
-				 x = nodePos;
-			while (x != _NULL_NODE && x != NULL)
+			while (x != _m_null)
 			{
 				y = x;
 				if (nodeCompare(newNode, x))
@@ -256,14 +226,50 @@ class RBT
 					x = x->right;
 			}
 			newNode->parent = y;
-			if (y == NULL)
+			if (y == _m_null)
+			{
+				_root = newNode;
+				_root->color = black;
+				majNull();
+				return iterator(newNode);
+			}
+			else if (nodeCompare(newNode, y))
+				y->left = newNode;
+			else
+				y->right = newNode;
+			updateBalance(newNode);
+			majNull();
+			return iterator(newNode);
+		}
+		
+		iterator insert(iterator pos, const pair_type& pair)
+		{
+			node_ptr nodePos = pos.base();
+			node_ptr newNode = createNode(pair);
+			node_ptr y = _m_null;
+			node_ptr x = this->_root;
+			if (nodePos == NULL)
+				_root = newNode;
+			else if (isKeySupToNode(nodePos, _key_of_pair(pair)) &&
+					isKeyInfToNode(nodePos->successor(), _key_of_pair(pair)))
+				 x = nodePos;
+			while (x != _m_null)
+			{
+				y = x;
+				if (nodeCompare(newNode, x))
+					x = x->left;
+				else
+					x = x->right;
+			}
+			newNode->parent = y;
+			if (y == _m_null)
 				_root = newNode;
 			else if (nodeCompare(newNode, y))
 				y->left = newNode;
 			else
 				y->right = newNode;
-			//updateBalance the node if necessary
 			updateBalance(newNode);
+			majNull();
 			return iterator(newNode);
 		}
 
@@ -333,10 +339,10 @@ class RBT
 			std::cout << ", " << x->pair.second << ")" << std::endl;
 			node_ptr y = x->left;
 			x->left = y->right;
-			if (y->right != _NULL_NODE)
+			if (y->right != _m_null)
 				y->right->parent = x;
 			y->parent = x->parent;
-			if (x->parent == _NULL_NODE)
+			if (x->parent == _m_null)
 				this->_root = y;
 			else if (x == x->parent->left)
 				x->parent->left = y;
@@ -524,9 +530,9 @@ class RBT
 		node_ptr maximum(node_ptr startSearch) const
 		{
 			node_ptr node = startSearch;
-			if (node == _NULL_NODE)
-				return _NULL_NODE;
-			while (node->right != _NULL_NODE)
+			if (node == _m_null)
+				return _m_null;
+			while (node->right != _m_null)
 				node = node->right;
 			return node;
 		}
@@ -534,28 +540,28 @@ class RBT
 		node_ptr minimum(node_ptr startSearch) const
 		{
 			node_ptr node = startSearch;
-			if (node == _NULL_NODE)
-				return _NULL_NODE;
-			while (node->left != _NULL_NODE)
+			if (node == _m_null)
+				return _m_null;
+			while (node->left != _m_null)
 				node = node->left;
 			return node;
 		}
 
 		void eraseNode(node_ptr node)
 		{
-			if (node == _NULL_NODE)
+			if (node == _m_null)
 				return;
 			_node_allocator.destroy(node);
 			_node_allocator.deallocate(node, 1);		
-			node = _NULL_NODE;
+			node = _m_null;
 		}
 
 		void initializeNode(node_ptr node, pair_type pair)
 		{
 			(void)pair;
-			node->parent = NULL;
-			node->left = _NULL_NODE;
-			node->right = _NULL_NODE;
+			node->parent = _m_null;
+			node->left = _m_null;
+			node->right = _m_null;
 			node->color = red;
 			node->bf = 0;
 		}
@@ -563,9 +569,9 @@ class RBT
 		node_ptr searchTreeHelper(node_ptr startSearch, const key_type& key) const
 		{
 			node_ptr node = startSearch;
-			if (node == _NULL_NODE)
+			if (node == _m_null)
 				return node;
-			while (node != _NULL_NODE && !isSameKey(node, key))
+			while (node != _m_null && !isSameKey(node, key))
 			{
 				if (isKeySupToNode(node, key))
 					node = node->right;
@@ -578,7 +584,7 @@ class RBT
 		// v is taking u's place, but v keeps its child
 		void rbtTransplant(node_ptr u, node_ptr v)
 		{
-			if (u->parent == NULL)
+			if (u->parent == _m_null)
 				this->_root = v;
 			else if (u->isLeft())
 				u->parent->left = v;
@@ -590,7 +596,7 @@ class RBT
 		// a is replaced by b, b->child = a->child
 		void replaceNode(node_ptr a, node_ptr b)
 		{
-			if (a->parent == NULL)
+			if (a->parent == _m_null)
 				this->_root = b;
 			else if (a->isLeft())
 				a->parent->left = b;
@@ -599,26 +605,26 @@ class RBT
 			b->parent = a->parent;
 			b->right = a->right;
 			b->left = a->left;
-			if (b->right != _NULL_NODE)
+			if (b->right != _m_null)
 				b->right->parent = b;
-			if (b->left != _NULL_NODE)
+			if (b->left != _m_null)
 				b->left->parent = b;
 		}
 
 		node_ptr deleteNodeHelper(node_ptr startSearch, const key_type& key)
 		{
 			node_ptr node = searchTreeHelper(startSearch, key);
-			if (node == _NULL_NODE)
-				return NULL;
+			if (node == _m_null)
+				return _m_null;
 			node_ptr y = node;
 			node_ptr x;
 			e_color originalColor = node->color;
-			if (node->left == _NULL_NODE) // No children or only right child
+			if (node->left == _m_null) // No children or only right child
 			{
 				x = node->right;
 				rbtTransplant(node, node->right);
 			}
-			else if (node->right == _NULL_NODE) // Only left child
+			else if (node->right == _m_null) // Only left child
 			{
 				x = node->left;
 				rbtTransplant(node, node->left);
@@ -642,15 +648,16 @@ class RBT
 				y->color = node->color;
 			}
 			eraseNode(node);
-			if (x != NULL && originalColor == black)
+			if (x != _m_null && originalColor == black)
 				fixDelete(x);
+			majNull();
 			return node;
 		}
 
 		void fixDelete(node_ptr node)
 		{
-			node_ptr sister = NULL;
-			while (node != _root && (node == NULL || node->color != red))
+			node_ptr sister = _m_null;
+			while (node != _root && (node == _m_null || node->color != red))
 			{
 				if (node->isLeft())
 				{
@@ -663,15 +670,15 @@ class RBT
 						leftRotate(node->parent);
 						sister = node->parent->right;
 					}
-					if ((sister->left == NULL || sister->left->color == black)
-							&& (sister->right == NULL || sister->right->color == black))
+					if ((sister->left == _m_null || sister->left->color == black)
+							&& (sister->right == _m_null || sister->right->color == black))
 					{
 						sister->color = red;
 						node = node->parent;
 					}
 					else 
 					{
-						if (sister->right == NULL || sister->right->color == black)
+						if (sister->right == _m_null || sister->right->color == black)
 						{
 							sister->left->color = black;
 							sister->color = red;
@@ -696,15 +703,15 @@ class RBT
 						rightRotate(node->parent);
 						sister = node->parent->left;
 					}
-					if ((sister->left == NULL || sister->left->color == black)
-							&& (sister->right == NULL || sister->right->color == black))
+					if ((sister->left == _m_null || sister->left->color == black)
+							&& (sister->right == _m_null || sister->right->color == black))
 					{
 						sister->color = red;
 						node = node->parent;
 					}
 					else 
 					{
-						if (sister->left == NULL || sister->left->color == black)
+						if (sister->left == _m_null || sister->left->color == black)
 						{
 							sister->right->color = black;
 							sister->color = red;
@@ -724,7 +731,7 @@ class RBT
 
 		void printHelperPerso(node_ptr node, std::string indent) const
 		{
-			if (node != _NULL_NODE)
+			if (node != _m_null)
 			{
 				indent += "            ";
 				printHelperPerso(node->right, indent);
@@ -740,7 +747,7 @@ class RBT
 
 		void printNode(node_ptr node) const
 		{
-			if (node == NULL)
+			if (node == _m_null)
 				return;
 			if (node->color == red)
 				std::cout << RED;
@@ -752,7 +759,7 @@ class RBT
 
 		void destructorHelper(node_ptr node)
 		{
-			if (node != _NULL_NODE)
+			if (node != _m_null)
 			{
 				destructorHelper(node->left);
 				destructorHelper(node->right);
@@ -765,12 +772,12 @@ class RBT
 		{
 			node_ptr newNode = createNode(nodeToCopy->pair);
 			newNode->color = nodeToCopy->color;
-			if (nodeToCopy->right != other._NULL_NODE)
+			if (nodeToCopy->right != other._m_null)
 			{
 				newNode->right = copyNodeHelper(nodeToCopy->right, other);
 				newNode->right->parent = newNode;
 			}
-			if (nodeToCopy->left != other._NULL_NODE)
+			if (nodeToCopy->left != other._m_null)
 			{
 				newNode->left = copyNodeHelper(nodeToCopy->left, other);
 				newNode->left->parent = newNode;
