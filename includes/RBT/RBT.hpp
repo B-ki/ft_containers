@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/04 22:58:10 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/05 12:44:57 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,23 +71,26 @@ class RBT
 
 		RBT() : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(key_compare())
 		{
-			header.parent = NULL;
-			header.left = reinterpret_cast<node_ptr>(&_root);
-			header.right = reinterpret_cast<node_ptr>(&_root);
+			_sentinel.parent = NULL;
+			_sentinel.left = reinterpret_cast<node_ptr>(&_root);
+			_sentinel.right = reinterpret_cast<node_ptr>(&_root);
 			_NULL_NODE = createNullNode();
 		}; 
 
 		RBT(const key_compare& comp) : _root(NULL), _pair_allocator(pair_allocator()), _node_allocator(node_allocator()), _comp(comp) 
 		{
-			header.parent = NULL;
-			header.left = reinterpret_cast<node_ptr>(&_root);
-			header.right = reinterpret_cast<node_ptr>(&_root);
+			_sentinel.parent = NULL;
+			_sentinel.left = reinterpret_cast<node_ptr>(&_root);
+			_sentinel.right = reinterpret_cast<node_ptr>(&_root);
 			_NULL_NODE = createNullNode();
 		}; 
 
 		RBT(const RBT<key_type, pair_type, key_of_pair, key_compare>& other) 
 			: _pair_allocator(pair_allocator()),  _node_allocator(node_allocator()), _comp(key_compare())
 		{
+			_sentinel.parent = NULL;
+			_sentinel.left = reinterpret_cast<node_ptr>(&_root);
+			_sentinel.right = reinterpret_cast<node_ptr>(&_root);
 			_NULL_NODE = createNullNode();
 			if (other._root)
 				_root = copyNodeHelper(other._root, other);
@@ -97,9 +100,6 @@ class RBT
 
 		~RBT()
 		{
-			header.parent = NULL;
-			header.left = reinterpret_cast<node_ptr>(&_root);
-			header.right = reinterpret_cast<node_ptr>(&_root);
 			destructorHelper(this->_root);
 			_node_allocator.deallocate(_NULL_NODE, 1);		
 		}
@@ -107,7 +107,7 @@ class RBT
 		// #################### MEMBERS ####################
 
 	private:
-		node_type		header;
+		node_type		_sentinel;
 		node_ptr 		_root;
 		pair_allocator  _pair_allocator;
 		node_allocator 	_node_allocator;
