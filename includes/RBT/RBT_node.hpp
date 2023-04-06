@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 16:56:13 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/05 21:53:14 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/06 12:17:42 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,21 @@ struct RBTNode
 
 	bool isRoot()
 	{
-		if (this->parent == NULL)
+		if (this->parent->isNull())
 			return true;
 		return false;
 	}
 
 	bool isRight()
 	{
-		if (this->parent && this == this->parent->right)
+		if (!this->parent->isNull() && this == this->parent->right)
 			return true;
 		return false;
 	}
 
 	bool isLeft()
 	{
-		if (this->parent != NULL && this->parent->left != NULL && this == this->parent->left)
+		if (!this->parent->isNull() && this == this->parent->left)
 			return true;
 		return false;
 	}
@@ -91,15 +91,15 @@ struct RBTNode
 	{
 		node_ptr node = this;
 		if (!node->right->isNull())
-			return (node->right->minimum());
+		{
+			return node->right->minimum();
+		}
 		node_ptr y = node->parent;
-		while (node->isRight() && y != NULL)
+		while (!y->isNull() && node->isRight())
 		{
 			node = y;
 			y = node->parent;
 		}
-		if (y == NULL)
-			return this->maximum()->right;
 		return y;
 	}
 		
@@ -107,16 +107,18 @@ struct RBTNode
 	node_ptr predecessor()
 	{
 		node_ptr node = this;
-		if (!node->left->isNull())
-			return (node->left->maximum());
+		if (!node->isNull())
+		{
+			return node->left->maximum();
+		}
 		node_ptr y = node->parent;
-		while (node->isLeft() && y != NULL)
+		if (!node->right->isNull())
+			return node->left->maximum();
+		while (!y->isNull() && node->isLeft())
 		{
 			node = y;
 			y = node->parent;
 		}
-		if (y == NULL)
-			return this->maximum()->right;
 		return y;
 	}
 		

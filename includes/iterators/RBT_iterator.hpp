@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 17:57:49 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/05 20:44:56 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/06 09:31:55 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ class RBT_iterator
 		//Pre-incrementation : ++It
 		RBT_iterator& operator++()
 		{ 
-			if (_current->isNull())
-				return *this;
 			this->_current = this->_current->successor(); 
 			return *this;
 		}
@@ -74,8 +72,6 @@ class RBT_iterator
 		//Post-incrementation : It++
 		RBT_iterator operator++(int) 
 		{ 
-			if (_current->isNull())
-				return *this;
 			RBT_iterator tmp(*this); 
 			this->_current = this->_current->successor(); 
 			return tmp; 
@@ -84,10 +80,7 @@ class RBT_iterator
 		//Pre-incrementation : --It
 		RBT_iterator& operator--() 
 		{ 
-			if (_current->isNull())
-				this->_current = this->_current->right->maximum();
-			else
-				this->_current = this->_current->predecessor(); 
+			this->_current = this->_current->predecessor(); 
 			return *this; 
 		}
 
@@ -95,10 +88,7 @@ class RBT_iterator
 		RBT_iterator operator--(int) 
 		{ 
 			RBT_iterator tmp(*this); 
-			if (_current->isNull())
-				this->_current = this->_current->right->maximum();
-			else
-				this->_current = this->_current->predecessor(); 
+			this->_current = this->_current->predecessor(); 
 			return tmp; 
 		}
 

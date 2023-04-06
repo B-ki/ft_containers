@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/05 23:02:59 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/06 12:16:50 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,9 @@ class RBT
 				_m_null(createNullNode()),
 				_root(_m_null),
 				_comp(key_compare())
-		{ } 
+		{ 
+			std::cout << "Adress of nill is :" << _m_null << std::endl;
+		} 
 
 		RBT(const key_compare& comp) : 	_pair_allocator(pair_allocator()), 
 										_node_allocator(node_allocator()), 
@@ -95,7 +97,7 @@ class RBT
 				majNull();
 			}
 			else
-				_root = NULL;
+				_root = _m_null;
 		}
 
 		~RBT()
@@ -248,7 +250,7 @@ class RBT
 			node_ptr newNode = createNode(pair);
 			node_ptr y = _m_null;
 			node_ptr x = this->_root;
-			if (nodePos == NULL)
+			if (nodePos == _m_null)
 				_root = newNode;
 			else if (isKeySupToNode(nodePos, _key_of_pair(pair)) &&
 					isKeyInfToNode(nodePos->successor(), _key_of_pair(pair)))
@@ -308,10 +310,10 @@ class RBT
 			std::cout << ", " << x->pair.second << ")" << std::endl;
 			node_ptr y = x->right;
 			x->right = y->left;
-			if (y->left != NULL)
+			if (y->left != _m_null)
 				y->left->parent = x;
 			y->parent = x->parent;
-			if (x->parent == NULL)
+			if (x->parent == _m_null)
 				this->_root = y;
 			else if (x == x->parent->left)
 				x->parent->left = y;
@@ -365,7 +367,7 @@ class RBT
 				if (node->parent->isRight()) 
 				{
 					node_ptr uncle = node->parent->parent->left;
-					if (uncle != NULL && uncle->color == red)
+					if (uncle != _m_null && uncle->color == red)
 					{
 						uncle->color = black;
 						node->parent->color = black;
@@ -387,7 +389,7 @@ class RBT
 				else 
 				{
 					node_ptr uncle = node->parent->parent->right;
-					if (uncle != NULL && uncle->color == red)
+					if (uncle != _m_null && uncle->color == red)
 					{
 						uncle->color = black;
 						node->parent->color = black;
@@ -406,11 +408,11 @@ class RBT
 						rightRotate(node->parent->parent);
 					}	
 				}
-				if (node->parent == NULL)
+				if (node->parent == _m_null)
 					break;
 			}
 			getRoot()->color = black;
-			getRoot()->parent = NULL;
+			getRoot()->parent = _m_null;
 		}
 
 		void rebalance(node_ptr node)
