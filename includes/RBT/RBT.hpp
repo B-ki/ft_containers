@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/06 12:16:50 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/06 18:33:00 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ class RBT
 		typedef const RBTNode<pair_type>* 						const_node_ptr;
 
 		typedef RBT_iterator<pair_type, false> 					iterator; 
-		typedef RBT_iterator<pair_type, true> 					const_iterator;
+		typedef const_RBT_iterator<pair_type, true> 			const_iterator;
 
 		typedef ft::reverse_iterator<iterator> 					reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator> 			const_reverse_iterator;
@@ -153,7 +153,29 @@ class RBT
 			return (ret);
 		}
 
+		const_iterator cbegin() const
+		{
+			const_iterator ret(minimum(getRoot()));
+			return (ret);
+		}
 
+		const_iterator cend() const
+		{
+			const_iterator ret(_m_null);
+			return (ret);
+		}
+
+		iterator rbegin() const
+		{
+			iterator ret(maximum(getRoot()));
+			return (ret);
+		}
+
+		const_iterator crbegin() const
+		{
+			const_iterator ret(maximum(getRoot()));
+			return (ret);
+		}
 
 		// The successor is the node whose key is next
 		node_ptr successor(node_ptr x) const

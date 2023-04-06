@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/05 18:28:53 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/06 18:33:41 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,19 +133,19 @@ class map {
 
 		iterator begin() { return _RBT.begin(); }
 
-		const_iterator begin() const { return _RBT.min(); }
+		const_iterator begin() const { return _RBT.cbegin(); }
 
-		iterator end() { return _RBT.max(); }
+		iterator end() { return _RBT.end(); }
 
-		const_iterator end() const { return _RBT.max(); }
+		const_iterator end() const { return _RBT.cend(); }
 	
-		reverse_iterator rbegin() { return _RBT.rmax(); }
+		reverse_iterator rbegin() { return _RBT.rbegin(); }
 
-		const_reverse_iterator rbegin() const { return _RBT.rmax(); }
+		const_reverse_iterator rbegin() const { return _RBT.crbegin(); }
 
-		reverse_iterator rend() { return _RBT.rmin(); }
+		reverse_iterator rend() { return _RBT.end(); }
 
-		const_reverse_iterator rend() const { return _RBT.rmin(); }
+		const_reverse_iterator rend() const { return _RBT.cend(); }
 
 		// #################### CAPACITY ####################
 

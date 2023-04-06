@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/06 12:18:16 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/06 18:43:21 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,7 @@ void RBT_test(void)
 		NS::pair<int, std::string> p1 = NS::make_pair(0, "a");
 		c.insert(p1);
 		NS::pair<int, std::string> p2 = NS::make_pair(1, "b");
-		c.insert(p2);
+		std::cout << (c.insert(p2)).second << std::endl;;
 		NS::pair<int, std::string> p3 = NS::make_pair(2, "c");
 		c.insert(p3);
 		NS::map<int, std::string>::iterator i = c.begin();
@@ -229,6 +229,13 @@ void RBT_test(void)
 		std::cout << i->second << std::endl;	
 		c.erase(1);
 		std::cout << i->second << std::endl;	
+		c.insert(p2);
+		NS::map<int, std::string>::iterator j = ++i;
+		std::cout << i->second << std::endl;
+		std::cout << j->second << std::endl;
+		c.insert(p2);
+		std::cout << c.size() << std::endl;
+		//c.printRBT();
 	}
 	return;
 }
