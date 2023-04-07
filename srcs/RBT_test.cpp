@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/06 18:43:21 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/07 18:39:28 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include "pair.hpp"
 #include "map.hpp"
 #include <map>
+#include <cstdlib>
+#include <time.h>
 
 #ifndef NS
 # define NS std
@@ -123,12 +125,19 @@ void RBT_test(void)
 		mapOfString.printRBT();
 		mapOfString.insert(pair7);
 		mapOfString.printRBT();
+		mapOfString.insert(pair8);
+		mapOfString.printRBT();
+		std::cout << "Value at key=4 : " << mapOfString[4] << std::endl;
+		std::cout << "Value at key=9 : " << mapOfString[9] << std::endl;
+		mapOfString.printRBT();
+		std::cout << "Value at key=999 : " << mapOfString[999] << std::endl;
 		mapOfString.printRBT();
 		ft::map<int, std::string> mapCopy(mapOfString);
-		mapCopy.printRBT();
 		mapCopy.find(5);
+		std::cout << "Erase 5\n";
 		mapCopy.erase(5);
 		mapCopy.printRBT();
+		std::cout << "Erase 6\n";
 		mapCopy.erase(6);
 		mapCopy.printRBT();
 		mapCopy.erase(0);
@@ -236,6 +245,35 @@ void RBT_test(void)
 		c.insert(p2);
 		std::cout << c.size() << std::endl;
 		//c.printRBT();
+	}
+	{
+		std::cout << "\n########## RBT BALANCE ##########\n\n";
+		ft::RBT<int> tree;
+		srand( (unsigned)time(NULL) );
+		
+		std::cout << "1000 insertion\n";
+		for(int i = 0; i < 50; i++)
+		{
+			tree.insert(i);
+			tree.checkRbt();
+		}
+		std::cout << "100 deletion\n";
+		tree.prettyPrint();
+		tree.deleteNode(7);
+		tree.checkRbt();
+		tree.prettyPrint();
+		tree.deleteNode(16);
+		tree.checkRbt();
+		/*
+		for (int i = 0; i < 50; i+= 10)
+		{
+			int t = i + rand() % 10;
+			std::cout << "Deleting : " << t << ", in tree of size :" << tree.size() << ", result :";
+			tree.deleteNode(t);
+			tree.checkRbt();
+		}
+		*/
+
 	}
 	return;
 }

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 16:56:13 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/06 12:17:42 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/07 17:46:42 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,20 @@ typedef enum e_color { black, red } t_color;
 template<class Pair>
 struct RBTNode
 {
-	Pair 		pair;
+	Pair 		value;
 	RBTNode* 	parent;
 	RBTNode* 	left;
 	RBTNode* 	right;
 	t_color 	color;
-	int 		bf;
 
 	typedef RBTNode 		node_type; 
 	typedef RBTNode* 		node_ptr;
 	typedef const RBTNode* 	const_node_ptr;
 
-	RBTNode() : pair(), parent(NULL), left(NULL), right(NULL), color(black), bf(0) {}
+	RBTNode() : value(), parent(NULL), left(NULL), right(NULL), color(black) {}
 
-	RBTNode(Pair v, node_ptr p = NULL, node_ptr l = NULL, node_ptr r = NULL, t_color c = black, int bf = 0) : 
-		pair(v), color(c), parent(p), left(l), right(r), bf(bf) {}; 
+	RBTNode(Pair v, node_ptr p = NULL, node_ptr l = NULL, node_ptr r = NULL, t_color c = black) : 
+		value(v), color(c), parent(p), left(l), right(r) {}; 
 
 	// "static" makes the member accessible out of the class, without needing 
 	// to instantiate an object of the class	

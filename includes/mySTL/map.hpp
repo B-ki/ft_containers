@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/06 18:33:41 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/07 17:45:51 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,12 +113,12 @@ class map {
 		// Return std::out_of_range is key is not in the _RBT
 		T& at(const Key& key) 
 		{
-			return (_RBT.getPair(key)).second;
+			return (_RBT.getValue(key)).second;
 		}
 
 		const T& at(const Key& key) const
 		{
-			return (_RBT.getPair(key)).second;
+			return (_RBT.getValue(key)).second;
 		}
 
 		// insert pair_type(key, T()) if key does not exists
@@ -126,7 +126,7 @@ class map {
 		{
 			if (!_RBT.searchTree(key))
 				return (*_RBT.insert(ft::make_pair(key, T()))).second;
-			return (_RBT.getPair(key)).second;
+			return (_RBT.getValue(key)).second;
 		}
 
 		// #################### ITERATORS ####################
@@ -283,6 +283,12 @@ class map {
 		void printRBT(void)
 		{
 			_RBT.prettyPrint();
+			_RBT.checkRbt();
+		}
+
+		void checkRBT(void)
+		{
+			_RBT.checkRbt();
 		}
 
 };
