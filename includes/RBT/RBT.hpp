@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/07 18:35:30 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/07 23:31:47 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,8 +315,6 @@ class RBT
 				prettyPrint();
 				std::cout << RED << "Tree is not balanced !! :(\n" << NORMAL;
 			}
-			else
-				std::cout << GREEN << "Tree is balanced :)\n" << NORMAL;
 		}
 
 		// ###################################################################
@@ -788,7 +786,7 @@ class RBT
 						sister->color = node->parent->color;
 						node->parent->color = black;
 						sister->left->color = black;
-						leftRotate(node->parent);
+						rightRotate(node->parent);
 						node = this->_root; // Break the loop
 					}
 				}

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/07 18:39:28 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/07 23:30:54 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,27 +252,19 @@ void RBT_test(void)
 		srand( (unsigned)time(NULL) );
 		
 		std::cout << "1000 insertion\n";
-		for(int i = 0; i < 50; i++)
+		for(int i = 0; i < 1000; i++)
 		{
 			tree.insert(i);
 			tree.checkRbt();
 		}
 		std::cout << "100 deletion\n";
-		tree.prettyPrint();
-		tree.deleteNode(7);
-		tree.checkRbt();
-		tree.prettyPrint();
-		tree.deleteNode(16);
-		tree.checkRbt();
-		/*
-		for (int i = 0; i < 50; i+= 10)
+		for (int i = 0; i < 100; i+= 10)
 		{
 			int t = i + rand() % 10;
 			std::cout << "Deleting : " << t << ", in tree of size :" << tree.size() << ", result :";
 			tree.deleteNode(t);
 			tree.checkRbt();
 		}
-		*/
 
 	}
 	return;
