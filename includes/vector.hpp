@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/20 19:28:43 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/09 01:40:25 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,12 @@
 #include <streambuf>
 #include "reverse_iterator.hpp"
 #include "equal.hpp"
+#include <iterator>
 
 namespace ft
 {
 
-template <class T>
+template <class T, class Alloc>
 class vector_base
 {
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
@@ -61,8 +62,8 @@ class vector_base
 		std::allocator<T> _alloc;
 };
 
-template <class T>
-void swapVectorBase(vector_base<T>& a, vector_base<T>& b)
+template <class T, class Alloc>
+void swapVectorBase(vector_base<T, Alloc>& a, vector_base<T, Alloc>& b)
 {
 	std::swap(a._first, b._first);
 	std::swap(a._last, b._last);
@@ -70,15 +71,15 @@ void swapVectorBase(vector_base<T>& a, vector_base<T>& b)
 	std::swap(a._alloc, b._alloc);
 }
 
-template <class T>
-class vector : private vector_base<T>
+template <class T, class Alloc = std::allocator<T> >
+class vector : private vector_base<T, Alloc>
 {
 	public:
 
 		// #################### MEMBER TYPES ####################
 
 		typedef T value_type;
-		//allocator_type est le type value_type retournee par std::allocator<T>
+		//allocator_type est le type value_type retournee par std::allocator<T, Alloc>
 		typedef typename std::allocator<value_type> 		allocator_type;
 
 		typedef typename allocator_type::pointer 			pointer;
@@ -97,19 +98,19 @@ class vector : private vector_base<T>
 
 		// #################### DATA MEMBERS ####################
 
-		using vector_base<T>::_first;
-		using vector_base<T>::_last;
-		using vector_base<T>::_end;
-		using vector_base<T>::_alloc;
+		using vector_base<T, Alloc>::_first;
+		using vector_base<T, Alloc>::_last;
+		using vector_base<T, Alloc>::_end;
+		using vector_base<T, Alloc>::_alloc;
 
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
 	public:
 		// Default constructor 
-		explicit vector() : vector_base<T>(0) { };
+		explicit vector() : vector_base<T, Alloc>(0) { };
 
 
 		// Parametric constructor
-		explicit vector(size_type n, const T& value = T()) : vector_base<T>(n) 
+		explicit vector(size_type n, const T& value = T()) : vector_base<T, Alloc>(n) 
 	{
 		std::uninitialized_fill_n(_first, n, value);
 		_last = _first + n;
@@ -121,14 +122,14 @@ class vector : private vector_base<T>
 		// compiler to use the range iterator if the parameter is an integral
 		template <class It>
 		vector(It first, It last, 
-				typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) : vector_base<T>(std::distance(first, last))
+				typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) : vector_base<T, Alloc>(std::distance(first, last))
 	{
 		std::uninitialized_copy(first, last, _first);
 		_last = _first + std::distance(first, last);
 	}
 
 		//Copy constructor 
-		vector(const vector<T>& x) : vector_base<T>(x.size())
+		vector(const vector<T, Alloc>& x) : vector_base<T, Alloc>(x.size())
 	{
 		std::uninitialized_copy(x._first, x._last, _first);
 		_last = _first + x.size();
@@ -142,7 +143,7 @@ class vector : private vector_base<T>
 
 		// #################### ASSIGNMENT OPERATORS  ####################
 
-		vector<T>& operator=(const vector<T>& x)
+		vector<T, Alloc>& operator=(const vector<T, Alloc>& x)
 		{
 			// Normalement la STL utilise adressof pour comparer lhs et rhs (et pas == car trop 
 			// long de comparer tout le vecteur), mais addressof est du C++11
@@ -169,7 +170,7 @@ class vector : private vector_base<T>
 			}
 			else
 			{
-				vector<T> tmp(x);
+				vector<T, Alloc> tmp(x);
 				swap(tmp);
 			}
 			return (*this);
@@ -183,7 +184,7 @@ class vector : private vector_base<T>
 				size_type n = std::distance(first, last);
 				if (n > cap)
 				{
-					vector<T> tmp(first, last);
+					vector<T, Alloc> tmp(first, last);
 					swap(tmp);
 				}
 				else
@@ -196,8 +197,10 @@ class vector : private vector_base<T>
 					}
 					else
 					{
-						std::copy(first, first + sz, _first);
-						std::uninitialized_copy(first + sz, last, _last);
+						It copy_end = first;
+						std::advance(copy_end, sz);
+						std::copy(first, copy_end, _first);
+						std::uninitialized_copy(copy_end, last, _last);
 					}
 					_last = _first + n;
 				}
@@ -209,7 +212,7 @@ class vector : private vector_base<T>
 			size_type cap = capacity();
 			if (n > cap)
 			{
-				vector<T> tmp(n, u);
+				vector<T, Alloc> tmp(n, u);
 				swap(tmp);
 			}
 			else
@@ -266,7 +269,7 @@ class vector : private vector_base<T>
 			if (newCap <= capacity())
 				return;
 
-			vector_base<T> tmp(newCap);
+			vector_base<T, Alloc> tmp(newCap);
 
 			tmp._last = std::uninitialized_copy(_first, _last, tmp._first);
 			clear();
@@ -338,22 +341,20 @@ class vector : private vector_base<T>
 			}
 		}
 
-		iterator insert(const_iterator position, const T& x)
+		iterator insert(iterator position, const T& x)
 		{
 			insert(position, 1lu, x);
-			iterator pos = (iterator)position;
-			return (pos);
+			return (position);
 		}
 
-		void insert(const_iterator position, size_type n, const T& x)
+		void insert(iterator pos, size_type n, const T& x)
 		{
-			iterator pos = (iterator)position;
 			size_type oldCap = capacity();
 
 			if (oldCap < size() + n)
 			{
 				size_type newCap = (oldCap + n ? (oldCap + n) * 2 : 1);
-				vector<T> tmpVector;
+				vector<T, Alloc> tmpVector;
 				tmpVector.reserve(newCap);
 
 				tmpVector._last = std::uninitialized_copy(_first, pos, tmpVector._first);
@@ -375,16 +376,15 @@ class vector : private vector_base<T>
 		}
 
 		template <class InputIterator>
-			void insert(const_iterator position, InputIterator first, InputIterator last)
+			void insert(iterator pos, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			{
-				iterator pos = (iterator)position;
 				size_type oldCap = capacity();
 				size_type n = std::distance(first, last);
 
 				if (oldCap < size() + n)
 				{
 					size_type newCap = (oldCap + n ? (oldCap + n) * 2 : 1);
-					vector<T> tmpVector;
+					vector<T, Alloc> tmpVector;
 					tmpVector.reserve(newCap);
 
 					tmpVector._last = std::uninitialized_copy(_first, pos, tmpVector._first);
@@ -397,12 +397,16 @@ class vector : private vector_base<T>
 					iterator oldLast = _last;
 					iterator startOwnCopy = (_last - n) - pos > 0 ? (_last - n) : pos;
 					iterator endTargetCopy = (pos + n) > _last ? _last : (pos + n);
-					std::uninitialized_copy(first + (endTargetCopy - pos), last, endTargetCopy);
-					_last += last - first + pos - endTargetCopy;
+					InputIterator uc_first = first;
+					std::advance(uc_first, std::distance(pos, endTargetCopy));
+					std::uninitialized_copy(uc_first, last, endTargetCopy);
+					_last += std::distance(first, last) + std::distance(endTargetCopy, pos);
 					std::uninitialized_copy(startOwnCopy, oldLast, (startOwnCopy + n));
-					_last += oldLast - startOwnCopy;
+					_last += std::distance(startOwnCopy, oldLast);
 					std::copy_backward(pos, startOwnCopy, oldLast);
-					std::copy(endTargetCopy, first + (endTargetCopy - pos), pos);
+					InputIterator copy_end = first;
+					std::advance(copy_end, endTargetCopy - pos);
+					std::copy(first, copy_end, pos);
 				}
 
 			}
@@ -419,13 +423,13 @@ class vector : private vector_base<T>
 			if (dist <= 0)
 				return (last);
 			std::copy(first + dist, _last, first);
-			for(iterator it = _last - dist; it != _last; it++)
+			for(iterator it = last; it != _last; it++)
 				_alloc.destroy(it);
 			_last -= dist;
-			return (last);
+			return (first);
 		}
 
-		void swap(vector<T>& other)
+		void swap(vector<T, Alloc>& other)
 		{
 			T* _tmpFirst = _first;
 			T* _tmpLast = _last;
@@ -467,50 +471,50 @@ class vector : private vector_base<T>
 };
 		// #################### NON MEMBER FUNCTIONS ####################
 
-template <class T>
-bool operator==(const vector<T>& x, const vector<T>& y)
+template <class T, class Alloc>
+bool operator==(const vector<T, Alloc>& x, const vector<T, Alloc>& y)
 {
 	if (x.size() != y.size())
 		return false;
 	return ft::equal(x.begin(), x.end(), y.begin());
 }
 
-template <class T>
-bool operator!=(const vector<T>& x, const vector<T>& y)
+template <class T, class Alloc>
+bool operator!=(const vector<T, Alloc>& x, const vector<T, Alloc>& y)
 {
 	if (x.size() != y.size())
 		return true;
 	return !ft::equal(x.begin(), x.end(), y.begin());
 }
 
-template <class T>
-bool operator> (const vector<T>& x, const vector<T>& y)
+template <class T, class Alloc>
+bool operator> (const vector<T, Alloc>& x, const vector<T, Alloc>& y)
 {
 	return ft::lexicographical_compare(y.begin(), y.end(), x.begin(), x.end());
 }
 
-template <class T>
-bool operator< (const vector<T>& x, const vector<T>& y)
+template <class T, class Alloc>
+bool operator< (const vector<T, Alloc>& x, const vector<T, Alloc>& y)
 {
 	return ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
 }
 
-template <class T>
-bool operator>=(const vector<T>& x, const vector<T>& y)
+template <class T, class Alloc>
+bool operator>=(const vector<T, Alloc>& x, const vector<T, Alloc>& y)
 {
 	return !ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
 }
 
-template <class T>
-bool operator<=(const vector<T>& x, const vector<T>& y)
+template <class T, class Alloc>
+bool operator<=(const vector<T, Alloc>& x, const vector<T, Alloc>& y)
 {
 	return !ft::lexicographical_compare(y.begin(), y.end(), x.begin(), x.end());
 }
 
 // #################### SPECIALIZED ALGORITHM ####################
 
-template <class T>
-void swap(vector<T>& x, vector<T>& y)
+template <class T, class Alloc>
+void swap(vector<T, Alloc>& x, vector<T, Alloc>& y)
 {
 	x.swap(y);
 }

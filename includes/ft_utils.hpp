@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 16:29:20 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/24 11:37:00 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/08 13:26:16 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ struct SelectFirst : public unary_function<Pair, typename Pair::first_type>
 		return (p.first);
 	}
 
-	result_type& operator()(const Pair& p) const
+	const result_type& operator()(const Pair& p) const
 	{
 		return (p.first);
 	}
@@ -63,7 +63,7 @@ struct Identity : public unary_function<T, T>
 		return (value);
 	}
 
-	result_type& operator()(const T& value) const
+	const result_type& operator()(const T& value) const
 	{
 		return (value);
 	}

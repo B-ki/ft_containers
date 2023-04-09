@@ -2,8 +2,7 @@ NAME = ft_container
 
 SRC_DIR = srcs/
 INC_PARAMS=$(foreach d, $(INCLUDE_DIR), -I$d)
-INCLUDE_DIR = includes/ includes/sandbox/ includes/RBT/ includes/utils/\
-			  includes/iterators/ includes/mySTL/
+INCLUDE_DIR = includes/
 OBJDIR = bin/
 
 SRCS = main.cpp\

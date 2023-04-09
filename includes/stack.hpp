@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 09:38:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/02/03 13:56:11 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/09 01:42:28 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 #define STACK_HPP 
 
 #include <vector>
+
+namespace ft
+
+{
 
 template <class T, class Container = std::vector<T> >
 class stack {
@@ -97,6 +101,8 @@ template <class T, class Container>
 bool operator<=(const stack<T, Container>& x, const stack<T, Container>& y)
 {
 	return (x <= y);
+}
+
 }
 
 #endif 

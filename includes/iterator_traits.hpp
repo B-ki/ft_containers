@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 11:33:22 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/20 22:48:20 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/09 01:04:51 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,16 @@ struct iterator_traits<T*>
 	typedef std::ptrdiff_t 						difference_type;
 	typedef T* 									pointer;
 	typedef T& 									reference;
+};
+
+template<class T>
+struct iterator_traits<const T*>
+{
+	typedef std::random_access_iterator_tag 	iterator_category;
+	typedef T 									value_type;
+	typedef std::ptrdiff_t 						difference_type;
+	typedef const T* 									pointer;
+	typedef const T& 									reference;
 };
 
 }

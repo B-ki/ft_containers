@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 17:57:49 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/07 17:47:16 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/09 03:30:23 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 namespace ft
 {
 
-template<class Value, bool IsConst>
+template<class Value>
 class RBT_iterator
 {
 	public:
@@ -41,7 +41,7 @@ class RBT_iterator
 
 		RBT_iterator(node_ptr ptr) : _current(ptr) {}
 
-		RBT_iterator(const RBT_iterator<Value, IsConst>& other) : _current(other._current) {}
+		RBT_iterator(const RBT_iterator<Value>& other) : _current(other._current) {}
 
 		RBT_iterator operator=(const RBT_iterator& other)
 		{
@@ -90,6 +90,24 @@ class RBT_iterator
 			return tmp; 
 		}
 
+		RBT_iterator operator+(difference_type n) const
+		{
+			difference_type i = 0;
+			node_ptr tmp = this->_current;
+			while (i++ < n)
+				tmp = tmp->successor();
+			return tmp;
+		}
+
+		RBT_iterator operator-(difference_type n) const
+		{
+			difference_type i = 0;
+			node_ptr tmp = this->_current;
+			while (i++ < n)
+				tmp = tmp->predecessor();
+			return tmp;
+		}
+
 		node_ptr base() const
 		{
 			return this->_current;
@@ -98,20 +116,20 @@ class RBT_iterator
 };
 
 template< class Value >
-bool operator==( const ft::RBT_iterator<Value, false>& lhs,
-                 const ft::RBT_iterator<Value, false>& rhs )
+bool operator==( const ft::RBT_iterator<Value>& lhs,
+                 const ft::RBT_iterator<Value>& rhs )
 {
 	return (lhs.base() == rhs.base());
 }
 
 template< class Value >
-bool operator!=( const ft::RBT_iterator<Value, false>& lhs,
-                 const ft::RBT_iterator<Value, false>& rhs )
+bool operator!=( const ft::RBT_iterator<Value>& lhs,
+                 const ft::RBT_iterator<Value>& rhs )
 {
 	return (lhs.base() != rhs.base());
 }
 
-template<class Value, bool IsConst>
+template<class Value>
 class const_RBT_iterator
 {
 	public:
@@ -131,7 +149,9 @@ class const_RBT_iterator
 
 		const_RBT_iterator(node_ptr ptr) : _current(ptr) {}
 
-		const_RBT_iterator(const RBT_iterator<Value, IsConst>& other) : _current(other._current) {}
+		const_RBT_iterator(RBT_iterator<Value>& other) : _current(other._current) {}
+
+		const_RBT_iterator(const RBT_iterator<Value>& other) : _current(other._current) {}
 
 		const_RBT_iterator operator=(const const_RBT_iterator& other)
 		{
@@ -180,6 +200,24 @@ class const_RBT_iterator
 			return tmp; 
 		}
 
+		const_RBT_iterator operator+(difference_type n) const
+		{
+			difference_type i = 0;
+			node_ptr tmp = this->_current;
+			while (i++ < n)
+				tmp = tmp->successor();
+			return tmp;
+		}
+
+		const_RBT_iterator operator-(difference_type n) const
+		{
+			difference_type i = 0;
+			node_ptr tmp = this->_current;
+			while (i++ < n)
+				tmp = tmp->predecessor();
+			return tmp;
+		}
+
 		node_ptr base() const
 		{
 			return this->_current;
@@ -188,18 +226,19 @@ class const_RBT_iterator
 };
 
 template< class Value >
-bool operator==( const ft::const_RBT_iterator<Value, false>& lhs,
-                 const ft::const_RBT_iterator<Value, false>& rhs )
+bool operator==( const ft::const_RBT_iterator<Value>& lhs,
+                 const ft::const_RBT_iterator<Value>& rhs )
 {
 	return (lhs.base() == rhs.base());
 }
 
 template< class Value >
-bool operator!=( const ft::const_RBT_iterator<Value, false>& lhs,
-                 const ft::const_RBT_iterator<Value, false>& rhs )
+bool operator!=( const ft::const_RBT_iterator<Value>& lhs,
+                 const ft::const_RBT_iterator<Value>& rhs )
 {
 	return (lhs.base() != rhs.base());
 }
+
 }
 
 

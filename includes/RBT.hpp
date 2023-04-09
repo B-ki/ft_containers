@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/07 23:31:47 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/09 03:31:56 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ class RBT
 		typedef RBTNode<value_type>* 							node_ptr;
 		typedef const RBTNode<value_type>* 						const_node_ptr;
 
-		typedef RBT_iterator<value_type, false> 				iterator; 
-		typedef const_RBT_iterator<value_type, true> 			const_iterator;
+		typedef RBT_iterator<value_type> 						iterator; 
+		typedef const_RBT_iterator<value_type> 					const_iterator;
 
 		typedef ft::reverse_iterator<iterator> 					reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator> 			const_reverse_iterator;
@@ -138,26 +138,22 @@ class RBT
 
 		iterator begin() const
 		{
-			iterator ret(minimum(getRoot()));
-			return (ret);
+			return(minimum(getRoot()));
 		}
 
 		iterator end() const
 		{
-			iterator ret(_m_null);
-			return (ret);
+			return (_m_null);
 		}
 
 		const_iterator cbegin() const
 		{
-			const_iterator ret(minimum(getRoot()));
-			return (ret);
+			return(minimum(getRoot()));
 		}
 
 		const_iterator cend() const
 		{
-			const_iterator ret(_m_null);
-			return (ret);
+			return(_m_null);
 		}
 
 		iterator rbegin() const
@@ -222,6 +218,28 @@ class RBT
 			return this->_root;
 		}
 
+		node_ptr lowerBound(const key_type& key) const
+		{
+			node_ptr ret = searchTree(key);
+			if (ret != _m_null)
+				return ret;
+			node_ptr node = _root->minimum();
+			while (node != _m_null && isKeyInfToNode(node, key))
+			{
+				node = node->successor();
+			}
+			return node;
+		}
+
+		node_ptr upperBound(const key_type& key) const
+		{
+			node_ptr ret = lowerBound(key);
+			if (isSameKey(ret, key))
+				return ret->successor();
+			else
+				return ret;
+		}
+
 		// ########## MODIFIERS ##########
 
 		iterator insert(const value_type& value)
@@ -232,7 +250,12 @@ class RBT
 			while (x != _m_null)
 			{
 				y = x;
-				if (nodeCompare(newNode, x))
+				if (isSameKey(x, key_of_value()(value)))
+				{
+					eraseNode(newNode);
+					return iterator(x);
+				}
+				else if (nodeCompare(newNode, x))
 					x = x->left;
 				else
 					x = x->right;
@@ -261,14 +284,19 @@ class RBT
 			node_ptr y = _m_null;
 			node_ptr x = this->_root;
 			if (nodePos == _m_null)
-				_root = newNode;
-			else if (isKeySupToNode(nodePos, _key_of_value(value)) &&
-					isKeyInfToNode(nodePos->successor(), _key_of_value(value)))
+				nodePos = _root;
+			else if (isKeySupToNode(nodePos, key_of_value()(value)) &&
+					isKeyInfToNode(nodePos->successor(), key_of_value()(value)))
 				 x = nodePos;
 			while (x != _m_null)
 			{
 				y = x;
-				if (nodeCompare(newNode, x))
+				if (isSameKey(x, key_of_value()(value)))
+				{
+					eraseNode(newNode);
+					return iterator(x);
+				}
+				else if (nodeCompare(newNode, x))
 					x = x->left;
 				else
 					x = x->right;
@@ -518,11 +546,15 @@ class RBT
 
 		bool isKeySupToNode(const node_ptr node, const key_type& key) const
 		{
+			if (node == _m_null)
+				return false;
 			return _comp(keyOfNode(node), key);
 		}
 
 		bool isKeyInfToNode(const node_ptr node, const key_type& key) const
 		{
+			if (node == _m_null)
+				return true;
 			return _comp(key, keyOfNode(node));
 		}
 

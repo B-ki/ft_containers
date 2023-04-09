@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/07 17:45:51 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/09 03:28:54 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,21 @@ class map {
 	public:
 		typedef Key 												key_type;
 		typedef T 													mapped_type;
-		typedef ft::pair<Key, T> 									pair_type;
+		typedef ft::pair<Key, T> 									value_type;
 
 		typedef Compare 											key_compare;
 		typedef typename std::allocator<ft::pair<Key, T> > 			allocator_type;
 		typedef typename allocator_type::size_type 					size_type;
 		typedef typename allocator_type::difference_type 			difference_type;
 
-		typedef pair_type& 											reference;
-		typedef const pair_type& 									const_reference;
+		typedef value_type& 										reference;
+		typedef const value_type& 									const_reference;
 		typedef typename allocator_type::pointer 					pointer;
 		typedef typename allocator_type::const_pointer 				const_pointer;
 
 	private:
 		// RED and BLACK TREE :
-		typedef RBT<key_type, pair_type, ft::SelectFirst<pair_type>, key_compare> 	tree_type; 
+		typedef RBT<key_type, value_type, ft::SelectFirst<value_type>, key_compare> 	tree_type; 
 
 //             TO DO
 	public:
@@ -56,20 +56,20 @@ class map {
 
 		// #################### MEMBER CLASSES ####################
 
-		class pair_compare : public binary_function<pair_type, pair_type, bool>
+		class pair_compare : public binary_function<value_type, value_type, bool>
 		{
 			// ##### MEMBER TYPES #####
 			friend class map;
-			typedef typename binary_function<pair_type, pair_type, bool>::result_type result_type;
-			typedef typename binary_function<pair_type, pair_type, bool>::first_argument_type first_argument_type;
-			typedef typename binary_function<pair_type, pair_type, bool>::second_argument_type second_argument_type;
+			typedef typename binary_function<value_type, value_type, bool>::result_type result_type;
+			typedef typename binary_function<value_type, value_type, bool>::first_argument_type first_argument_type;
+			typedef typename binary_function<value_type, value_type, bool>::second_argument_type second_argument_type;
 
 			// ##### CONSTRUCTOR #####
 			public:
 				pair_compare(key_compare pred) : comp(pred) {}
 
 			// ##### OPERATOR #####
-				bool operator()(const pair_type&left, const pair_type& right) const
+				bool operator()(const value_type&left, const value_type& right) const
 				{
 					return comp(left.first, right.first);
 				}
@@ -121,7 +121,7 @@ class map {
 			return (_RBT.getValue(key)).second;
 		}
 
-		// insert pair_type(key, T()) if key does not exists
+		// insert value_type(key, T()) if key does not exists
 		T& operator[](const Key& key)
 		{
 			if (!_RBT.searchTree(key))
@@ -171,7 +171,7 @@ class map {
 			_RBT.clearTree();
 		}
 
-		ft::pair<iterator, bool> insert(const pair_type& pair)
+		ft::pair<iterator, bool> insert(const value_type& pair)
 		{
 			iterator it = _RBT.insert(pair);
 			bool ret = true;
@@ -182,7 +182,7 @@ class map {
 		}
 
 		// We have an RBT, so we just insert normally
-		iterator insert(iterator pos, const pair_type& pair)
+		iterator insert(iterator pos, const value_type& pair)
 		{
 			return _RBT.insert(pos, pair);
 		}
@@ -221,49 +221,50 @@ class map {
 
 		size_type count(const Key& key) const
 		{
-			return _RBT.count(key);
+			if (_RBT.searchTree(key) != NULL)
+				return 1;
+			return 0;
 		}
 
 		iterator find(const Key& key)
 		{
-			return iterator(_RBT.searchTree(key));
+			return _RBT.searchTree(key);
 		}
 
-		/*
 		const_iterator find(const Key& key) const
 		{
-			return _RBT.find(key);
+			return _RBT.searchTree(key);
 		}
 
 		ft::pair<iterator, iterator> equal_range(const Key& key)
 		{
-			return _RBT.equal_range(key);
+			return ft::make_pair(_RBT.lowerBound(key), _RBT.upperBound(key));
 		}
 
 		ft::pair<const_iterator, const_iterator> equal_range(const Key& key) const
 		{
-			return _RBT.equal_range(key);
+			return ft::make_pair(_RBT.lowerBound(key), _RBT.upperBound(key));
 		}
 
 		iterator lower_bound(const Key& key)
 		{
-			return _RBT.lower_bound(key);
+			return _RBT.lowerBound(key);
 		}
 
-		const_iterator lower_bound(const Key& key)
+		const_iterator lower_bound(const Key& key) const
 		{
-			return _RBT.lower_bound(key);
+			return _RBT.lowerBound(key);
 		}
 
 		iterator upper_bound(const Key& key)
 		{
-			return _RBT.upper_bound(key);
+			return _RBT.upperBound(key);
 		}
 
-		const_iterator upper_bound(const Key& key)
+		const_iterator upper_bound(const Key& key) const
 		{
-			return _RBT.upper_bound(key);
-		}*/
+			return _RBT.upperBound(key);
+		}
 
 		// #################### OBSERVERS ####################
 

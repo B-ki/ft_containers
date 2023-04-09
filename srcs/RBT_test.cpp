@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/07 23:30:54 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/08 16:24:36 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,7 +244,15 @@ void RBT_test(void)
 		std::cout << j->second << std::endl;
 		c.insert(p2);
 		std::cout << c.size() << std::endl;
+		c.insert(p3);
 		//c.printRBT();
+		NS::map<int, std::string>::reverse_iterator k = c.rbegin();
+		std::cout << k->second << std::endl;
+		k++;
+		std::cout << k->second << std::endl;
+		k++;
+		std::cout << k->second << std::endl;
+		
 	}
 	{
 		std::cout << "\n########## RBT BALANCE ##########\n\n";
@@ -266,6 +274,31 @@ void RBT_test(void)
 			tree.checkRbt();
 		}
 
+	}
+	{
+		std::cout << "\n########## RBT INSERT POS ##########\n\n";
+		NS::map<int, std::string> c;
+		NS::pair<int, std::string> p0 = NS::make_pair(0, "a");
+		NS::pair<int, std::string> p1 = NS::make_pair(1, "b");
+		NS::pair<int, std::string> p2 = NS::make_pair(2, "c");
+		NS::pair<int, std::string> p3 = NS::make_pair(3, "d");
+		NS::pair<int, std::string> p3bis = NS::make_pair(3, "dddd");
+		NS::pair<int, std::string> p4 = NS::make_pair(4, "e");
+		NS::pair<int, std::string> p5 = NS::make_pair(5, "f");
+		c.insert(p0);
+		std::cout << (c.insert(p1)).second << std::endl;;
+		c.insert(p2);
+		NS::map<int, std::string>::iterator i = c.begin();
+		i++;
+		i++; // Pointe sur p2
+		c.insert(i, p3);
+		c.insert(i, p3bis);
+		std::cout << "Size is : " << c.size() << std::endl;
+		c.printRBT();
+		c.insert(c.begin(), p4);
+		c.printRBT();
+		c.insert(c.end()--, p5);
+		c.printRBT();
 	}
 	return;
 }
