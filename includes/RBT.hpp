@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/09 03:31:56 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/18 13:38:48 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ class RBT
 
 		iterator begin() const
 		{
-			return(minimum(getRoot()));
+			return(getRoot()->minimum());
 		}
 
 		iterator end() const
@@ -148,7 +148,7 @@ class RBT
 
 		const_iterator cbegin() const
 		{
-			return(minimum(getRoot()));
+			return (getRoot()->minimum());
 		}
 
 		const_iterator cend() const
@@ -156,16 +156,14 @@ class RBT
 			return(_m_null);
 		}
 
-		iterator rbegin() const
+		reverse_iterator rbegin() const
 		{
-			iterator ret(maximum(getRoot()));
-			return (ret);
+			return reverse_iterator(getRoot()->maximum());
 		}
 
-		const_iterator crbegin() const
+		const_reverse_iterator crbegin() const
 		{
-			const_iterator ret(maximum(getRoot()));
-			return (ret);
+			return const_reverse_iterator(getRoot()->maximum());
 		}
 
 		// The successor is the node whose key is next

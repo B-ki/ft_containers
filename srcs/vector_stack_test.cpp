@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:46:52 by rmorel            #+#    #+#             */
-/*   Updated: 2023/03/21 17:50:03 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/18 13:42:13 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #endif
 
 template <class T>
-void print_and_empty_stack(stack<T> & c)
+void print_and_empty_stack(NS::stack<T> & c)
 {
 	while (!c.empty())
 	{
@@ -72,7 +72,7 @@ std::ostream & operator<<(std::ostream & o, A const & rhs)
 void vector_stack_test(void)
 {
 	{
-		stack<int> c1;
+		NS::stack<int> c1;
 		c1.push(5);
 		c1.push(6);
 		c1.push(7);
