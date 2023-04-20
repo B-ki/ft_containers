@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/18 13:38:48 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/20 19:06:03 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "RBT_node.hpp"
 #include "reverse_iterator.hpp"
 #include "ft_utils.hpp"
+#include "is_integral.hpp"
 #include "pair.hpp"
 
 # define RED "\033[1;31m"
@@ -77,15 +78,18 @@ class RBT
 				_root(_m_null),
 				_comp(key_compare())
 		{ 
+			majNull();
 			//std::cout << "Adress of nill is :" << _m_null << std::endl;
 		} 
 
 		RBT(const key_compare& comp) : 	_value_allocator(value_allocator()), 
 										_node_allocator(node_allocator()), 
 										_m_null(createNullNode()), 
-										_root(NULL), 
+										_root(_m_null), 
 										_comp(comp)
-		{ } 
+		{ 
+			majNull();
+		} 
 
 		RBT(const RBT<key_type, value_type, key_of_value, key_compare>& other) 
 			: 	_value_allocator(value_allocator()),
@@ -100,6 +104,17 @@ class RBT
 			}
 			else
 				_root = _m_null;
+			majNull();
+		}
+
+		template <class It>
+		RBT(It first, It last, const key_compare& comp,
+				typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) :	
+			_value_allocator(value_allocator()), _node_allocator(node_allocator()),
+			_m_null(createNullNode()), _root(_m_null), _comp(comp)
+		{
+			for (It it = first; it != last; it++)
+				insert(*it);
 		}
 
 		~RBT()
@@ -111,7 +126,7 @@ class RBT
 		// #################### MEMBERS ####################
 
 	private:
-		value_allocator  _value_allocator;
+		value_allocator _value_allocator;
 		node_allocator 	_node_allocator;
 		key_of_value 	_key_of_value;
 		node_ptr 		_m_null;
@@ -124,7 +139,7 @@ class RBT
 
 		bool empty() const
 		{
-			if (this->_root)
+			if (this->_root == _m_null)
 				return true;
 			return false;
 		}
@@ -134,36 +149,51 @@ class RBT
 			return sizeHelper(this->_root) - 1;
 		}
 
+		size_type max_size() const
+		{
+			return _node_allocator.max_size();
+		}
+
 		// ########## FINDERS ##########
 
 		iterator begin() const
 		{
-			return(getRoot()->minimum());
+			return iterator(getRoot()->minimum());
 		}
 
 		iterator end() const
 		{
-			return (_m_null);
+			return iterator(_m_null);
 		}
 
 		const_iterator cbegin() const
 		{
-			return (getRoot()->minimum());
+			return const_iterator(getRoot()->minimum());
 		}
 
 		const_iterator cend() const
 		{
-			return(_m_null);
+			return const_iterator(_m_null);
 		}
 
 		reverse_iterator rbegin() const
 		{
-			return reverse_iterator(getRoot()->maximum());
+			return reverse_iterator(_m_null);
+		}
+
+		reverse_iterator rend() const
+		{
+			return reverse_iterator(getRoot()->minimum());
 		}
 
 		const_reverse_iterator crbegin() const
 		{
-			return const_reverse_iterator(getRoot()->maximum());
+			return const_reverse_iterator(_m_null);
+		}
+
+		const_reverse_iterator crend() const
+		{
+			return const_reverse_iterator(getRoot()->minimum());
 		}
 
 		// The successor is the node whose key is next
@@ -192,6 +222,11 @@ class RBT
 			return y;
 		}
 
+		iterator find(key_type key) const
+		{
+			return iterator(searchTreeHelper(this->_root, key));
+		}
+
 		node_ptr searchTree(key_type key) const
 		{
 			node_ptr ret;
@@ -218,29 +253,45 @@ class RBT
 
 		node_ptr lowerBound(const key_type& key) const
 		{
+			node_ptr node = getRoot()->minimum();
+			for ( ; 
+					node != _m_null && isKeySupToNode(node, key); 
+					node = node->successor())
+				;
+				/*
 			node_ptr ret = searchTree(key);
-			if (ret != _m_null)
+			if (ret != NULL)
 				return ret;
 			node_ptr node = _root->minimum();
 			while (node != _m_null && isKeyInfToNode(node, key))
 			{
 				node = node->successor();
 			}
+			*/
 			return node;
 		}
 
 		node_ptr upperBound(const key_type& key) const
 		{
+			node_ptr node = getRoot()->minimum();
+			for ( ; 
+					node != _m_null && 
+					(isKeySupToNode(node, key) || isSameKey(node, key)); 
+					node = node->successor())
+				;
+			/*
 			node_ptr ret = lowerBound(key);
 			if (isSameKey(ret, key))
 				return ret->successor();
 			else
 				return ret;
+				*/
+			return node;
 		}
 
 		// ########## MODIFIERS ##########
 
-		iterator insert(const value_type& value)
+		ft::pair<iterator, bool> insert(const value_type& value)
 		{
 			node_ptr newNode = createNode(value);
 			node_ptr y = _m_null;
@@ -251,7 +302,7 @@ class RBT
 				if (isSameKey(x, key_of_value()(value)))
 				{
 					eraseNode(newNode);
-					return iterator(x);
+					return ft::make_pair(iterator(x), false);
 				}
 				else if (nodeCompare(newNode, x))
 					x = x->left;
@@ -264,7 +315,7 @@ class RBT
 				_root = newNode;
 				_root->color = black;
 				majNull();
-				return iterator(newNode);
+				return ft::make_pair(iterator(newNode), true);
 			}
 			else if (nodeCompare(newNode, y))
 				y->left = newNode;
@@ -272,7 +323,7 @@ class RBT
 				y->right = newNode;
 			updateBalance(newNode);
 			majNull();
-			return iterator(newNode);
+			return ft::make_pair(iterator(newNode), true);
 		}
 		
 		iterator insert(iterator pos, const value_type& value)
@@ -311,14 +362,46 @@ class RBT
 			return iterator(newNode);
 		}
 
-		iterator deleteNode(const key_type& key)
+		bool erase(const key_type& key)
 		{
-			return iterator(deleteNodeHelper(this->_root, key));
+			return deleteNodeHelper(this->_root, key);
+		}
+
+		bool erase(iterator pos)
+		{
+			return deleteNodeHelper(this->_root, keyOfNode(pos.base()));
 		}
 
 		void clearTree()
 		{
 			destructorHelper(this->_root);
+			this->_root = this->_m_null;
+		}
+
+		RBT<Key, Value, KeyOfValue, KeyCompare>&
+			operator=(const RBT<Key, Value, KeyOfValue, KeyCompare>& other)
+		{
+			if (this != &other)
+			{
+				RBT tmp(other);
+				std::swap(this->_comp, tmp._comp);
+				std::swap(this->_key_of_value, tmp._key_of_value);
+				std::swap(this->_value_allocator, tmp._value_allocator);
+				std::swap(this->_node_allocator, tmp._node_allocator);
+				std::swap(this->_m_null, tmp._m_null);
+				std::swap(this->_root, tmp._root);
+			}
+			return *this;
+		}
+		
+		void swap(RBT<Key, Value, KeyOfValue, KeyCompare>& other)
+		{
+			std::swap(_comp, other._comp);
+			std::swap(_key_of_value, other._key_of_value);
+			std::swap(_value_allocator, other._value_allocator);
+			std::swap(_node_allocator, other._node_allocator);
+			std::swap(_m_null, other._m_null);
+			std::swap(_root, other._root);
 		}
 
 		// ########## PRINTERS ##########
@@ -593,9 +676,8 @@ class RBT
 			return node;
 		}
 
-		void initializeNode(node_ptr node, value_type value)
+		void initializeNode(node_ptr node)
 		{
-			(void)value;
 			node->parent = _m_null;
 			node->left = _m_null;
 			node->right = _m_null;
@@ -608,7 +690,7 @@ class RBT
 			try 
 			{
 				_value_allocator.construct(&node->value, value);
-				initializeNode(node, value);
+				initializeNode(node);
 			} 
 			catch (...) 
 			{
@@ -703,14 +785,13 @@ class RBT
 				return;
 			_node_allocator.destroy(node);
 			_node_allocator.deallocate(node, 1);		
-			node = _m_null;
 		}
 
-		node_ptr deleteNodeHelper(node_ptr startSearch, const key_type& key)
+		bool deleteNodeHelper(node_ptr startSearch, const key_type& key)
 		{
 			node_ptr node = searchTreeHelper(startSearch, key);
 			if (node == _m_null)
-				return _m_null;
+				return false;
 			node_ptr y = node;
 			node_ptr x;
 			e_color originalColor = node->color;
@@ -746,7 +827,7 @@ class RBT
 				fixDelete(x);
 			eraseNode(node);
 			majNull();
-			return node;
+			return true;
 		}
 
 		void fixDelete(node_ptr node)

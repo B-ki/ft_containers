@@ -7,7 +7,12 @@ OBJDIR = bin/
 
 SRCS = main.cpp\
 	   RBT_test.cpp\
-	   vector_stack_test.cpp
+	   vector_stack_test.cpp\
+	   mli_bounds.cpp\
+	   mli_empty.cpp\
+	   mli_erase.cpp\
+	   mli_erase2.cpp\
+	   mli_find.cpp
 
 OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))
 

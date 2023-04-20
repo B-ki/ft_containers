@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 17:57:49 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/09 03:30:23 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/20 15:51:06 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@ template<class Value>
 class RBT_iterator
 {
 	public:
-		typedef std::bidirectional_iterator_tag 						iterator_category;
-		typedef std::ptrdiff_t 											difference_type;
-		typedef Value 													value_type;
-		typedef value_type*												pointer;
-		typedef value_type&												reference;
-		typedef RBTNode<value_type>										node_type;
-		typedef node_type* 												node_ptr;
+		typedef std::bidirectional_iterator_tag 	iterator_category;
+		typedef std::ptrdiff_t 						difference_type;
+		typedef Value 								value_type;
+		typedef value_type*							pointer;
+		typedef value_type&							reference;
+		typedef RBTNode<value_type>					node_type;
+		typedef node_type* 							node_ptr;
 
-	protected:
+	private:
 		node_ptr _current;
 
 	public:
@@ -41,9 +41,24 @@ class RBT_iterator
 
 		RBT_iterator(node_ptr ptr) : _current(ptr) {}
 
-		RBT_iterator(const RBT_iterator<Value>& other) : _current(other._current) {}
+		RBT_iterator(const RBT_iterator& other) : _current(other._current) {}
 
-		RBT_iterator operator=(const RBT_iterator& other)
+		/*
+		template<class U>
+		RBT_iterator& operator=(const RBT_iterator<U>& other)
+		{
+			_current = other.base();
+			return *this;
+		}*/
+
+		~RBT_iterator() {}
+
+		node_ptr base() const
+		{
+			return this->_current;
+		}
+
+		RBT_iterator& operator=(const RBT_iterator& other)
 		{
 			if (*this != other)
 				_current = other._current;
@@ -59,6 +74,16 @@ class RBT_iterator
 		{
 			return &(_current->value);
 		}			
+
+		bool operator==(const RBT_iterator& rhs) const
+		{
+			return this->_current == rhs._current;
+		}
+
+		bool operator!=(const RBT_iterator& rhs) const
+		{
+			return this->_current != rhs._current;
+		}
 
 		//Pre-incrementation : ++It
 		RBT_iterator& operator++()
@@ -108,11 +133,6 @@ class RBT_iterator
 			return tmp;
 		}
 
-		node_ptr base() const
-		{
-			return this->_current;
-		}
-
 };
 
 template< class Value >
@@ -133,13 +153,13 @@ template<class Value>
 class const_RBT_iterator
 {
 	public:
-		typedef std::bidirectional_iterator_tag 						iterator_category;
-		typedef std::ptrdiff_t 											difference_type;
-		typedef Value 													value_type;
-		typedef const value_type*										const_pointer;
-		typedef const value_type&										const_reference;
-		typedef RBTNode<value_type>										node_type;
-		typedef node_type* 												node_ptr;
+		typedef std::bidirectional_iterator_tag 	iterator_category;
+		typedef std::ptrdiff_t 						difference_type;
+		typedef Value 								value_type;
+		typedef const value_type*					pointer;
+		typedef const value_type&					reference;
+		typedef RBTNode<value_type>					node_type;
+		typedef node_type* 							node_ptr;
 
 	protected:
 		node_ptr _current;
@@ -149,23 +169,48 @@ class const_RBT_iterator
 
 		const_RBT_iterator(node_ptr ptr) : _current(ptr) {}
 
-		const_RBT_iterator(RBT_iterator<Value>& other) : _current(other._current) {}
+		const_RBT_iterator(const const_RBT_iterator& other) :
+			_current(other._current) {}
 
-		const_RBT_iterator(const RBT_iterator<Value>& other) : _current(other._current) {}
+		node_ptr base() const
+		{
+			return this->_current;
+		}
 
-		const_RBT_iterator operator=(const const_RBT_iterator& other)
+		template<class U>
+		const_RBT_iterator(const RBT_iterator<U>& other) :
+			_current(other.base()) {}
+
+		const_RBT_iterator& operator=(const const_RBT_iterator& other)
 		{
 			if (*this != other)
 				_current = other._current;
 			return *this;
 		}
 
-		const_reference operator*() const
+		template<class U>
+		const_RBT_iterator& operator=(const const_RBT_iterator<U>& other)
+		{
+			_current = other.base();
+			return *this;
+		}
+
+		bool operator==(const const_RBT_iterator& rhs) const
+		{
+			return this->_current == rhs._current;
+		}
+
+		bool operator!=(const const_RBT_iterator& rhs) const
+		{
+			return this->_current != rhs._current;
+		}
+
+		reference operator*() const
 		{
 			return _current->value;
 		}
 
-		const_pointer operator->() const
+		pointer operator->() const
 		{
 			return &(_current->value);
 		}			
@@ -218,11 +263,6 @@ class const_RBT_iterator
 			return tmp;
 		}
 
-		node_ptr base() const
-		{
-			return this->_current;
-		}
-
 };
 
 template< class Value >
@@ -232,14 +272,13 @@ bool operator==( const ft::const_RBT_iterator<Value>& lhs,
 	return (lhs.base() == rhs.base());
 }
 
-template< class Value >
-bool operator!=( const ft::const_RBT_iterator<Value>& lhs,
-                 const ft::const_RBT_iterator<Value>& rhs )
+template< class V1, class V2 >
+bool operator!=( const ft::const_RBT_iterator<V1>& lhs,
+                 const ft::const_RBT_iterator<V2>& rhs )
 {
 	return (lhs.base() != rhs.base());
 }
 
 }
-
 
 #endif 

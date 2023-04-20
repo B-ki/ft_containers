@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/09 03:28:54 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/20 19:03:52 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 #define MAP_HPP 
 
 #include "reverse_iterator.hpp"
+#include "is_integral.hpp"
 #include "pair.hpp"
 #include "ft_utils.hpp"
+#include "equal.hpp"
 #include "RBT.hpp"
 #include <iostream>
 #include <functional>
@@ -24,7 +26,7 @@
 namespace ft
 {
 
-template <class Key, class T, class Compare = std::less<Key> >
+template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<Key, T> > >
 class map {
 
 		// #################### MEMBER TYPES ####################
@@ -47,7 +49,6 @@ class map {
 		// RED and BLACK TREE :
 		typedef RBT<key_type, value_type, ft::SelectFirst<value_type>, key_compare> 	tree_type; 
 
-//             TO DO
 	public:
 		typedef typename tree_type::iterator						iterator; 
 		typedef typename tree_type::const_iterator					const_iterator; 
@@ -56,7 +57,7 @@ class map {
 
 		// #################### MEMBER CLASSES ####################
 
-		class pair_compare : public binary_function<value_type, value_type, bool>
+		class value_compare : public binary_function<value_type, value_type, bool>
 		{
 			// ##### MEMBER TYPES #####
 			friend class map;
@@ -66,7 +67,7 @@ class map {
 
 			// ##### CONSTRUCTOR #####
 			public:
-				pair_compare(key_compare pred) : comp(pred) {}
+				value_compare(key_compare pred) : comp(pred) {}
 
 			// ##### OPERATOR #####
 				bool operator()(const value_type&left, const value_type& right) const
@@ -91,9 +92,10 @@ class map {
 
 		explicit map (const Compare& comp) : _RBT(comp) {}
 
-		template<class InputIt>
-		map(InputIt first, InputIt last, 
-				const Compare& comp = Compare()) : _RBT(first, last, comp) {}
+		template<class It>
+		map(It first, It last, const Compare& comp = Compare(), 
+			typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) : 
+			_RBT(first, last, comp) {}
 
 		map (const map& other) : _RBT(other._RBT) {}
 
@@ -124,9 +126,7 @@ class map {
 		// insert value_type(key, T()) if key does not exists
 		T& operator[](const Key& key)
 		{
-			if (!_RBT.searchTree(key))
-				return (*_RBT.insert(ft::make_pair(key, T()))).second;
-			return (_RBT.getValue(key)).second;
+			return insert(ft::make_pair(key, T())).first->second;
 		}
 
 		// #################### ITERATORS ####################
@@ -143,9 +143,9 @@ class map {
 
 		const_reverse_iterator rbegin() const { return _RBT.crbegin(); }
 
-		reverse_iterator rend() { return _RBT.end(); }
+		reverse_iterator rend() { return _RBT.rend(); }
 
-		const_reverse_iterator rend() const { return _RBT.cend(); }
+		const_reverse_iterator rend() const { return _RBT.crend(); }
 
 		// #################### CAPACITY ####################
 
@@ -161,7 +161,7 @@ class map {
 
 		size_type max_size() const
 		{
-			return std::numeric_limits<difference_type>::max();
+			return _RBT.max_size();
 		}
 
 		// #################### MODIFIERS ####################
@@ -173,12 +173,7 @@ class map {
 
 		ft::pair<iterator, bool> insert(const value_type& pair)
 		{
-			iterator it = _RBT.insert(pair);
-			bool ret = true;
-
-			if (it.base() == NULL)
-				ret = false;
-			return ft::make_pair(it, ret);
+			return _RBT.insert(pair);
 		}
 
 		// We have an RBT, so we just insert normally
@@ -194,22 +189,20 @@ class map {
 				_RBT.insert(*it);	
 		}
 
-		iterator erase(iterator pos)
+		void erase(iterator pos)
 		{
-			return _RBT.erase(pos);
+			_RBT.erase(pos);
 		}
 
-		iterator erase(iterator first, iterator last)
+		void erase(iterator first, iterator last)
 		{
-			return _RBT.erase(first, last);
+			while (first != last)
+				_RBT.erase(first++);
 		}
 
 		size_type erase(const Key& key)
 		{
-			iterator it = _RBT.deleteNode(key);
-			if (it.base() != NULL)
-				return 1;
-			return 0;
+			return _RBT.erase(key);
 		}
 
 		void swap(map& other)
@@ -228,12 +221,12 @@ class map {
 
 		iterator find(const Key& key)
 		{
-			return _RBT.searchTree(key);
+			return _RBT.find(key);
 		}
 
 		const_iterator find(const Key& key) const
 		{
-			return _RBT.searchTree(key);
+			return _RBT.find(key);
 		}
 
 		ft::pair<iterator, iterator> equal_range(const Key& key)
@@ -273,9 +266,9 @@ class map {
 			return key_compare();
 		}
 
-		pair_compare pair_comp() const
+		value_compare value_comp() const
 		{
-			return pair_compare(key_comp());
+			return value_compare(key_comp());
 		}
 
 	public:
@@ -296,14 +289,55 @@ class map {
 
 	// #################### NON-MEMBER FUNCTIONS ####################
 
-/*
-template<class Key, class T, class Compare = std::less<Key> > 
-std::ostream& operator<<(std::ostream& o, const map<Key, T, Compare>& m)
+template<class Key, class T, class Compare, class Alloc> 
+inline bool operator==(const map<Key, T, Compare, Alloc>& m1,
+		const map<Key, T, Compare, Alloc>& m2)
 {
-	o << m.printRBT();
-	return o;
+	return m1.size() == m2.size() && ft::equal(m1.begin(), m1.end(), m2.begin());
 }
-*/
+
+template<class Key, class T, class Compare, class Alloc> 
+bool operator!=(const map<Key, T, Compare, Alloc>& m1,
+		const map<Key, T, Compare, Alloc>& m2)
+{
+	return !(m1 == m2);
+}
+
+template<class Key, class T, class Compare, class Alloc>
+bool operator<(const map<Key, T, Compare, Alloc>& m1,
+		const map<Key, T, Compare, Alloc>& m2)
+{
+	return ft::lexicographical_compare(m1.begin(), m1.end(), m2.begin(), m2.end());
+}
+
+template<class Key, class T, class Compare, class Alloc>
+bool operator>=(const map<Key, T, Compare, Alloc>& m1,
+		const map<Key, T, Compare, Alloc>& m2)
+{
+	return !(m1 < m2);
+}
+
+template<class Key, class T, class Compare, class Alloc>
+bool operator>(const map<Key, T, Compare, Alloc>& m1,
+		const map<Key, T, Compare, Alloc>& m2)
+{
+	return m2 < m1;
+}
+
+template<class Key, class T, class Compare, class Alloc> 
+bool operator<=(const map<Key, T, Compare, Alloc>& m1,
+		const map<Key, T, Compare, Alloc>& m2)
+{
+	return !(m1 > m2);
+}
+
+template<class Key, class T, class Compare, class Alloc> 
+void swap(const map<Key, T, Compare, Alloc>& m1,
+		const map<Key, T, Compare, Alloc>& m2)
+{
+	m1.swap(m2);
+}
+
 }
 
 #endif 

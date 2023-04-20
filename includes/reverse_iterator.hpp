@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 13:06:48 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/09 01:16:36 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/20 11:11:38 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class reverse_iterator
 		template <typename Iter>
 		reverse_iterator(const reverse_iterator<Iter>& other) : _current(other.base()) {}
 
+		// Operator that takes a reverse_iterator of different type
 		template<class U>
 		reverse_iterator& operator=(const reverse_iterator<U>& rhs)
 		{
@@ -49,55 +50,11 @@ class reverse_iterator
 			return *this;
 		}
 
-		//Pre-incrementation : ++It
-		reverse_iterator& operator++()
-		{ 
-			--_current; 
-			return *this;
-		}
-
-		//Post-incrementation : It++
-		reverse_iterator operator++(int) 
-		{ 
-			reverse_iterator tmp(*this); 
-			++(*this); 
-			return tmp; 
-		}
-
-		//Pre-incrementation : --It
-		reverse_iterator& operator--() 
-		{ 
-			++this->_current; 
-			return *this; 
-		}
-
-		//Post-incrementation : It--
-		reverse_iterator operator--(int) 
-		{ 
-			reverse_iterator tmp(*this);
-			--(*this); return tmp;
-		}
-
-		reverse_iterator& operator+=(difference_type n)
+		// Operator that takes a reverse_iterator of same type
+		reverse_iterator& operator=(const reverse_iterator& rhs)
 		{
-			_current = _current - n;
-			return *this;
-		}
-
-		reverse_iterator& operator-=(difference_type n)
-		{
-			_current = _current + n;
-			return *this;
-		}
-
-		reverse_iterator operator+(difference_type n) const
-		{
-			return reverse_iterator(base() - n);
-		}
-
-		reverse_iterator operator-(difference_type n) const
-		{
-			return reverse_iterator(base() + n);
+    		_current = rhs._current;
+    		return *this;
 		}
 
 		iterator_type base() const
@@ -117,6 +74,63 @@ class reverse_iterator
 			It tmp = _current;
 			return &(*--tmp);
 		}			
+
+		//Pre-incrementation : ++It
+		reverse_iterator& operator++()
+		{ 
+			--_current; 
+			return *this;
+		}
+
+		//Post-incrementation : It++
+		reverse_iterator operator++(int) 
+		{ 
+			reverse_iterator tmp(*this); 
+			--_current; 
+			return tmp; 
+		}
+
+		//Pre-incrementation : --It
+		reverse_iterator& operator--() 
+		{ 
+			++_current; 
+			return *this; 
+		}
+
+		//Post-incrementation : It--
+		reverse_iterator operator--(int) 
+		{ 
+			reverse_iterator tmp(*this);
+			++_current; 
+			return tmp;
+		}
+
+		reverse_iterator& operator+=(difference_type n)
+		{
+			_current = _current - n;
+			return *this;
+		}
+
+		reverse_iterator& operator-=(difference_type n)
+		{
+			_current = _current + n;
+			return *this;
+		}
+
+		difference_type operator-(const reverse_iterator& rhs) const
+		{
+			return rhs.base() - base();
+		}
+
+		reverse_iterator operator+(difference_type n) const
+		{
+			return reverse_iterator(base() - n);
+		}
+
+		reverse_iterator operator-(difference_type n) const
+		{
+			return reverse_iterator(base() + n);
+		}
 
 		reference operator[](difference_type n) const
 		{
@@ -211,6 +225,13 @@ bool operator>=( const ft::reverse_iterator<Iterator1>& lhs,
                  const ft::reverse_iterator<Iterator2>& rhs )
 {
 	return (lhs.base() <= rhs.base());
+}
+
+template<class It>
+ft::reverse_iterator<It> operator+(typename ft::reverse_iterator<It>::difference_type n,
+		const ft::reverse_iterator<It>& it)
+{
+    return ft::reverse_iterator<It>(it.base() - n);
 }
 
 #endif 

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/08 16:24:36 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/20 14:17:27 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <linux/limits.h>
 #include <vector>
 #include "binary_heap.hpp"
+#include <list>
 #include "AVL.hpp"
 #include "binary_search_tree.hpp"
 #include "pair.hpp"
@@ -26,6 +27,61 @@
 #ifndef NS
 # define NS std
 #endif
+
+# define _pair NS::pair
+
+template <typename T>
+std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
+{
+	o << "key: " << iterator->first << " | value: " << iterator->second;
+	if (nl)
+		o << std::endl;
+	return ("");
+}
+
+template <typename T_MAP>
+void	printSize(T_MAP const &mp, bool print_content = 1)
+{
+	std::cout << "size: " << mp.size() << std::endl;
+	std::cout << "max_size: " << mp.max_size() << std::endl;
+	if (print_content)
+	{
+		typename T_MAP::const_iterator it = mp.begin(), ite = mp.end();
+		std::cout << std::endl << "Content is:" << std::endl;
+		for (; it != ite; ++it)
+			std::cout << "- " << printPair(it, false) << std::endl;
+	}
+	std::cout << "###############################################" << std::endl;
+}
+
+template <typename U, typename V>
+void	printReverse(NS::map<U, V> &mp)
+{
+	typename NS::map<U, V>::iterator it = mp.end(), ite = mp.begin();
+
+	std::cout << "printReverse:" << std::endl;
+	while (it != ite) {
+		it--;
+		std::cout << "-> " << printPair(it, false) << std::endl;
+	}
+	std::cout << "_______________________________________________" << std::endl;
+}
+
+template <typename T>
+T	inc(T it, int n)
+{
+	while (n-- > 0)
+		++it;
+	return (it);
+}
+
+template <typename T>
+T	dec(T it, int n)
+{
+	while (n-- > 0)
+		--it;
+	return (it);
+}
 
 void RBT_test(void)
 {
@@ -202,7 +258,7 @@ void RBT_test(void)
 		mapCopy.erase(9);
 	}
 	{
-		std::cout << "\n########## RBT ITERATORS1 ##########\n\n";
+		std::cout << "\n########## RBT ITERATORS 0 ##########\n\n";
 		NS::map<int, std::string> c;
 		NS::map<int, std::string>::iterator i = c.begin();
 		NS::map<int, std::string>::iterator j = c.begin();
@@ -216,7 +272,39 @@ void RBT_test(void)
 		std::cout << j->second << std::endl;
 	}
 	{
-		std::cout << "\n########## RBT ITERATORS ##########\n\n";
+		std::cout << "\n########## RBT ITERATORS 1 ##########\n\n";
+
+		#define T1 char
+		#define T2 int
+		typedef _pair<const T1, T2> T3;
+		std::list<T3> lst;
+		unsigned int lst_size = 5;
+		for (unsigned int i = 0; i < lst_size; ++i)
+			lst.push_back(T3('a' + i, (i + 1) * 7));
+
+		NS::map<T1, T2> mp(lst.begin(), lst.end());
+		NS::map<T1, T2>::iterator it_ = mp.begin();
+		NS::map<T1, T2>::reverse_iterator it(it_), ite;
+		printSize(mp);
+
+		std::cout << (it_ == it.base()) << std::endl;
+		std::cout << (it_ == dec(it, 3).base()) << std::endl;
+
+		printPair(it.base());
+		printPair(inc(it.base(), 1));
+
+		std::cout << "TEST OFFSET" << std::endl;
+		--it;
+		printPair(it);
+		printPair(it.base());
+
+		it = mp.rbegin(); ite = mp.rend();
+		while (it != ite)
+			std::cout << "[rev] " << printPair(it++, false) << std::endl;
+
+	}
+	{
+		std::cout << "\n########## RBT ITERATORS 2 ##########\n\n";
 		NS::map<int, std::string> c;
 		NS::pair<int, std::string> p1 = NS::make_pair(0, "a");
 		c.insert(p1);
@@ -254,6 +342,7 @@ void RBT_test(void)
 		std::cout << k->second << std::endl;
 		
 	}
+
 	{
 		std::cout << "\n########## RBT BALANCE ##########\n\n";
 		ft::RBT<int> tree;
@@ -270,7 +359,7 @@ void RBT_test(void)
 		{
 			int t = i + rand() % 10;
 			std::cout << "Deleting : " << t << ", in tree of size :" << tree.size() << ", result :";
-			tree.deleteNode(t);
+			tree.erase(t);
 			tree.checkRbt();
 		}
 
@@ -294,11 +383,13 @@ void RBT_test(void)
 		c.insert(i, p3);
 		c.insert(i, p3bis);
 		std::cout << "Size is : " << c.size() << std::endl;
-		c.printRBT();
+		//c.printRBT();
 		c.insert(c.begin(), p4);
-		c.printRBT();
+		//c.printRBT();
 		c.insert(c.end()--, p5);
-		c.printRBT();
+		//c.printRBT();
+	}
+	{
 	}
 	return;
 }

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 16:56:13 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/07 17:46:42 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/20 15:25:57 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ struct RBTNode
 	node_ptr maximum()
 	{
 		node_ptr node = this;
+		if (node->isNull())
+			return node;
 		while (!node->right->isNull())
 			node = node->right;
 		return node;
@@ -80,6 +82,8 @@ struct RBTNode
 	node_ptr minimum()
 	{
 		node_ptr node = this;
+		if (node->isNull())
+			return node;
 		while (!node->left->isNull())
 			node = node->left;
 		return node;
@@ -90,9 +94,7 @@ struct RBTNode
 	{
 		node_ptr node = this;
 		if (!node->right->isNull())
-		{
 			return node->right->minimum();
-		}
 		node_ptr y = node->parent;
 		while (!y->isNull() && node->isRight())
 		{
@@ -106,13 +108,9 @@ struct RBTNode
 	node_ptr predecessor()
 	{
 		node_ptr node = this;
-		if (!node->isNull())
-		{
+		if (!node->left->isNull())
 			return node->left->maximum();
-		}
 		node_ptr y = node->parent;
-		if (!node->right->isNull())
-			return node->left->maximum();
 		while (!y->isNull() && node->isLeft())
 		{
 			node = y;

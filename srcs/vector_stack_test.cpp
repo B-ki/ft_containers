@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:46:52 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/18 13:42:13 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/18 17:35:52 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <climits>
 #include <linux/limits.h>
 #include <vector>
+#include <stack>
 
 #ifndef NS
 # define NS std
@@ -133,11 +134,15 @@ void vector_stack_test(void)
 		y.push_back(5);
 		y.push_back(6);
 		y.push_back(7);
-		std::cout << "print x, y ; x.swap(y); print x, y;\n";
+		std::cout << "Vector x : ";
 		print_vector(x);
+		std::cout << "Vector y : ";
 		print_vector(y);
+		std::cout << "Swap x, y\n";
 		x.swap(y);
+		std::cout << "Vector x : ";
 		print_vector(x);
+		std::cout << "Vector y : ";
 		print_vector(y);
 		std::cout << "x.popback()\n";
 		x.pop_back();
@@ -145,13 +150,18 @@ void vector_stack_test(void)
 		x.push_back(INT_MAX);
 		std::cout << "x.push_back(INT_MAX)\n";
 		print_vector(x);
-		std::cout<< "x.erase(x.begin +1), x.erase(x.begin + 3), x.erase(x.begin)\n";
+		std::cout<< "x.erase(x.begin +1)\n";
 		x.erase(x.begin() + 1);
+		std::cout << "Vector x : ";
 		print_vector(x);
+		std::cout<< "x.erase(x.begin + 3)\n";
 		x.erase(x.begin() + 3);
+		std::cout << "Vector x : ";
 		print_vector(x);
 		std::cout << "NOTE : Even though x.begin() + 3 is already destroyed, erase destroy the last element\n";
+		std::cout<< "x.erase(x.begin)\n";
 		x.erase(x.begin());
+		std::cout << "Vector x : ";
 		print_vector(x);
 		std::cout << "Vector y :\n";
 		print_vector(y);

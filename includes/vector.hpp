@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/09 01:40:25 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/18 18:02:57 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -423,7 +423,7 @@ class vector : private vector_base<T, Alloc>
 			if (dist <= 0)
 				return (last);
 			std::copy(first + dist, _last, first);
-			for(iterator it = last; it != _last; it++)
+			for(iterator it = _last - dist; it != _last; it++)
 				_alloc.destroy(it);
 			_last -= dist;
 			return (first);

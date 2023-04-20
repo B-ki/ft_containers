@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 09:38:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/09 01:42:28 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/20 19:58:00 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ class stack {
 		// #################### CONSTRUCTOR & DESTRUCTORS ####################
 
 		explicit stack(const Container& cont = Container()) : c(cont) {}
+
+		stack(const stack& other) : c(other.c) {}
 
 		~stack() {}
 
@@ -66,41 +68,42 @@ class stack {
 
 		void push(const value_type& x) { c.push_back(x); }
 		void pop() { c.pop_back(); }
+
+		friend bool operator==(const stack<T, Container>& x,
+				const stack<T, Container>& y)
+		{
+			return x.c == y.c;
+		}
+
+		friend bool operator<(const stack<T, Container>& x,
+				const stack<T, Container>& y)
+		{
+			return x.c < y.c;
+		}
+
 };
-
-template <class T, class Container>
-bool operator==(const stack<T, Container>& x, const stack<T, Container>& y)
-{
-	return (x == y);
-}
-
-template <class T, class Container>
-bool operator<(const stack<T, Container>& x, const stack<T, Container>& y)
-{
-	return (x < y);
-}
 
 template <class T, class Container>
 bool operator!=(const stack<T, Container>& x, const stack<T, Container>& y)
 {
-	return (x != y);
+	return !(x == y);
 }
 
 template <class T, class Container>
 bool operator> (const stack<T, Container>& x, const stack<T, Container>& y)
 {
-	return (x > y);
+	return (y < x);
 }
 
 template <class T, class Container>
 bool operator>=(const stack<T, Container>& x, const stack<T, Container>& y)
 {
-	return (x >= y);
+	return !(x < y);
 }
 template <class T, class Container>
 bool operator<=(const stack<T, Container>& x, const stack<T, Container>& y)
 {
-	return (x <= y);
+	return !(y < x);
 }
 
 }
