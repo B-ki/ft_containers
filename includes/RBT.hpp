@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/20 19:06:03 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/21 17:08:01 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,14 @@ class RBT
 			//std::cout << "Adress of nill is :" << _m_null << std::endl;
 		} 
 
-		RBT(const key_compare& comp) : 	_value_allocator(value_allocator()), 
+		RBT(const key_compare& comp, const value_allocator& alloc) : 	
+										_value_allocator(value_allocator()), 
 										_node_allocator(node_allocator()), 
 										_m_null(createNullNode()), 
 										_root(_m_null), 
 										_comp(comp)
 		{ 
+			(void)alloc;
 			majNull();
 		} 
 
@@ -108,11 +110,12 @@ class RBT
 		}
 
 		template <class It>
-		RBT(It first, It last, const key_compare& comp,
+		RBT(It first, It last, const key_compare& comp, const value_allocator& alloc,
 				typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) :	
 			_value_allocator(value_allocator()), _node_allocator(node_allocator()),
 			_m_null(createNullNode()), _root(_m_null), _comp(comp)
 		{
+			(void)alloc;
 			for (It it = first; it != last; it++)
 				insert(*it);
 		}
@@ -362,12 +365,53 @@ class RBT
 			return iterator(newNode);
 		}
 
+		iterator insert(const_iterator pos, const value_type& value)
+		{
+			node_ptr nodePos = pos.base();
+			node_ptr newNode = createNode(value);
+			node_ptr y = _m_null;
+			node_ptr x = this->_root;
+			if (nodePos == _m_null)
+				nodePos = _root;
+			else if (isKeySupToNode(nodePos, key_of_value()(value)) &&
+					isKeyInfToNode(nodePos->successor(), key_of_value()(value)))
+				 x = nodePos;
+			while (x != _m_null)
+			{
+				y = x;
+				if (isSameKey(x, key_of_value()(value)))
+				{
+					eraseNode(newNode);
+					return iterator(x);
+				}
+				else if (nodeCompare(newNode, x))
+					x = x->left;
+				else
+					x = x->right;
+			}
+			newNode->parent = y;
+			if (y == _m_null)
+				_root = newNode;
+			else if (nodeCompare(newNode, y))
+				y->left = newNode;
+			else
+				y->right = newNode;
+			updateBalance(newNode);
+			majNull();
+			return iterator(newNode);
+		}
+
 		bool erase(const key_type& key)
 		{
 			return deleteNodeHelper(this->_root, key);
 		}
 
 		bool erase(iterator pos)
+		{
+			return deleteNodeHelper(this->_root, keyOfNode(pos.base()));
+		}
+
+		bool erase(const_iterator pos)
 		{
 			return deleteNodeHelper(this->_root, keyOfNode(pos.base()));
 		}

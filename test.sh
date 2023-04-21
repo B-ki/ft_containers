@@ -5,7 +5,7 @@ make re
 ./ft_container > ft_output.txt
 
 # Compile and run make re NS=std
-make re NS=std
+make re NS=std USING_FT=0
 ./ft_container > std_output.txt
 
 # Check the difference between the two output files

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:46:52 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/18 17:35:52 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/21 18:58:20 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <linux/limits.h>
 #include <vector>
 #include <stack>
+#include "tests.hpp"
 
 #ifndef NS
 # define NS std
@@ -57,7 +58,7 @@ class A
 template <class T>
 void print_vector(const NS::vector<T> & c)
 {
-	std::cout << "Vector [size = " << c.size() << ", cap = " << c.capacity() << "] = ";
+	std::cout << "Vector [size = " << c.size() << "] = ";
 	std::cout << "{ ";
 	for (typename NS::vector<T>::const_iterator it = c.begin(); it != c.end(); it++)
 		std::cout << *it << " ";
@@ -72,6 +73,7 @@ std::ostream & operator<<(std::ostream & o, A const & rhs)
 
 void vector_stack_test(void)
 {
+	std::clock_t start = std::clock();
 	{
 		NS::stack<int> c1;
 		c1.push(5);
@@ -93,6 +95,10 @@ void vector_stack_test(void)
 			std::cout << *it << " ";
 		std::cout << "}\n";
 	}
+	std::clock_t end = std::clock();
+	double elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time VECTOR BASIC TESTS : " << NAME << " = " << elapsed_time << " seconds\n";
+	start = std::clock();
 	{
 		NS::vector<A> x;
 		x.push_back(1);
@@ -123,6 +129,10 @@ void vector_stack_test(void)
 		print_vector(y);
 		print_vector(z);
 	}
+	end = std::clock();
+	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time VECTOR OPERATORS : " << NAME << " = " << elapsed_time << " seconds\n";
+	start = std::clock();
 	{
 		std::cout << "\n########## MODIFIERS ##########\n\n";
 		NS::vector<A> x;
@@ -175,6 +185,10 @@ void vector_stack_test(void)
 		y.clear();
 		print_vector(y);
 	}
+	end = std::clock();
+	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time MODIFIERS : " << NAME << " = " << elapsed_time << " seconds\n";
+	start = std::clock();
 	{
 		std::cout << "\n########## RESIZE ##########\n\n";
 		NS::vector<int> x;
@@ -217,6 +231,10 @@ void vector_stack_test(void)
 		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
 		print_vector(x);	
 	}
+	end = std::clock();
+	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time SIZE : " << NAME << " = " << elapsed_time << " seconds\n";
+	start = std::clock();
 	{
 		std::cout << "\n########## VECTOR CAPACITY ##########\n\n";
 		NS::vector<A> x;
@@ -231,6 +249,10 @@ void vector_stack_test(void)
 		print_vector(x);
 		std::cout << "x size : " << x.size() << ", x.capacity : " << x.capacity() << ", x empty : " << x.empty() << ", x max_size : " << x.max_size() << std::endl;
 	}
+	end = std::clock();
+	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time VECTOR CAPACITY : " << NAME << " = " << elapsed_time << " seconds\n";
+	start = std::clock();
 	{
 		std::cout << "\n########## VECTOR ELEMENT ACCESS ##########\n\n";
 		NS::vector<A> x;
@@ -262,6 +284,10 @@ void vector_stack_test(void)
 		std::cout << "y.front().getInt() : " << y.front().getInt() << "\n";
 		// Should not compile, because the vector is const but setInt is not const :  y.front().setInt(2);
 	}
+	end = std::clock();
+	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time VECTOR ELEMENT ACCESS : " << NAME << " = " << elapsed_time << " seconds\n";
+	start = std::clock();
 	{
 		std::cout << "\n########## VECTOR MODIFIERS ##########\n\n";
 		NS::vector<A> x;
@@ -290,6 +316,10 @@ void vector_stack_test(void)
 		std::cout << "cap = " << x.capacity() << ", size = " << x.size() << std::endl;
 		x.resize(5);
 	}
+	end = std::clock();
+	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time VECTOR MODIFERS 2 : " << NAME << " = " << elapsed_time << " seconds\n";
+	start = std::clock();
 	{
 		std::cout << "\n########## INSERT ##########\n\n";
 		NS::vector<int> x;
@@ -391,6 +421,10 @@ void vector_stack_test(void)
 		a.insert(a.begin(), A(18));
 		print_vector(a);
 	}
+	end = std::clock();
+	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time VECTOR INSERT : " << NAME << " = " << elapsed_time << " seconds\n";
+	start = std::clock();
 	{
 		std::cout << "\n########## ASSIGN  ##########\n\n";
 		NS::vector<A> x;
@@ -417,6 +451,10 @@ void vector_stack_test(void)
 		std::cout << "z : cap = " << z.capacity() << ", size = " << z.size() << std::endl;
 		print_vector(z);
 	}
+	end = std::clock();
+	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time VECTOR ASSIGN : " << NAME << " = " << elapsed_time << " seconds\n";
+	start = std::clock();
 	{
 		std::cout << "\n########## REVERSE_ITERATOR  ##########\n\n";
 		NS::vector<A> x;
@@ -432,7 +470,12 @@ void vector_stack_test(void)
 			if (i)
 				std::cout << ", r.base = " << *(r.base()) << ", ";
 		}
+		std::cout << std::endl;
 	}
+	end = std::clock();
+	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time VECTOR REVERSE_ITERATOR : " << NAME << " = " << elapsed_time << " seconds\n";
+	start = std::clock();
 	{
 		std::cout << "\n########## LOGICAL OPERATORS ##########\n\n";
 
@@ -451,5 +494,8 @@ void vector_stack_test(void)
 		print_vector(y);
 		std::cout << "x = y ? " << (x == y) << std::endl;
 	}
+	end = std::clock();
+	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	std::cout << "Elapsed time LOGICAL OPERATORS : " << NAME << " = " << elapsed_time << " seconds\n";
 	return ;
 }
