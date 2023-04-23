@@ -12,7 +12,7 @@ Code some STL containers : vector, stack, map and set
 
 * We have to use std::allocator (thus I don't leave the possibility to use another allocator), 
 * C++ 98 only, compiling with -Wextra -Werror and -Wall flags.
-* we have to code also some others templates :
+* We have to code also some others templates :
    - std::iterator_traits
    - std::enable_if (this is C++11, we are forced to stick to C++98 but this aims to teach us the magic of SFINAE)
    - std::reverse_iterator
@@ -62,7 +62,7 @@ If it works, diff output should be only time differences, otherwise the differen
    
 ---
 
-### Main topics learned in container
+## Main topics learned in container
 
 ### SFINAE
 
@@ -126,3 +126,4 @@ When constructed, `_m_null` is created and `_root = _m_null`
 * Mainly norm, I'm on my way to developp a code norm that I like, so you may find awfull things due to my lack of experience in CPP.
 * Vector capacity management : I'm not doubling the capacity like STL vector does, though I don't have a too big difference in execution time
 * More containers : deque, list, etc.
+* Allow special allocators.
