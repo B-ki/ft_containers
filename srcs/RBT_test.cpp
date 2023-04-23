@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:44:12 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/21 15:32:47 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/23 14:25:28 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,55 @@ void RBT_test(void)
 		}
 	}
 	{
+		std::cout << "\n########## RBT PRINT ##########\n\n";
+		ft::map<int, std::string> mapOfString;
+		ft::pair<int, std::string> pair1 = ft::make_pair(0, "ab");
+		ft::pair<int, std::string> pair2 = ft::make_pair(1, "cd");
+		ft::pair<int, std::string> pair3 = ft::make_pair(2, "ef");
+		ft::pair<int, std::string> pair4 = ft::make_pair(3, "gh");
+		ft::pair<int, std::string> pair5 = ft::make_pair(4, "ij");
+		ft::pair<int, std::string> pair6 = ft::make_pair(5, "kl");
+		ft::pair<int, std::string> pair7 = ft::make_pair(6, "mn");
+		ft::pair<int, std::string> pair8 = ft::make_pair(7, "op");
+		mapOfString.insert(pair1);
+		mapOfString.printRBT();
+		mapOfString.insert(pair2);
+		mapOfString.printRBT();
+		mapOfString.insert(pair3);
+		mapOfString.printRBT();
+		mapOfString.insert(pair4);
+		mapOfString.printRBT();
+		mapOfString.insert(pair5);
+		mapOfString.printRBT();
+		mapOfString.insert(pair6);
+		mapOfString.printRBT();
+		mapOfString.insert(pair7);
+		mapOfString.printRBT();
+		mapOfString.insert(pair8);
+		mapOfString.printRBT();
+		std::cout << "Value at key=4 : " << mapOfString[4] << std::endl;
+		std::cout << "Value at key=9 : " << mapOfString[9] << std::endl;
+		mapOfString.printRBT();
+		std::cout << "Value at key=10 : " << mapOfString[10] << std::endl;
+		mapOfString.printRBT();
+		mapOfString.erase(6);
+		mapOfString.printRBT();
+		mapOfString.erase(0);
+		mapOfString.printRBT();
+		mapOfString.erase(3);
+		mapOfString.printRBT();
+		mapOfString.erase(4);
+		mapOfString.printRBT();
+		mapOfString.erase(1);
+		mapOfString.printRBT();
+		mapOfString.erase(2);
+		mapOfString.printRBT();
+		mapOfString.erase(7);
+		mapOfString.printRBT();
+		mapOfString.erase(10);
+		mapOfString.printRBT();
+		mapOfString.erase(9);
+		mapOfString.printRBT();
 	}
 	return;
 }

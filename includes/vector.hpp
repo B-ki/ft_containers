@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 18:18:33 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/18 18:02:57 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/23 11:45:11 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,7 +265,7 @@ class vector : private vector_base<T, Alloc>
 		void reserve(size_type newCap)
 		{
 			if (newCap > max_size())
-				throw(std::length_error("ft::vector<t>::reserve : newCap > max_size"));
+				throw(std::length_error("vector::reserve"));
 			if (newCap <= capacity())
 				return;
 
@@ -343,8 +343,9 @@ class vector : private vector_base<T, Alloc>
 
 		iterator insert(iterator position, const T& x)
 		{
+			size_type n = position - begin();
 			insert(position, 1lu, x);
-			return (position);
+			return iterator(this->_first + n);
 		}
 
 		void insert(iterator pos, size_type n, const T& x)

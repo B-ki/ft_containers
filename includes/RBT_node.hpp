@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 16:56:13 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/20 15:25:57 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/23 14:00:45 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ struct RBTNode
 		return node;
 	}
 
-	// Return the next node in the tree, if no next return NULL
 	node_ptr successor()
 	{
 		node_ptr node = this;
@@ -104,7 +103,6 @@ struct RBTNode
 		return y;
 	}
 		
-	// Idem
 	node_ptr predecessor()
 	{
 		node_ptr node = this;

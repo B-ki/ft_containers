@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/21 17:08:01 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/23 13:45:08 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ class RBT
 				_node_allocator(node_allocator()),
 				_m_null(createNullNode()),
 				_root(_m_null),
-				_comp(key_compare())
+				_comp(key_compare()),
+				_sz(0)
 		{ 
 			majNull();
 			//std::cout << "Adress of nill is :" << _m_null << std::endl;
@@ -87,7 +88,8 @@ class RBT
 										_node_allocator(node_allocator()), 
 										_m_null(createNullNode()), 
 										_root(_m_null), 
-										_comp(comp)
+										_comp(comp),
+										_sz(0)
 		{ 
 			(void)alloc;
 			majNull();
@@ -97,13 +99,11 @@ class RBT
 			: 	_value_allocator(value_allocator()),
 				_node_allocator(node_allocator()),
 				_m_null(createNullNode()),
-				_comp(key_compare())
+				_comp(key_compare()),
+				_sz(0)
 		{
-			if (other._root)
-			{
+			if (!other.empty())
 				_root = copyNodeHelper(other._root, other);
-				majNull();
-			}
 			else
 				_root = _m_null;
 			majNull();
@@ -113,7 +113,7 @@ class RBT
 		RBT(It first, It last, const key_compare& comp, const value_allocator& alloc,
 				typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) :	
 			_value_allocator(value_allocator()), _node_allocator(node_allocator()),
-			_m_null(createNullNode()), _root(_m_null), _comp(comp)
+			_m_null(createNullNode()), _root(_m_null), _comp(comp), _sz(0)
 		{
 			(void)alloc;
 			for (It it = first; it != last; it++)
@@ -135,6 +135,7 @@ class RBT
 		node_ptr 		_m_null;
 		node_ptr 		_root;
 		key_compare 	_comp;
+		size_type 		_sz;
 
 	public: 
 
@@ -149,7 +150,7 @@ class RBT
 
 		size_type size() const 
 		{
-			return sizeHelper(this->_root) - 1;
+			return _sz;
 		}
 
 		size_type max_size() const
@@ -434,6 +435,7 @@ class RBT
 				std::swap(this->_node_allocator, tmp._node_allocator);
 				std::swap(this->_m_null, tmp._m_null);
 				std::swap(this->_root, tmp._root);
+				std::swap(this->_sz, tmp._sz);
 			}
 			return *this;
 		}
@@ -446,6 +448,8 @@ class RBT
 			std::swap(_node_allocator, other._node_allocator);
 			std::swap(_m_null, other._m_null);
 			std::swap(_root, other._root);
+			std::swap(this->_sz, other._sz);
+			majNull();
 		}
 
 		// ########## PRINTERS ##########
@@ -741,6 +745,7 @@ class RBT
 				_node_allocator.deallocate(node, 1);
 				throw ;
 			}
+			_sz++;
 			return node;
 		}
 
@@ -829,6 +834,7 @@ class RBT
 				return;
 			_node_allocator.destroy(node);
 			_node_allocator.deallocate(node, 1);		
+			_sz--;
 		}
 
 		bool deleteNodeHelper(node_ptr startSearch, const key_type& key)
@@ -1007,16 +1013,8 @@ class RBT
 			checkRbtHelper(node->left, black_height, count, balanced);
 		}
 
-		size_type sizeHelper(node_ptr node) const
-		{
-			if (node == _m_null)
-				return 1;
-			return (sizeHelper(node->left) + sizeHelper(node->right));
-		}
 };
 
 }
-
-
 
 #endif 

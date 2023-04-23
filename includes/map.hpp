@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 15:49:16 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/21 16:05:20 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/23 14:22:20 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,7 +274,7 @@ class map {
 			return value_compare(key_comp());
 		}
 
-	private:
+	public:
 		// #################### HELPERS ####################
 		
 		void printRBT(void)

@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 18:27:26 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/21 19:09:23 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/23 11:52:03 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,12 @@
 #define NAME "std"
 #endif
 
-void RBT_test(void);
-void vector_stack_test(void);
-void map_iterator(void);
-void map_insert_erase(void);
+void RBT_test();
+void vector_stack_test();
+void map_iterator();
+void map_insert_erase();
 void map_bounds();
+void map_swap();
 void set_test();
 
 template<typename T>

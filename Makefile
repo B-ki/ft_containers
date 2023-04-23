@@ -11,6 +11,7 @@ SRCS = main.cpp\
 	   map_iterator.cpp\
 	   map_insert_erase.cpp\
 	   map_bounds.cpp\
+	   map_swap.cpp\
 	   set.cpp
 
 OBJS = $(addprefix $(OBJDIR),$(SRCS:.cpp=.o))

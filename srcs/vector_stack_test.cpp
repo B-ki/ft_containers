@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:46:52 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/21 18:58:20 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/23 11:28:46 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -454,6 +454,32 @@ void vector_stack_test(void)
 	end = std::clock();
 	elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
 	std::cout << "Elapsed time VECTOR ASSIGN : " << NAME << " = " << elapsed_time << " seconds\n";
+	{
+		std::cout << "\n########## INSERT FREE  ##########\n\n";
+		NS::vector<int> myvector (3,100);
+        NS::vector<int>::iterator it;
+
+		it = myvector.begin();
+		it = myvector.insert ( it , 200 );
+
+		print_vector(myvector);
+		myvector.insert (it,2,300);
+
+		// "it" no longer valid, get a new one:
+		it = myvector.begin();
+
+		NS::vector<int> anothervector (2,400);
+		myvector.insert (it+2,anothervector.begin(),anothervector.end());
+
+		int myarray [] = { 501,502,503 };
+		myvector.insert (myvector.begin(), myarray, myarray+3);
+
+		std::cout << "myvector contains:";
+		for (it=myvector.begin(); it<myvector.end(); it++)
+			std::cout << ' ' << *it;
+		std::cout << '\n';
+
+	}
 	start = std::clock();
 	{
 		std::cout << "\n########## REVERSE_ITERATOR  ##########\n\n";
