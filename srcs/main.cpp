@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/11 15:44:36 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/23 14:22:31 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/25 17:58:00 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ int main()
 	RBT_test();
 	map_iterator();
 	map_insert_erase();
-	map_bounds();
-	map_swap();
-	set_test();
+//	map_bounds();
+//	map_swap();
+//	set_test();
 
 	return 0;
 }

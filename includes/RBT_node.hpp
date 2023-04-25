@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 16:56:13 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/23 14:00:45 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/25 15:51:38 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,32 +41,19 @@ struct RBTNode
 	// "static" makes the member accessible out of the class, without needing 
 	// to instantiate an object of the class	
 
-	bool isRoot()
-	{
-		if (this->parent->isNull())
-			return true;
-		return false;
-	}
-
 	bool isRight()
 	{
-		if (!this->parent->isNull() && this == this->parent->right)
-			return true;
-		return false;
+		return (!this->parent->isNull() && this == this->parent->right);
 	}
 
 	bool isLeft()
 	{
-		if (!this->parent->isNull() && this == this->parent->left)
-			return true;
-		return false;
+		return (!this->parent->isNull() && this == this->parent->left);
 	}
 
 	bool isNull()
 	{
-		if (parent == NULL && left == right)
-			return true;
-		return false;
+		return (parent == NULL && left == right);
 	}
 
 	node_ptr maximum()

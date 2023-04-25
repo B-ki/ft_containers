@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/21 11:08:05 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/21 18:40:23 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/25 18:06:23 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,4 +126,29 @@ void map_insert_erase()
 	std::clock_t end = std::clock();
 	double elapsed_time = static_cast<double>(end - start) / CLOCKS_PER_SEC;
 	std::cout << "Elapsed time MAP INSERT ERASE : " << NAME << " = " << elapsed_time << " seconds\n";
+	{
+		NS::RBT<int, int> tree;
+		std::cout << "\n######### random mode #########\n\n";
+		int RANDOM_TEST_SIZE = 10000;
+		ft::vector<int> numbers(RANDOM_TEST_SIZE);
+		std::srand(std::time(0));
+		for (int i = 0; i < RANDOM_TEST_SIZE; i++)
+		{
+			int number = std::rand() % 13337;
+			numbers.push_back(number);
+			tree.insert(number);
+			//tree.printTree();
+		}
+
+		while (numbers.size())
+		{
+			ft::vector<int>::iterator randIt = numbers.begin();
+			std::advance(randIt, std::rand() % numbers.size());
+			tree.erase(*randIt);
+			numbers.erase(randIt);
+		}
+		tree.prettyPrint();
+		//tree.printTree();
+
+	}
 }

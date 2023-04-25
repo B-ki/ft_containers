@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 17:20:46 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/23 13:45:08 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/25 18:39:54 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -545,8 +545,6 @@ class RBT
 
 		void updateBalance(node_ptr node)
 		{
-			if (!node)
-				return;
 			node->color = red;
 			while (node->parent->color == red)
 			{

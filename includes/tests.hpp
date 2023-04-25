@@ -6,7 +6,7 @@
 /*   By: rmorel <rmorel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 18:27:26 by rmorel            #+#    #+#             */
-/*   Updated: 2023/04/23 11:52:03 by rmorel           ###   ########.fr       */
+/*   Updated: 2023/04/25 17:55:46 by rmorel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <iostream>
 #include "pair.hpp"
 #include "map.hpp"
+#include "vector.hpp"
 #include "set.hpp"
 #include <set>
 #include <map>
