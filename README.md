@@ -6,7 +6,7 @@
 
 ### Objectives : 
 
-Code some STL containers : vector, stack, map and set
+Recreate some of the Standard Template Library containers : vector, stack, map and set.
 
 ### Requirements : 
 
@@ -24,7 +24,20 @@ Code some STL containers : vector, stack, map and set
 
 ---
 
-## Structure
+## How to use it ?
+
+Run ./test.sh in order to compile 2 executable, one using ft (fourty-two) namespace, and the other using std namespace. The output of several tests will be redirected in 2 txt files, and the diff between them will be the final output.
+
+There should be only time difference, otherwise it means that ft_containers don't work like std containers.
+
+You can also use :
+`make` to create an executable `ft_containers` that will output the tests results using the namespace ft.
+
+Or you can use `make -DNS=std` to create an executable `ft_containers` that will output the tests results using the namespace std.
+
+---
+
+## Structure of this project
 
 ### includes/
 
@@ -123,7 +136,7 @@ When constructed, `_m_null` is created and `_root = _m_null`
 
 ## Improvements
 
-* Mainly norm, I'm on my way to developp a code norm that I like, so you may find awfull things due to my lack of experience in CPP.
+* Coding standards, I'm on my way to developp my own CPP standard, so you may find awfull things due to my lack of experience in CPP.
 * Vector capacity management : I'm not doubling the capacity like STL vector does, though I don't have a too big difference in execution time
 * More containers : deque, list, etc.
-* Allow special allocators.
+* Allowing special allocators.
