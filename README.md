@@ -6,7 +6,7 @@
 
 ### Objectives : 
 
-Recreate some of the Standard Template Library containers : vector, stack, map and set.
+Recreate some of the Standard Template Library containers : vector, stack, map and set. [https://en.cppreference.com/w/cpp/container]
 
 ### Requirements : 
 
@@ -26,7 +26,7 @@ Recreate some of the Standard Template Library containers : vector, stack, map a
 
 ## How to use it ?
 
-Run ./test.sh in order to compile 2 executable, one using ft (fourty-two) namespace, and the other using std namespace. The output of several tests will be redirected in 2 txt files, and the diff between them will be the final output.
+Run ./test.sh in order to compile 2 executable, one using ft (forty-two) namespace, and the other using std namespace. The output of several tests will be redirected in 2 .txt files, and the diff between them will be the final output.
 
 There should be only time difference, otherwise it means that ft_containers don't work like std containers.
 
