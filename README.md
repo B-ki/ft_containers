@@ -118,7 +118,7 @@ Thus if `It` is a real integer, `type` is defined and `ft::enable_if<!ft::is_int
 
 ### Exceptions management
 
-Mainly in vector, construction of objects can sometimes generate many errors. For example, a class throwing an execption every 3 objects created is a good tester.
+Mainly in vector, construction of objects can sometimes generate many errors. For example, a class throwing an exception every 3 objects created is a good tester.
 
 Thus, after discovering that those exceptions really need to be managed, I started to use `std::copy`,`std::uninitialized_copy` and `std::fill` as much as I could. The algorithm to insert elements is then a little tricky, but gave a good problem to solve, you can check it in the `insert` function of `vector`.
 
@@ -128,9 +128,9 @@ Thus, after discovering that those exceptions really need to be managed, I start
 
 For vector, the `vector<T>::iterator` is simply a pointer to a value. Thus `operator++` and `operator--` are really simple. 
 
-`reverse_iterator` is a class that can use any error in a mirror way (increment should decrement, `rbegin()` should be the last element, `rend()` should point one unit before the first element, etc.)
+`reverse_iterator` is a class that can use any iterator in a mirror way (increment should decrement, `rbegin()` should be the last element, `rend()` should point one unit before the first element, etc.)
 
-`RBT_iterator` is a class specific to the RBT, that uses `node->sucessor()` as increment operator and `node->predecessor()` as decrement operator.
+`RBT_iterator` is a class specific to the RBT, that uses `node->sucessor()` as increment operator and `node->predecessor()` as decrement operator. Moving to the next node is more complicated than just moving a pointer to the next block.
 
 const_iterator and iterator should always be comparable. Thus it is necessary to have a constructor in const_iterator classes that uses as parameter an iterator (iterator to const_iterator is doable, the opposite is not).
 
