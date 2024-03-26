@@ -79,20 +79,37 @@ If it works, diff output should be only time differences, otherwise the differen
 
 ### SFINAE
 
-**Substitution Failure Is Not An Error** : Check at compile time if a condition is true or false. Mainly use if we have two overload of the same function, one using 2 iterators and the other using 2 int. The compiler needs to know which one to pick, so we use SFINAE to know if parameters are real integrals.
+**Substitution Failure Is Not An Error** : Check at compile time if a condition is true or false. 
 
-`template<class It>
- map(It first, It last, const Compare& comp = Compare(), const Allocator& alloc = Allocator(), 
-    typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0)`
-    
-If It is a real integral (char, bool, uchar, signed  char, short, ushort, int, uint, long, ulong) then `ft::is_integral<It>::value = true`. And `enable_if` is a template structure :
+Mainly use it to make sure we will be using Iterator in a function, and not real int, when there exists 2 overload possible of a constructor :
 
+- Overload 1 - Real integers :
+`	explicit vector(size_type n, const T& value = T()) : vector_base<T, Alloc>(n) 
+	{
+		std::uninitialized_fill_n(_first, n, value);
+		_last = _first + n;
+	}`
+- Overload 2 - Iterators : 
+`	template <class It>
+   vector(It first, It last, 
+		typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) : vector_base<T, Alloc>(std::distance(first, last))
+	{
+		std::uninitialized_copy(first, last, _first);
+		_last = _first + std::distance(first, last);
+	}`
+
+Thanks to the `enable_if` in the 2nd overload, the compiler will know if it has to pick overload 1 or 2 to construct the vector instance.
+
+*How does it work ?*
+If `It` is a real integral (char, bool, uchar, signed  char, short, ushort, int, uint, long, ulong) then `ft::is_integral<It>::value = true`. 
+
+And `enable_if` is a template structure :
 `template<bool B, class T = void>
  struct enable_if {};`
 
 This structure posess an object type (of type T) only if B is true.
 
-Thus if `It` is a real integer, `type` est defini et `ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0` sends an error, and compiler knows it's not the right overload of the function.
+Thus if `It` is a real integer, `type` is defined and `ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0` sends an error, and compiler knows it's not the right overload of the function.
 
 ### Exceptions management
 
