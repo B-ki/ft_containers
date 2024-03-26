@@ -84,19 +84,24 @@ If it works, diff output should be only time differences, otherwise the differen
 Mainly use it to make sure we will be using Iterator in a function, and not real int, when there exists 2 overload possible of a constructor :
 
 - Overload 1 - Real integers :
-`	explicit vector(size_type n, const T& value = T()) : vector_base<T, Alloc>(n) 
-	{
-		std::uninitialized_fill_n(_first, n, value);
-		_last = _first + n;
-	}`
-- Overload 2 - Iterators : 
-`	template <class It>
-   vector(It first, It last, 
-		typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) : vector_base<T, Alloc>(std::distance(first, last))
-	{
-		std::uninitialized_copy(first, last, _first);
-		_last = _first + std::distance(first, last);
-	}`
+```
+explicit vector(size_type n, const T& value = T()) : vector_base<T, Alloc>(n)
+ {
+	std::uninitialized_fill_n(_first, n, value);
+	_last = _first + n;
+}
+```
+- Overload 2 - Iterators :
+```
+template <class It>
+vector(It first, It last,
+	typename ft::enable_if<!ft::is_integral<It>::value, It>::type* = 0) :
+		vector_base<T, Alloc>(std::distance(first, last))
+{
+	std::uninitialized_copy(first, last, _first);
+	_last = _first + std::distance(first, last);
+}
+```
 
 Thanks to the `enable_if` in the 2nd overload, the compiler will know if it has to pick overload 1 or 2 to construct the vector instance.
 
